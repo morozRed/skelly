@@ -298,7 +298,7 @@ func (t *TypeScriptParser) buildFunctionSignature(node *sitter.Node, content []b
 		sig += paramsNode.Content(content)
 	}
 	if returnNode != nil {
-		sig += ": " + returnNode.Content(content)
+		sig += formatTypeScriptReturnType(returnNode.Content(content))
 	}
 
 	return sig
@@ -317,7 +317,7 @@ func (t *TypeScriptParser) buildMethodSignature(node *sitter.Node, content []byt
 		sig += paramsNode.Content(content)
 	}
 	if returnNode != nil {
-		sig += ": " + returnNode.Content(content)
+		sig += formatTypeScriptReturnType(returnNode.Content(content))
 	}
 
 	return sig
@@ -460,19 +460,20 @@ func parseJSImportAliases(raw string) []string {
 	}
 
 	aliases := make([]string, 0)
-	parts := strings.Split(spec, ",")
+	parts := splitTopLevelCSV(spec)
 	for _, part := range parts {
 		part = strings.TrimSpace(part)
 		if part == "" {
 			continue
 		}
 		if strings.HasPrefix(part, "{") && strings.HasSuffix(part, "}") {
-			members := strings.Split(strings.Trim(part, "{} "), ",")
+			members := splitTopLevelCSV(strings.Trim(part, "{} "))
 			for _, member := range members {
 				member = strings.TrimSpace(member)
 				if member == "" {
 					continue
 				}
+				member = strings.TrimSpace(strings.TrimPrefix(member, "type "))
 				if strings.Contains(member, " as ") {
 					asParts := strings.Split(member, " as ")
 					member = strings.TrimSpace(asParts[len(asParts)-1])
@@ -484,6 +485,7 @@ func parseJSImportAliases(raw string) []string {
 			continue
 		}
 
+		part = strings.TrimSpace(strings.TrimPrefix(part, "type "))
 		if strings.HasPrefix(part, "* as ") {
 			alias := strings.TrimSpace(strings.TrimPrefix(part, "* as "))
 			if alias != "" {
@@ -495,4 +497,43 @@ func parseJSImportAliases(raw string) []string {
 		aliases = append(aliases, part)
 	}
 	return aliases
+}
+
+func formatTypeScriptReturnType(raw string) string {
+	value := strings.TrimSpace(raw)
+	if value == "" {
+		return ""
+	}
+	value = strings.TrimSpace(strings.TrimPrefix(value, ":"))
+	if value == "" {
+		return ""
+	}
+	return ": " + value
+}
+
+func splitTopLevelCSV(raw string) []string {
+	if strings.TrimSpace(raw) == "" {
+		return nil
+	}
+
+	parts := make([]string, 0)
+	depth := 0
+	start := 0
+	for i, ch := range raw {
+		switch ch {
+		case '{':
+			depth++
+		case '}':
+			if depth > 0 {
+				depth--
+			}
+		case ',':
+			if depth == 0 {
+				parts = append(parts, strings.TrimSpace(raw[start:i]))
+				start = i + 1
+			}
+		}
+	}
+	parts = append(parts, strings.TrimSpace(raw[start:]))
+	return parts
 }

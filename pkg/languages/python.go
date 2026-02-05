@@ -200,6 +200,37 @@ func (p *PythonParser) extractFromImport(node *sitter.Node, content []byte) ([]s
 	if alias != "" {
 		aliases[alias] = moduleName
 	}
+
+	for i := 0; i < int(node.ChildCount()); i++ {
+		if node.FieldNameForChild(i) != "name" {
+			continue
+		}
+		child := node.Child(i)
+		if child == nil {
+			continue
+		}
+
+		switch child.Type() {
+		case "aliased_import":
+			importedName := ""
+			if nameNode := child.ChildByFieldName("name"); nameNode != nil {
+				importedName = strings.TrimSpace(nameNode.Content(content))
+			}
+			aliasName := ""
+			if aliasNode := child.ChildByFieldName("alias"); aliasNode != nil {
+				aliasName = strings.TrimSpace(aliasNode.Content(content))
+			}
+			if aliasName != "" && importedName != "" {
+				aliases[aliasName] = fromImportAliasTarget(moduleName, importedName)
+			}
+		case "dotted_name", "identifier":
+			importedName := strings.TrimSpace(child.Content(content))
+			if importedName != "" {
+				aliases[importedName] = fromImportAliasTarget(moduleName, importedName)
+			}
+		}
+	}
+
 	return []string{moduleName}, aliases
 }
 
@@ -337,6 +368,18 @@ func parsePythonAliasedImport(raw string) (module, alias string) {
 		alias = defaultImportAlias(module)
 	}
 	return module, alias
+}
+
+func fromImportAliasTarget(moduleName, symbolName string) string {
+	moduleName = strings.TrimSpace(moduleName)
+	symbolName = strings.TrimSpace(symbolName)
+	if moduleName == "" {
+		return ""
+	}
+	if symbolName == "" {
+		return moduleName
+	}
+	return moduleName + "#" + symbolName
 }
 
 func extractDocstring(s string) string {
