@@ -1,0 +1,6 @@
+profiles:
+  local:
+    command: ["codex", "e", PROMPT, "--output-schema", JSON_SCHEMA_FILE, "--model", "gpt-5.1-codex-mini"]
+    timeout: 15s
+    prompt_template: |
+      Summarize {{ .Symbol.Name }} in {{ .Symbol.Path }}.

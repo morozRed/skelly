@@ -1,0 +1,9 @@
+.DS_Store
+
+# Build outputs
+bin/
+skelly
+*.test
+*.out
+
+*.md
