@@ -30,7 +30,12 @@ type symbolLookups struct {
 	byFile                map[string]map[string][]string
 	byFileMethods         map[string]map[string][]string
 	byModule              map[string]map[string][]string
-	importAliasCandidates map[string]map[string][]string
+	importAliasCandidates map[string]map[string]importAliasCandidate
+}
+
+type importAliasCandidate struct {
+	Files      []string
+	SymbolName string
 }
 
 // NewGraph creates a new empty graph
@@ -121,7 +126,7 @@ func buildSymbolLookup(result *parser.ParseResult) symbolLookups {
 		byFile:                make(map[string]map[string][]string),
 		byFileMethods:         make(map[string]map[string][]string),
 		byModule:              make(map[string]map[string][]string),
-		importAliasCandidates: make(map[string]map[string][]string),
+		importAliasCandidates: make(map[string]map[string]importAliasCandidate),
 	}
 
 	for _, file := range result.Files {
@@ -187,9 +192,17 @@ func (g *Graph) calculatePageRank(iterations int, dampingFactor float64) {
 	// Iterate
 	for i := 0; i < iterations; i++ {
 		newRanks := make(map[string]float64)
+		danglingMass := 0.0
+
+		for _, node := range g.Nodes {
+			if len(node.OutEdges) == 0 {
+				danglingMass += node.PageRank
+			}
+		}
+		danglingContribution := dampingFactor * danglingMass / n
 
 		for id, node := range g.Nodes {
-			rank := (1 - dampingFactor) / n
+			rank := (1-dampingFactor)/n + danglingContribution
 
 			// Sum contributions from incoming edges
 			for _, inID := range node.InEdges {
@@ -337,19 +350,14 @@ func (l symbolLookups) resolve(sourceFile string, sourceSymbol parser.Symbol, ca
 	}
 
 	qualifier := primaryQualifier(call.Qualifier)
-	aliasMatched := false
 	if qualifier != "" {
-		if byAlias := l.importAliasCandidates[sourceFile]; byAlias != nil {
-			if candidateFiles, exists := byAlias[qualifier]; exists {
-				aliasMatched = true
-				if ids := l.collectFromFiles(candidateFiles, callName); len(ids) > 0 {
-					return chooseUnique(ids, "heuristic")
-				}
-			}
+		if ids := l.resolveImportAlias(sourceFile, qualifier, callName); len(ids) > 0 {
+			return chooseUnique(ids, "heuristic")
 		}
-	}
-	if qualifier != "" && !callIsReceiverScoped(call) && !aliasMatched {
-		return nil, "", false
+	} else {
+		if ids := l.resolveImportAlias(sourceFile, callName, callName); len(ids) > 0 {
+			return chooseUnique(ids, "heuristic")
+		}
 	}
 
 	module := moduleName(sourceFile)
@@ -411,8 +419,28 @@ func (l symbolLookups) collectFromFiles(files []string, callName string) []strin
 	return dedupeAndSort(out)
 }
 
-func buildImportAliasCandidates(result *parser.ParseResult) map[string]map[string][]string {
-	out := make(map[string]map[string][]string)
+func (l symbolLookups) resolveImportAlias(sourceFile, alias, fallbackName string) []string {
+	byAlias := l.importAliasCandidates[sourceFile]
+	if byAlias == nil {
+		return nil
+	}
+	candidate, exists := byAlias[alias]
+	if !exists {
+		return nil
+	}
+
+	targetName := strings.TrimSpace(candidate.SymbolName)
+	if targetName == "" {
+		targetName = strings.TrimSpace(fallbackName)
+	}
+	if targetName == "" {
+		return nil
+	}
+	return l.collectFromFiles(candidate.Files, targetName)
+}
+
+func buildImportAliasCandidates(result *parser.ParseResult) map[string]map[string]importAliasCandidate {
+	out := make(map[string]map[string]importAliasCandidate)
 	allFiles := make([]string, 0, len(result.Files))
 	for _, file := range result.Files {
 		allFiles = append(allFiles, file.Path)
@@ -436,13 +464,17 @@ func buildImportAliasCandidates(result *parser.ParseResult) map[string]map[strin
 			continue
 		}
 
-		sourceCandidates := make(map[string][]string)
-		for alias, importPath := range aliases {
+		sourceCandidates := make(map[string]importAliasCandidate)
+		for alias, target := range aliases {
+			importPath, symbolName := parseImportAliasTarget(target)
 			candidates := matchImportCandidates(source.Path, importPath, allFiles)
 			if len(candidates) == 0 {
 				continue
 			}
-			sourceCandidates[alias] = dedupeAndSort(candidates)
+			sourceCandidates[alias] = importAliasCandidate{
+				Files:      dedupeAndSort(candidates),
+				SymbolName: symbolName,
+			}
 		}
 		if len(sourceCandidates) > 0 {
 			out[source.Path] = sourceCandidates
@@ -450,6 +482,19 @@ func buildImportAliasCandidates(result *parser.ParseResult) map[string]map[strin
 	}
 
 	return out
+}
+
+func parseImportAliasTarget(raw string) (importPath string, symbolName string) {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return "", ""
+	}
+	parts := strings.SplitN(raw, "#", 2)
+	importPath = strings.TrimSpace(parts[0])
+	if len(parts) == 2 {
+		symbolName = strings.TrimSpace(parts[1])
+	}
+	return importPath, symbolName
 }
 
 func matchImportCandidates(sourceFile, importPath string, allFiles []string) []string {

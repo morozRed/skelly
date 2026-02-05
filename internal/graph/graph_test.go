@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"math"
 	"testing"
 
 	"github.com/skelly-dev/skelly/internal/parser"
@@ -123,6 +124,118 @@ func TestBuildGraphPrefersImportAliasMatches(t *testing.T) {
 		if edgeID == otherNode.ID {
 			t.Fatalf("did not expect call to resolve via global fallback when import alias is present")
 		}
+	}
+}
+
+func TestBuildGraphResolvesDirectImportAlias(t *testing.T) {
+	result := &parser.ParseResult{
+		Files: []parser.FileSymbols{
+			{
+				Path:          "app/main.py",
+				Imports:       []string{"util"},
+				ImportAliases: map[string]string{"myfoo": "util#foo"},
+				Symbols: []parser.Symbol{
+					{
+						Name: "run",
+						Kind: parser.SymbolFunction,
+						Line: 5,
+						Calls: []parser.CallSite{
+							{Name: "myfoo"},
+						},
+					},
+				},
+			},
+			{
+				Path: "app/util.py",
+				Symbols: []parser.Symbol{
+					{Name: "foo", Kind: parser.SymbolFunction, Line: 1},
+				},
+			},
+		},
+	}
+
+	g := BuildFromParseResult(result)
+	runNode := findNodeByName(t, g, "app/main.py", "run")
+	fooNode := findNodeByName(t, g, "app/util.py", "foo")
+
+	if runNode.OutEdgeConfidence[fooNode.ID] != "heuristic" {
+		t.Fatalf("expected direct import alias to resolve as heuristic, got %q", runNode.OutEdgeConfidence[fooNode.ID])
+	}
+}
+
+func TestBuildGraphFallsBackForQualifiedCallsWithoutAliasMatch(t *testing.T) {
+	result := &parser.ParseResult{
+		Files: []parser.FileSymbols{
+			{
+				Path: "svc/main.go",
+				Symbols: []parser.Symbol{
+					{
+						Name: "run",
+						Kind: parser.SymbolFunction,
+						Line: 5,
+						Calls: []parser.CallSite{
+							{Name: "Handle", Qualifier: "svc"},
+						},
+					},
+				},
+			},
+			{
+				Path: "svc/handler.go",
+				Symbols: []parser.Symbol{
+					{Name: "Handle", Kind: parser.SymbolMethod, Line: 1},
+				},
+			},
+		},
+	}
+
+	g := BuildFromParseResult(result)
+	runNode := findNodeByName(t, g, "svc/main.go", "run")
+	handleNode := findNodeByName(t, g, "svc/handler.go", "Handle")
+
+	if runNode.OutEdgeConfidence[handleNode.ID] != "heuristic" {
+		t.Fatalf("expected qualified call without alias match to fall back to module/global lookup")
+	}
+}
+
+func TestPageRankRedistributesDanglingNodes(t *testing.T) {
+	result := &parser.ParseResult{
+		Files: []parser.FileSymbols{
+			{
+				Path: "a.go",
+				Symbols: []parser.Symbol{
+					{
+						Name: "A",
+						Kind: parser.SymbolFunction,
+						Line: 1,
+						Calls: []parser.CallSite{
+							{Name: "B"},
+						},
+					},
+				},
+			},
+			{
+				Path: "b.go",
+				Symbols: []parser.Symbol{
+					{Name: "B", Kind: parser.SymbolFunction, Line: 1},
+				},
+			},
+		},
+	}
+
+	g := BuildFromParseResult(result)
+
+	total := 0.0
+	for _, node := range g.Nodes {
+		total += node.PageRank
+	}
+	if math.Abs(total-1.0) > 1e-9 {
+		t.Fatalf("expected page rank to preserve total rank mass, got %f", total)
+	}
+
+	nodeA := findNodeByName(t, g, "a.go", "A")
+	nodeB := findNodeByName(t, g, "b.go", "B")
+	if nodeB.PageRank <= nodeA.PageRank {
+		t.Fatalf("expected sink target node B to rank above source A, got A=%f B=%f", nodeA.PageRank, nodeB.PageRank)
 	}
 }
 
