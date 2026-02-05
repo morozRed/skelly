@@ -2420,9 +2420,10 @@ func upsertSkellyHook(existingHook, repoRoot string) string {
 
 func buildSkellyHookBlock(repoRoot string) string {
 	return fmt.Sprintf(
-		"%s\nrepo_root=%q\nif command -v skelly >/dev/null 2>&1; then\n  (cd \"$repo_root\" && skelly update) || exit 1\nfi\n%s",
+		"%s\nrepo_root=%q\ncontext_dir=\"$repo_root/%s\"\nif command -v skelly >/dev/null 2>&1; then\n  if [ -f \"$context_dir/manifest.json\" ] && [ -f \"$context_dir/symbols.jsonl\" ] && [ -f \"$context_dir/edges.jsonl\" ]; then\n    (cd \"$repo_root\" && skelly update --format jsonl) || exit 1\n  else\n    (cd \"$repo_root\" && skelly update) || exit 1\n  fi\nfi\n%s",
 		hookStart,
 		repoRoot,
+		output.ContextDir,
 		hookEnd,
 	)
 }
