@@ -23,6 +23,9 @@ go install github.com/skelly-dev/skelly/cmd/skelly@latest
 ## Usage
 
 ```bash
+# Guided first run: picks agent profile, then runs generate + enrich
+skelly setup
+
 # Initialize .skelly/.context/ in your project
 skelly init
 
@@ -188,6 +191,10 @@ If `.skelly/agents.yaml` is missing, `skelly enrich` auto-creates:
 - Incremental updates parse only changed/new files and reuse cached symbol snapshots for unchanged files.
 - `--format text|jsonl` is supported for `generate` and `update` (default: `text`).
 - `enrich` supports `--agent`, `--scope changed|all`, `--max-symbols`, `--timeout`, and `--dry-run`.
+- `setup` is an interactive shortcut for first-time usage:
+  - prompts for agent profile (or accepts `--agent`)
+  - runs `generate`
+  - runs `enrich` (default scope is `all` so the first run produces enrichment output)
 - `enrich` writes `.skelly/.context/enrich.jsonl` with structured input + machine-readable output fields (`summary`, `purpose`, `side_effects`, `confidence`).
 - State includes parser versioning, per-file hashes, per-file symbols/imports, dependency links, and generated output hashes.
 - Calls are stored as structured call sites (name, qualifier/receiver, arity, line, raw expression).

@@ -2,7 +2,7 @@
 
 # Build outputs
 bin/
-skelly
+/skelly
 *.test
 *.out
 
