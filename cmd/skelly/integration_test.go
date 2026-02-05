@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"io"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -83,6 +84,112 @@ func C() {}
 		}
 		if !strings.Contains(string(updatedGraph), "|C|") {
 			t.Fatalf("expected updated graph output to contain symbol C")
+		}
+	})
+}
+
+func TestInitWithLLMGeneratesIntegrationFilesIdempotently(t *testing.T) {
+	root := t.TempDir()
+
+	withWorkingDir(t, root, func() {
+		initCmd := newInitCmdForTest()
+		mustSetFlag(t, initCmd, "llm", "codex,claude,cursor")
+		if err := runInit(initCmd, nil); err != nil {
+			t.Fatalf("runInit failed: %v", err)
+		}
+
+		expected := []string{
+			filepath.Join(root, output.ContextDir, ".state.json"),
+			filepath.Join(root, ".skelly", "skills", "skelly.md"),
+			filepath.Join(root, "CONTEXT.md"),
+			filepath.Join(root, "AGENTS.md"),
+			filepath.Join(root, "CLAUDE.md"),
+			filepath.Join(root, ".cursor", "rules", "skelly-context.mdc"),
+		}
+		for _, path := range expected {
+			assertExists(t, path)
+		}
+
+		agentsBefore, err := os.ReadFile(filepath.Join(root, "AGENTS.md"))
+		if err != nil {
+			t.Fatalf("failed to read AGENTS.md: %v", err)
+		}
+		if !strings.Contains(string(agentsBefore), llmManagedBlockStart) {
+			t.Fatalf("expected AGENTS.md to include managed block marker")
+		}
+
+		if err := runInit(initCmd, nil); err != nil {
+			t.Fatalf("second runInit failed: %v", err)
+		}
+
+		agentsAfter, err := os.ReadFile(filepath.Join(root, "AGENTS.md"))
+		if err != nil {
+			t.Fatalf("failed to read AGENTS.md after rerun: %v", err)
+		}
+		if !bytes.Equal(agentsBefore, agentsAfter) {
+			t.Fatalf("expected init --llm to be idempotent for AGENTS.md")
+		}
+	})
+}
+
+func TestDoctorReportsHealthyAndStaleStates(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
+
+func A() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		initCmd := newInitCmdForTest()
+		mustSetFlag(t, initCmd, "llm", "all")
+		if err := runInit(initCmd, nil); err != nil {
+			t.Fatalf("runInit failed: %v", err)
+		}
+		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("runGenerate failed: %v", err)
+		}
+
+		var healthy DoctorSummary
+		doctorCmd := newDoctorCmdForTest()
+		mustSetFlag(t, doctorCmd, "json", "true")
+		stdout := captureStdout(t, func() {
+			if err := runDoctor(doctorCmd, nil); err != nil {
+				t.Fatalf("runDoctor failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &healthy); err != nil {
+			t.Fatalf("failed to decode healthy doctor output: %v\noutput=%s", err, stdout)
+		}
+		if !healthy.Healthy {
+			t.Fatalf("expected healthy doctor status, got %+v", healthy)
+		}
+		if !healthy.Clean || healthy.Changed != 0 || healthy.Deleted != 0 {
+			t.Fatalf("expected clean doctor summary, got %+v", healthy)
+		}
+
+		mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
+
+func A() { B() }
+func B() {}
+`)
+
+		var stale DoctorSummary
+		stdout = captureStdout(t, func() {
+			if err := runDoctor(doctorCmd, nil); err != nil {
+				t.Fatalf("runDoctor after edits failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &stale); err != nil {
+			t.Fatalf("failed to decode stale doctor output: %v\noutput=%s", err, stdout)
+		}
+		if stale.Clean {
+			t.Fatalf("expected stale doctor summary to be dirty, got %+v", stale)
+		}
+		if stale.Changed == 0 {
+			t.Fatalf("expected stale doctor summary to report changed files, got %+v", stale)
+		}
+		if !containsString(stale.Suggestions, "run skelly update") {
+			t.Fatalf("expected stale doctor suggestions to include skelly update, got %#v", stale.Suggestions)
 		}
 	})
 }
@@ -519,6 +626,12 @@ func newGenerateCmdForTest() *cobra.Command {
 	return cmd
 }
 
+func newInitCmdForTest() *cobra.Command {
+	cmd := &cobra.Command{}
+	cmd.Flags().String("llm", "", "")
+	return cmd
+}
+
 func newUpdateCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().Bool("explain", false, "")
@@ -545,6 +658,12 @@ func newSetupCmdForTest() *cobra.Command {
 	cmd.Flags().Int("max-symbols", 200, "")
 	cmd.Flags().Duration("timeout", 30*time.Second, "")
 	cmd.Flags().String("format", "text", "")
+	return cmd
+}
+
+func newDoctorCmdForTest() *cobra.Command {
+	cmd := &cobra.Command{}
+	cmd.Flags().Bool("json", false, "")
 	return cmd
 }
 
@@ -586,6 +705,43 @@ func mustSetFlag(t *testing.T, cmd *cobra.Command, key, value string) {
 	if err := cmd.Flags().Set(key, value); err != nil {
 		t.Fatalf("failed to set --%s=%s: %v", key, value, err)
 	}
+}
+
+func captureStdout(t *testing.T, fn func()) string {
+	t.Helper()
+
+	original := os.Stdout
+	reader, writer, err := os.Pipe()
+	if err != nil {
+		t.Fatalf("failed to create stdout pipe: %v", err)
+	}
+	os.Stdout = writer
+	defer func() {
+		os.Stdout = original
+		_ = writer.Close()
+		_ = reader.Close()
+	}()
+
+	fn()
+
+	if err := writer.Close(); err != nil {
+		t.Fatalf("failed to close stdout writer: %v", err)
+	}
+
+	data, err := io.ReadAll(reader)
+	if err != nil {
+		t.Fatalf("failed to read captured stdout: %v", err)
+	}
+	return string(data)
+}
+
+func containsString(values []string, target string) bool {
+	for _, value := range values {
+		if value == target {
+			return true
+		}
+	}
+	return false
 }
 
 func cloneStringMap(input map[string]string) map[string]string {

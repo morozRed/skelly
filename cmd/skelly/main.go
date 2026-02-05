@@ -33,6 +33,9 @@ var version = "0.1.0-dev"
 const (
 	hookStart = "# >>> skelly update hook >>>"
 	hookEnd   = "# <<< skelly update hook <<<"
+
+	llmManagedBlockStart = "<!-- skelly:managed:start -->"
+	llmManagedBlockEnd   = "<!-- skelly:managed:end -->"
 )
 
 type RunSummary struct {
@@ -67,6 +70,20 @@ type EnrichRunSummary struct {
 	Targets    []string `json:"targets,omitempty"`
 }
 
+type DoctorSummary struct {
+	Mode         string          `json:"mode"`
+	RootPath     string          `json:"root_path"`
+	ContextDir   string          `json:"context_dir"`
+	Format       string          `json:"format"`
+	Healthy      bool            `json:"healthy"`
+	Clean        bool            `json:"clean"`
+	Changed      int             `json:"changed"`
+	Deleted      int             `json:"deleted"`
+	Missing      []string        `json:"missing,omitempty"`
+	Integrations map[string]bool `json:"integrations,omitempty"`
+	Suggestions  []string        `json:"suggestions,omitempty"`
+}
+
 func main() {
 	rootCmd := &cobra.Command{
 		Use:   "skelly",
@@ -84,6 +101,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		Short: "Initialize .skelly/.context/ directory in current project",
 		RunE:  runInit,
 	}
+	initCmd.Flags().String("llm", "", "Generate LLM integration files (comma-separated: codex,claude,cursor)")
 
 	setupCmd := &cobra.Command{
 		Use:   "setup",
@@ -124,6 +142,13 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 	}
 	statusCmd.Flags().Bool("json", false, "Print machine-readable status output")
 
+	doctorCmd := &cobra.Command{
+		Use:   "doctor",
+		Short: "Validate skelly setup and context freshness",
+		RunE:  runDoctor,
+	}
+	doctorCmd.Flags().Bool("json", false, "Print machine-readable doctor output")
+
 	enrichCmd := &cobra.Command{
 		Use:   "enrich",
 		Short: "Generate symbol summaries for changed files or the full codebase",
@@ -152,7 +177,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		},
 	}
 
-	rootCmd.AddCommand(initCmd, setupCmd, generateCmd, updateCmd, statusCmd, enrichCmd, installHookCmd, versionCmd)
+	rootCmd.AddCommand(initCmd, setupCmd, generateCmd, updateCmd, statusCmd, doctorCmd, enrichCmd, installHookCmd, versionCmd)
 
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
@@ -175,8 +200,243 @@ func runInit(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("failed to write initial state: %w", err)
 	}
 
+	llmRaw, err := optionalStringFlag(cmd, "llm")
+	if err != nil {
+		return err
+	}
+	llmProviders, err := parseLLMProviders(llmRaw)
+	if err != nil {
+		return err
+	}
+	if len(llmProviders) > 0 {
+		updatedFiles, err := generateLLMIntegrationFiles(rootPath, llmProviders)
+		if err != nil {
+			return err
+		}
+		if len(updatedFiles) > 0 {
+			fmt.Printf("Updated LLM integration files: %s\n", strings.Join(updatedFiles, ", "))
+		}
+	}
+
 	fmt.Printf("Initialized context directory at %s\n", contextDir)
 	return nil
+}
+
+func optionalStringFlag(cmd *cobra.Command, name string) (string, error) {
+	if cmd == nil || cmd.Flags().Lookup(name) == nil {
+		return "", nil
+	}
+	value, err := cmd.Flags().GetString(name)
+	if err != nil {
+		return "", fmt.Errorf("failed to read --%s flag: %w", name, err)
+	}
+	return strings.TrimSpace(value), nil
+}
+
+func parseLLMProviders(raw string) ([]string, error) {
+	raw = strings.TrimSpace(strings.ToLower(raw))
+	if raw == "" {
+		return nil, nil
+	}
+
+	allowed := map[string]bool{
+		"codex":  true,
+		"claude": true,
+		"cursor": true,
+	}
+	seen := make(map[string]bool)
+	out := make([]string, 0, 3)
+
+	addProvider := func(value string) error {
+		value = strings.TrimSpace(value)
+		if value == "" {
+			return nil
+		}
+		if value == "all" {
+			for _, provider := range []string{"codex", "claude", "cursor"} {
+				if !seen[provider] {
+					seen[provider] = true
+					out = append(out, provider)
+				}
+			}
+			return nil
+		}
+		if !allowed[value] {
+			return fmt.Errorf("unsupported --llm provider %q (supported: codex, claude, cursor, all)", value)
+		}
+		if !seen[value] {
+			seen[value] = true
+			out = append(out, value)
+		}
+		return nil
+	}
+
+	for _, chunk := range strings.Split(raw, ",") {
+		for _, value := range strings.Fields(chunk) {
+			if err := addProvider(value); err != nil {
+				return nil, err
+			}
+		}
+	}
+	if len(out) == 0 {
+		return nil, nil
+	}
+	return out, nil
+}
+
+func generateLLMIntegrationFiles(rootPath string, providers []string) ([]string, error) {
+	updated := make([]string, 0)
+
+	skillPath := filepath.Join(rootPath, ".skelly", "skills", "skelly.md")
+	if err := os.MkdirAll(filepath.Dir(skillPath), 0755); err != nil {
+		return nil, fmt.Errorf("failed to create skills directory: %w", err)
+	}
+	skillContent := buildSkellySkillContent()
+	wrote, err := writeFileIfChangedTracked(skillPath, []byte(skillContent))
+	if err != nil {
+		return nil, fmt.Errorf("failed to write %s: %w", skillPath, err)
+	}
+	if wrote {
+		updated = append(updated, filepath.ToSlash(filepath.Clean(filepath.Join(".skelly", "skills", "skelly.md"))))
+	}
+
+	contextPath := filepath.Join(rootPath, "CONTEXT.md")
+	contextDoc, err := upsertManagedMarkdownFile(contextPath, buildContextBlock())
+	if err != nil {
+		return nil, err
+	}
+	if contextDoc {
+		updated = append(updated, "CONTEXT.md")
+	}
+
+	for _, provider := range providers {
+		switch provider {
+		case "codex":
+			changed, err := upsertManagedMarkdownFile(
+				filepath.Join(rootPath, "AGENTS.md"),
+				buildRootAdapterBlock("Codex"),
+			)
+			if err != nil {
+				return nil, err
+			}
+			if changed {
+				updated = append(updated, "AGENTS.md")
+			}
+		case "claude":
+			changed, err := upsertManagedMarkdownFile(
+				filepath.Join(rootPath, "CLAUDE.md"),
+				buildRootAdapterBlock("Claude"),
+			)
+			if err != nil {
+				return nil, err
+			}
+			if changed {
+				updated = append(updated, "CLAUDE.md")
+			}
+		case "cursor":
+			cursorPath := filepath.Join(rootPath, ".cursor", "rules", "skelly-context.mdc")
+			if err := os.MkdirAll(filepath.Dir(cursorPath), 0755); err != nil {
+				return nil, fmt.Errorf("failed to create cursor rules directory: %w", err)
+			}
+			changed, err := writeFileIfChangedTracked(cursorPath, []byte(buildCursorRuleContent()))
+			if err != nil {
+				return nil, fmt.Errorf("failed to write %s: %w", cursorPath, err)
+			}
+			if changed {
+				updated = append(updated, filepath.ToSlash(filepath.Clean(filepath.Join(".cursor", "rules", "skelly-context.mdc"))))
+			}
+		}
+	}
+
+	sort.Strings(updated)
+	return updated, nil
+}
+
+func upsertManagedMarkdownFile(path, body string) (bool, error) {
+	existing := ""
+	if data, err := os.ReadFile(path); err == nil {
+		existing = string(data)
+	} else if !os.IsNotExist(err) {
+		return false, fmt.Errorf("failed to read %s: %w", path, err)
+	}
+
+	managed := fmt.Sprintf("%s\n%s\n%s", llmManagedBlockStart, strings.TrimSpace(body), llmManagedBlockEnd)
+	updated := upsertManagedBlock(existing, llmManagedBlockStart, llmManagedBlockEnd, managed)
+	return writeFileIfChangedTracked(path, []byte(updated))
+}
+
+func upsertManagedBlock(existing, startMarker, endMarker, managedContent string) string {
+	if existing == "" {
+		return managedContent + "\n"
+	}
+
+	start := strings.Index(existing, startMarker)
+	end := strings.Index(existing, endMarker)
+	if start >= 0 && end >= start {
+		end += len(endMarker)
+		updated := existing[:start] + managedContent + existing[end:]
+		return ensureTrailingNewline(updated)
+	}
+
+	base := ensureTrailingNewline(existing)
+	return base + "\n" + managedContent + "\n"
+}
+
+func buildSkellySkillContent() string {
+	return `# Skelly Skill
+
+Use Skelly context artifacts and commands before opening many source files.
+
+Workflow:
+1. Run skelly doctor to validate context freshness.
+2. If stale, run skelly update.
+3. Prefer .skelly/.context/manifest.json, symbols.jsonl, and edges.jsonl when present.
+4. Fall back to index.txt and graph.txt for text mode repos.
+5. Use skelly status before major changes to understand impacted files.
+`
+}
+
+func buildContextBlock() string {
+	return `# Skelly Context
+
+This repository uses Skelly as the canonical code context layer for LLM tools.
+
+- Canonical skill instructions: .skelly/skills/skelly.md
+- Context directory: .skelly/.context/
+- Preferred machine-readable artifacts:
+  - .skelly/.context/symbols.jsonl
+  - .skelly/.context/edges.jsonl
+  - .skelly/.context/manifest.json
+
+Recommended command sequence:
+1. skelly doctor
+2. skelly update (if doctor reports stale context)
+3. skelly status (to inspect impact)
+`
+}
+
+func buildRootAdapterBlock(agentName string) string {
+	return fmt.Sprintf(`# Skelly Integration (%s)
+
+Use Skelly outputs before broad code reads.
+
+1. Run skelly doctor at session start.
+2. If stale, run skelly update.
+3. Follow .skelly/skills/skelly.md.
+4. Use CONTEXT.md for canonical artifact paths.
+`, agentName)
+}
+
+func buildCursorRuleContent() string {
+	return `---
+description: Use Skelly context artifacts for code navigation
+alwaysApply: true
+---
+
+Run skelly doctor first. If context is stale, run skelly update.
+Use .skelly/skills/skelly.md and CONTEXT.md as primary guidance.
+Prefer .skelly/.context/symbols.jsonl, .skelly/.context/edges.jsonl, and .skelly/.context/manifest.json when available.
+`
 }
 
 func runSetup(cmd *cobra.Command, args []string) error {
@@ -767,6 +1027,180 @@ func runStatus(cmd *cobra.Command, args []string) error {
 	}
 
 	return printRunSummary(summary, asJSON)
+}
+
+func runDoctor(cmd *cobra.Command, args []string) error {
+	rootPath, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to resolve working directory: %w", err)
+	}
+	asJSON, err := optionalBoolFlag(cmd, "json", false)
+	if err != nil {
+		return err
+	}
+
+	contextDir := filepath.Join(rootPath, output.ContextDir)
+	summary := DoctorSummary{
+		Mode:         "doctor",
+		RootPath:     rootPath,
+		ContextDir:   contextDir,
+		Format:       detectContextFormat(contextDir),
+		Integrations: detectLLMIntegrations(rootPath),
+		Clean:        false,
+	}
+
+	statePath := filepath.Join(contextDir, state.StateFile)
+	hasState := fileExists(statePath)
+	if !hasState {
+		summary.Missing = append(summary.Missing, state.StateFile)
+	}
+	if summary.Format == "none" {
+		summary.Missing = append(summary.Missing, "context artifacts")
+	}
+
+	if hasState {
+		st, err := state.Load(contextDir)
+		if err != nil {
+			summary.Missing = append(summary.Missing, "valid state file")
+			summary.Suggestions = append(summary.Suggestions, "run skelly generate")
+		} else {
+			registry := languages.NewDefaultRegistry()
+			ignoreRules, err := loadIgnoreRules(rootPath)
+			if err != nil {
+				return err
+			}
+			currentHashes, err := scanFileHashes(rootPath, registry, ignoreRules)
+			if err != nil {
+				return fmt.Errorf("failed to scan files: %w", err)
+			}
+			currentFiles := make(map[string]bool, len(currentHashes))
+			for file := range currentHashes {
+				currentFiles[file] = true
+			}
+
+			changed := st.ChangedFiles(currentHashes)
+			deleted := st.DeletedFiles(currentFiles)
+			for file, fileState := range st.Files {
+				if currentFiles[file] && fileState.Language == "" && len(fileState.Symbols) == 0 {
+					changed = append(changed, file)
+				}
+			}
+
+			summary.Changed = len(dedupeStrings(changed))
+			summary.Deleted = len(deleted)
+			summary.Clean = summary.Changed == 0 && summary.Deleted == 0
+		}
+	}
+
+	if !summary.Integrations["skills"] {
+		summary.Missing = append(summary.Missing, ".skelly/skills/skelly.md")
+	}
+	if !summary.Integrations["context"] {
+		summary.Missing = append(summary.Missing, "CONTEXT.md managed block")
+	}
+	hasProviderAdapter := summary.Integrations["codex"] || summary.Integrations["claude"] || summary.Integrations["cursor"]
+	if !hasProviderAdapter {
+		summary.Missing = append(summary.Missing, "LLM adapter file")
+	}
+
+	if !hasState || summary.Format == "none" {
+		summary.Suggestions = append(summary.Suggestions, "run skelly init && skelly generate")
+	}
+	if hasState && !summary.Clean {
+		summary.Suggestions = append(summary.Suggestions, "run skelly update")
+	}
+	if !summary.Integrations["skills"] || !summary.Integrations["context"] || !hasProviderAdapter {
+		summary.Suggestions = append(summary.Suggestions, "run skelly init --llm codex,claude,cursor")
+	}
+
+	summary.Missing = dedupeStrings(summary.Missing)
+	sort.Strings(summary.Missing)
+	summary.Suggestions = dedupeStrings(summary.Suggestions)
+	sort.Strings(summary.Suggestions)
+	summary.Healthy = summary.Clean && summary.Format != "none" && len(summary.Missing) == 0
+
+	if asJSON {
+		encoder := json.NewEncoder(os.Stdout)
+		encoder.SetIndent("", "  ")
+		return encoder.Encode(summary)
+	}
+
+	status := "issues"
+	if summary.Healthy {
+		status = "ok"
+	}
+	fmt.Printf("doctor: %s\n", status)
+	fmt.Printf("context: format=%s clean=%t changed=%d deleted=%d\n", summary.Format, summary.Clean, summary.Changed, summary.Deleted)
+	fmt.Printf("integrations: skills=%t context=%t codex=%t claude=%t cursor=%t\n",
+		summary.Integrations["skills"],
+		summary.Integrations["context"],
+		summary.Integrations["codex"],
+		summary.Integrations["claude"],
+		summary.Integrations["cursor"],
+	)
+	if len(summary.Missing) > 0 {
+		fmt.Printf("missing (%d): %s\n", len(summary.Missing), strings.Join(summary.Missing, ", "))
+	}
+	if len(summary.Suggestions) > 0 {
+		for _, suggestion := range summary.Suggestions {
+			fmt.Printf("next: %s\n", suggestion)
+		}
+	}
+	return nil
+}
+
+func optionalBoolFlag(cmd *cobra.Command, name string, defaultValue bool) (bool, error) {
+	if cmd == nil || cmd.Flags().Lookup(name) == nil {
+		return defaultValue, nil
+	}
+	value, err := cmd.Flags().GetBool(name)
+	if err != nil {
+		return false, fmt.Errorf("failed to read --%s flag: %w", name, err)
+	}
+	return value, nil
+}
+
+func detectContextFormat(contextDir string) string {
+	hasText := fileExists(filepath.Join(contextDir, output.IndexFile)) &&
+		fileExists(filepath.Join(contextDir, output.GraphFile))
+	hasJSONL := fileExists(filepath.Join(contextDir, output.SymbolsFile)) &&
+		fileExists(filepath.Join(contextDir, output.EdgesFile)) &&
+		fileExists(filepath.Join(contextDir, output.ManifestFile))
+
+	switch {
+	case hasText && hasJSONL:
+		return "mixed"
+	case hasJSONL:
+		return string(output.FormatJSONL)
+	case hasText:
+		return string(output.FormatText)
+	default:
+		return "none"
+	}
+}
+
+func detectLLMIntegrations(rootPath string) map[string]bool {
+	return map[string]bool{
+		"skills":  fileExists(filepath.Join(rootPath, ".skelly", "skills", "skelly.md")),
+		"context": containsManagedBlock(filepath.Join(rootPath, "CONTEXT.md")),
+		"codex":   containsManagedBlock(filepath.Join(rootPath, "AGENTS.md")),
+		"claude":  containsManagedBlock(filepath.Join(rootPath, "CLAUDE.md")),
+		"cursor":  fileExists(filepath.Join(rootPath, ".cursor", "rules", "skelly-context.mdc")),
+	}
+}
+
+func containsManagedBlock(path string) bool {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return false
+	}
+	text := string(data)
+	return strings.Contains(text, llmManagedBlockStart) && strings.Contains(text, llmManagedBlockEnd)
+}
+
+func fileExists(path string) bool {
+	_, err := os.Stat(path)
+	return err == nil
 }
 
 type enrichScope string
@@ -2323,14 +2757,22 @@ func encodeJSONLines[T any](records []T) ([]byte, error) {
 }
 
 func writeFileIfChanged(path string, data []byte) error {
+	_, err := writeFileIfChangedTracked(path, data)
+	return err
+}
+
+func writeFileIfChangedTracked(path string, data []byte) (bool, error) {
 	existing, err := os.ReadFile(path)
 	if err == nil && bytes.Equal(existing, data) {
-		return nil
+		return false, nil
 	}
 	if err != nil && !os.IsNotExist(err) {
-		return err
+		return false, err
 	}
-	return os.WriteFile(path, data, 0644)
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return false, err
+	}
+	return true, nil
 }
 
 func writeFileIfMissing(path string, data []byte, perm os.FileMode) error {
