@@ -194,6 +194,153 @@ func B() {}
 	})
 }
 
+func TestGenerateWritesNavigationIndex(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
+
+func A() { B() }
+func B() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		if err := runInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("runInit failed: %v", err)
+		}
+		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("runGenerate failed: %v", err)
+		}
+
+		indexPath := filepath.Join(root, output.ContextDir, navigationIndexFile)
+		assertExists(t, indexPath)
+
+		data, err := os.ReadFile(indexPath)
+		if err != nil {
+			t.Fatalf("failed to read navigation index: %v", err)
+		}
+		var payload navigationIndex
+		if err := json.Unmarshal(data, &payload); err != nil {
+			t.Fatalf("failed to decode navigation index: %v", err)
+		}
+		if payload.Version == "" {
+			t.Fatalf("expected navigation index version to be set")
+		}
+		if len(payload.Nodes) < 2 {
+			t.Fatalf("expected navigation index to include at least 2 nodes, got %d", len(payload.Nodes))
+		}
+	})
+}
+
+func TestNavigationCommandsJSON(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
+
+func Start() { Mid() }
+func Mid() { End() }
+func End() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		if err := runInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("runInit failed: %v", err)
+		}
+		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("runGenerate failed: %v", err)
+		}
+
+		symbolCmd := newSymbolCmdForTest()
+		mustSetFlag(t, symbolCmd, "json", "true")
+		var symbolPayload struct {
+			Query   string                   `json:"query"`
+			Matches []navigationSymbolRecord `json:"matches"`
+		}
+		stdout := captureStdout(t, func() {
+			if err := runSymbol(symbolCmd, []string{"Mid"}); err != nil {
+				t.Fatalf("runSymbol failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &symbolPayload); err != nil {
+			t.Fatalf("failed to decode symbol output: %v\noutput=%s", err, stdout)
+		}
+		if len(symbolPayload.Matches) != 1 {
+			t.Fatalf("expected one symbol match for Mid, got %#v", symbolPayload.Matches)
+		}
+		midID := symbolPayload.Matches[0].ID
+
+		callersCmd := newCallersCmdForTest()
+		mustSetFlag(t, callersCmd, "json", "true")
+		var callersPayload struct {
+			Callers []navigationEdgeRecord `json:"callers"`
+		}
+		stdout = captureStdout(t, func() {
+			if err := runCallers(callersCmd, []string{"Mid"}); err != nil {
+				t.Fatalf("runCallers failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &callersPayload); err != nil {
+			t.Fatalf("failed to decode callers output: %v\noutput=%s", err, stdout)
+		}
+		if len(callersPayload.Callers) != 1 || callersPayload.Callers[0].Symbol.Name != "Start" {
+			t.Fatalf("expected Start to call Mid, got %#v", callersPayload.Callers)
+		}
+
+		calleesCmd := newCalleesCmdForTest()
+		mustSetFlag(t, calleesCmd, "json", "true")
+		var calleesPayload struct {
+			Callees []navigationEdgeRecord `json:"callees"`
+		}
+		stdout = captureStdout(t, func() {
+			if err := runCallees(calleesCmd, []string{midID}); err != nil {
+				t.Fatalf("runCallees failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &calleesPayload); err != nil {
+			t.Fatalf("failed to decode callees output: %v\noutput=%s", err, stdout)
+		}
+		if len(calleesPayload.Callees) != 1 || calleesPayload.Callees[0].Symbol.Name != "End" {
+			t.Fatalf("expected End as callee of Mid, got %#v", calleesPayload.Callees)
+		}
+
+		traceCmd := newTraceCmdForTest()
+		mustSetFlag(t, traceCmd, "depth", "2")
+		mustSetFlag(t, traceCmd, "json", "true")
+		var tracePayload struct {
+			Hops []navigationTraceHop `json:"hops"`
+		}
+		stdout = captureStdout(t, func() {
+			if err := runTrace(traceCmd, []string{"Start"}); err != nil {
+				t.Fatalf("runTrace failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &tracePayload); err != nil {
+			t.Fatalf("failed to decode trace output: %v\noutput=%s", err, stdout)
+		}
+		if len(tracePayload.Hops) < 2 {
+			t.Fatalf("expected at least two hops in trace, got %#v", tracePayload.Hops)
+		}
+
+		pathCmd := newPathCmdForTest()
+		mustSetFlag(t, pathCmd, "json", "true")
+		var pathPayload struct {
+			Length int                      `json:"length"`
+			Path   []navigationSymbolRecord `json:"path"`
+		}
+		stdout = captureStdout(t, func() {
+			if err := runPath(pathCmd, []string{"Start", "End"}); err != nil {
+				t.Fatalf("runPath failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &pathPayload); err != nil {
+			t.Fatalf("failed to decode path output: %v\noutput=%s", err, stdout)
+		}
+		if pathPayload.Length != 2 {
+			t.Fatalf("expected path length 2, got %#v", pathPayload)
+		}
+		if len(pathPayload.Path) != 3 {
+			t.Fatalf("expected path with 3 symbols, got %#v", pathPayload.Path)
+		}
+	})
+}
+
 func TestGenerateParsesSupportedLanguageFixtures(t *testing.T) {
 	root := t.TempDir()
 	mustWriteFile(t, filepath.Join(root, "go", "main.go"), `package demo
@@ -662,6 +809,37 @@ func newSetupCmdForTest() *cobra.Command {
 }
 
 func newDoctorCmdForTest() *cobra.Command {
+	cmd := &cobra.Command{}
+	cmd.Flags().Bool("json", false, "")
+	return cmd
+}
+
+func newSymbolCmdForTest() *cobra.Command {
+	cmd := &cobra.Command{}
+	cmd.Flags().Bool("json", false, "")
+	return cmd
+}
+
+func newCallersCmdForTest() *cobra.Command {
+	cmd := &cobra.Command{}
+	cmd.Flags().Bool("json", false, "")
+	return cmd
+}
+
+func newCalleesCmdForTest() *cobra.Command {
+	cmd := &cobra.Command{}
+	cmd.Flags().Bool("json", false, "")
+	return cmd
+}
+
+func newTraceCmdForTest() *cobra.Command {
+	cmd := &cobra.Command{}
+	cmd.Flags().Int("depth", 2, "")
+	cmd.Flags().Bool("json", false, "")
+	return cmd
+}
+
+func newPathCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().Bool("json", false, "")
 	return cmd

@@ -34,6 +34,8 @@ const (
 	hookStart = "# >>> skelly update hook >>>"
 	hookEnd   = "# <<< skelly update hook <<<"
 
+	navigationIndexFile = "nav-index.json"
+
 	llmManagedBlockStart = "<!-- skelly:managed:start -->"
 	llmManagedBlockEnd   = "<!-- skelly:managed:end -->"
 )
@@ -149,6 +151,47 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 	}
 	doctorCmd.Flags().Bool("json", false, "Print machine-readable doctor output")
 
+	symbolCmd := &cobra.Command{
+		Use:   "symbol <name|id>",
+		Short: "Lookup symbols by name or stable ID",
+		Args:  cobra.ExactArgs(1),
+		RunE:  runSymbol,
+	}
+	symbolCmd.Flags().Bool("json", false, "Print machine-readable symbol matches")
+
+	callersCmd := &cobra.Command{
+		Use:   "callers <name|id>",
+		Short: "Show direct callers of a symbol",
+		Args:  cobra.ExactArgs(1),
+		RunE:  runCallers,
+	}
+	callersCmd.Flags().Bool("json", false, "Print machine-readable caller results")
+
+	calleesCmd := &cobra.Command{
+		Use:   "callees <name|id>",
+		Short: "Show direct callees of a symbol",
+		Args:  cobra.ExactArgs(1),
+		RunE:  runCallees,
+	}
+	calleesCmd.Flags().Bool("json", false, "Print machine-readable callee results")
+
+	traceCmd := &cobra.Command{
+		Use:   "trace <name|id>",
+		Short: "Trace outgoing calls from a symbol up to depth N",
+		Args:  cobra.ExactArgs(1),
+		RunE:  runTrace,
+	}
+	traceCmd.Flags().Int("depth", 2, "Traversal depth (>=1)")
+	traceCmd.Flags().Bool("json", false, "Print machine-readable trace results")
+
+	pathCmd := &cobra.Command{
+		Use:   "path <from> <to>",
+		Short: "Find shortest call path between two symbols",
+		Args:  cobra.ExactArgs(2),
+		RunE:  runPath,
+	}
+	pathCmd.Flags().Bool("json", false, "Print machine-readable path results")
+
 	enrichCmd := &cobra.Command{
 		Use:   "enrich",
 		Short: "Generate symbol summaries for changed files or the full codebase",
@@ -177,7 +220,22 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		},
 	}
 
-	rootCmd.AddCommand(initCmd, setupCmd, generateCmd, updateCmd, statusCmd, doctorCmd, enrichCmd, installHookCmd, versionCmd)
+	rootCmd.AddCommand(
+		initCmd,
+		setupCmd,
+		generateCmd,
+		updateCmd,
+		statusCmd,
+		doctorCmd,
+		symbolCmd,
+		callersCmd,
+		calleesCmd,
+		traceCmd,
+		pathCmd,
+		enrichCmd,
+		installHookCmd,
+		versionCmd,
+	)
 
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
@@ -647,6 +705,9 @@ func generateContext(rootPath string, languageFilter map[string]bool, format out
 	if err := writer.WriteAll(g, parseResult, format); err != nil {
 		return fmt.Errorf("failed to write output files: %w", err)
 	}
+	if err := writeNavigationIndex(contextDir, g); err != nil {
+		return fmt.Errorf("failed to write navigation index: %w", err)
+	}
 
 	if err := persistState(contextDir, parseResult.Files, g, format); err != nil {
 		return fmt.Errorf("failed to persist state: %w", err)
@@ -862,6 +923,9 @@ func runUpdate(cmd *cobra.Command, args []string) error {
 			if err := writer.WriteAll(g, parseResult, format); err != nil {
 				return fmt.Errorf("failed to write output files: %w", err)
 			}
+			if err := writeNavigationIndex(contextDir, g); err != nil {
+				return fmt.Errorf("failed to write navigation index: %w", err)
+			}
 			if err := recordOutputHashes(st, contextDir, format); err != nil {
 				return fmt.Errorf("failed to update output hashes: %w", err)
 			}
@@ -927,6 +991,9 @@ func runUpdate(cmd *cobra.Command, args []string) error {
 	writer := output.NewWriter(rootPath)
 	if err := writer.WriteAll(g, parseResult, format); err != nil {
 		return fmt.Errorf("failed to write output files: %w", err)
+	}
+	if err := writeNavigationIndex(contextDir, g); err != nil {
+		return fmt.Errorf("failed to write navigation index: %w", err)
 	}
 	if err := recordOutputHashes(st, contextDir, format); err != nil {
 		return fmt.Errorf("failed to update output hashes: %w", err)
@@ -1147,6 +1214,575 @@ func runDoctor(cmd *cobra.Command, args []string) error {
 		}
 	}
 	return nil
+}
+
+type navigationIndex struct {
+	Version string                `json:"version"`
+	Nodes   []navigationIndexNode `json:"nodes"`
+}
+
+type navigationIndexNode struct {
+	ID            string                     `json:"id"`
+	Name          string                     `json:"name"`
+	Kind          string                     `json:"kind"`
+	Signature     string                     `json:"signature,omitempty"`
+	File          string                     `json:"file"`
+	Line          int                        `json:"line"`
+	OutEdges      []string                   `json:"out_edges,omitempty"`
+	InEdges       []string                   `json:"in_edges,omitempty"`
+	OutConfidence []navigationEdgeConfidence `json:"out_confidence,omitempty"`
+}
+
+type navigationEdgeConfidence struct {
+	TargetID   string `json:"target_id"`
+	Confidence string `json:"confidence,omitempty"`
+}
+
+type navigationLookup struct {
+	byID   map[string]*navigationIndexNode
+	byName map[string][]string
+}
+
+type navigationSymbolRecord struct {
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	Kind      string `json:"kind"`
+	Signature string `json:"signature,omitempty"`
+	File      string `json:"file"`
+	Line      int    `json:"line"`
+}
+
+type navigationEdgeRecord struct {
+	Symbol     navigationSymbolRecord `json:"symbol"`
+	Confidence string                 `json:"confidence,omitempty"`
+}
+
+type navigationTraceHop struct {
+	Depth      int                    `json:"depth"`
+	From       navigationSymbolRecord `json:"from"`
+	To         navigationSymbolRecord `json:"to"`
+	Confidence string                 `json:"confidence,omitempty"`
+}
+
+func writeNavigationIndex(contextDir string, g *graph.Graph) error {
+	if err := os.MkdirAll(contextDir, 0755); err != nil {
+		return err
+	}
+
+	ids := make([]string, 0, len(g.Nodes))
+	for id := range g.Nodes {
+		ids = append(ids, id)
+	}
+	sort.Strings(ids)
+
+	nodes := make([]navigationIndexNode, 0, len(ids))
+	for _, id := range ids {
+		node := g.Nodes[id]
+		outConf := make([]navigationEdgeConfidence, 0, len(node.OutEdges))
+		for _, targetID := range node.OutEdges {
+			outConf = append(outConf, navigationEdgeConfidence{
+				TargetID:   targetID,
+				Confidence: node.OutEdgeConfidence[targetID],
+			})
+		}
+		sort.Slice(outConf, func(i, j int) bool {
+			return outConf[i].TargetID < outConf[j].TargetID
+		})
+
+		nodes = append(nodes, navigationIndexNode{
+			ID:            node.ID,
+			Name:          node.Symbol.Name,
+			Kind:          node.Symbol.Kind.String(),
+			Signature:     node.Symbol.Signature,
+			File:          node.File,
+			Line:          node.Symbol.Line,
+			OutEdges:      append([]string(nil), node.OutEdges...),
+			InEdges:       append([]string(nil), node.InEdges...),
+			OutConfidence: outConf,
+		})
+	}
+
+	index := navigationIndex{
+		Version: "nav-index-v1",
+		Nodes:   nodes,
+	}
+
+	data, err := json.MarshalIndent(index, "", "  ")
+	if err != nil {
+		return err
+	}
+	return writeFileIfChanged(filepath.Join(contextDir, navigationIndexFile), data)
+}
+
+func loadNavigationLookup(rootPath string) (*navigationLookup, error) {
+	path := filepath.Join(rootPath, output.ContextDir, navigationIndexFile)
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil, fmt.Errorf("navigation index missing at %s (run skelly update)", path)
+		}
+		return nil, fmt.Errorf("failed to read navigation index: %w", err)
+	}
+
+	var index navigationIndex
+	if err := json.Unmarshal(data, &index); err != nil {
+		return nil, fmt.Errorf("failed to decode navigation index: %w", err)
+	}
+
+	lookup := &navigationLookup{
+		byID:   make(map[string]*navigationIndexNode, len(index.Nodes)),
+		byName: make(map[string][]string),
+	}
+	for i := range index.Nodes {
+		node := &index.Nodes[i]
+		lookup.byID[node.ID] = node
+		lookup.byName[node.Name] = append(lookup.byName[node.Name], node.ID)
+	}
+	for name := range lookup.byName {
+		sort.Strings(lookup.byName[name])
+	}
+	return lookup, nil
+}
+
+func (l *navigationLookup) resolve(query string) []*navigationIndexNode {
+	query = strings.TrimSpace(query)
+	if query == "" {
+		return nil
+	}
+	if node, ok := l.byID[query]; ok {
+		return []*navigationIndexNode{node}
+	}
+	ids := l.byName[query]
+	out := make([]*navigationIndexNode, 0, len(ids))
+	for _, id := range ids {
+		if node := l.byID[id]; node != nil {
+			out = append(out, node)
+		}
+	}
+	return out
+}
+
+func resolveSingleSymbol(l *navigationLookup, query string) (*navigationIndexNode, error) {
+	matches := l.resolve(query)
+	if len(matches) == 0 {
+		return nil, fmt.Errorf("symbol %q not found", query)
+	}
+	if len(matches) == 1 {
+		return matches[0], nil
+	}
+
+	options := make([]string, 0, len(matches))
+	for _, match := range matches {
+		options = append(options, match.ID)
+	}
+	sort.Strings(options)
+	return nil, fmt.Errorf("symbol %q is ambiguous; use one of: %s", query, strings.Join(options, ", "))
+}
+
+func symbolRecordFromNode(node *navigationIndexNode) navigationSymbolRecord {
+	if node == nil {
+		return navigationSymbolRecord{}
+	}
+	return navigationSymbolRecord{
+		ID:        node.ID,
+		Name:      node.Name,
+		Kind:      node.Kind,
+		Signature: node.Signature,
+		File:      node.File,
+		Line:      node.Line,
+	}
+}
+
+func printJSON(value any) error {
+	encoder := json.NewEncoder(os.Stdout)
+	encoder.SetIndent("", "  ")
+	return encoder.Encode(value)
+}
+
+func runSymbol(cmd *cobra.Command, args []string) error {
+	rootPath, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to resolve working directory: %w", err)
+	}
+	asJSON, err := optionalBoolFlag(cmd, "json", false)
+	if err != nil {
+		return err
+	}
+
+	lookup, err := loadNavigationLookup(rootPath)
+	if err != nil {
+		return err
+	}
+	matches := lookup.resolve(args[0])
+	if len(matches) == 0 {
+		return fmt.Errorf("symbol %q not found", args[0])
+	}
+
+	records := make([]navigationSymbolRecord, 0, len(matches))
+	for _, match := range matches {
+		records = append(records, symbolRecordFromNode(match))
+	}
+
+	if asJSON {
+		return printJSON(map[string]any{
+			"query":   args[0],
+			"matches": records,
+		})
+	}
+
+	fmt.Printf("symbol matches for %q (%d)\n", args[0], len(records))
+	for _, record := range records {
+		fmt.Printf("- %s [%s] %s:%d\n", record.ID, record.Kind, record.File, record.Line)
+		if record.Signature != "" {
+			fmt.Printf("  sig: %s\n", record.Signature)
+		}
+	}
+	return nil
+}
+
+func collectCallers(l *navigationLookup, node *navigationIndexNode) []navigationEdgeRecord {
+	out := make([]navigationEdgeRecord, 0, len(node.InEdges))
+	for _, callerID := range node.InEdges {
+		caller := l.byID[callerID]
+		if caller == nil {
+			continue
+		}
+		out = append(out, navigationEdgeRecord{
+			Symbol:     symbolRecordFromNode(caller),
+			Confidence: l.edgeConfidence(caller.ID, node.ID),
+		})
+	}
+	sort.Slice(out, func(i, j int) bool {
+		return out[i].Symbol.ID < out[j].Symbol.ID
+	})
+	return out
+}
+
+func collectCallees(l *navigationLookup, node *navigationIndexNode) []navigationEdgeRecord {
+	out := make([]navigationEdgeRecord, 0, len(node.OutEdges))
+	for _, calleeID := range node.OutEdges {
+		callee := l.byID[calleeID]
+		if callee == nil {
+			continue
+		}
+		out = append(out, navigationEdgeRecord{
+			Symbol:     symbolRecordFromNode(callee),
+			Confidence: l.edgeConfidence(node.ID, callee.ID),
+		})
+	}
+	sort.Slice(out, func(i, j int) bool {
+		return out[i].Symbol.ID < out[j].Symbol.ID
+	})
+	return out
+}
+
+func (l *navigationLookup) edgeConfidence(fromID, toID string) string {
+	from := l.byID[fromID]
+	if from == nil {
+		return ""
+	}
+	for _, item := range from.OutConfidence {
+		if item.TargetID == toID {
+			return item.Confidence
+		}
+	}
+	return ""
+}
+
+func runCallers(cmd *cobra.Command, args []string) error {
+	rootPath, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to resolve working directory: %w", err)
+	}
+	asJSON, err := optionalBoolFlag(cmd, "json", false)
+	if err != nil {
+		return err
+	}
+
+	lookup, err := loadNavigationLookup(rootPath)
+	if err != nil {
+		return err
+	}
+	node, err := resolveSingleSymbol(lookup, args[0])
+	if err != nil {
+		return err
+	}
+
+	callers := collectCallers(lookup, node)
+	if asJSON {
+		return printJSON(map[string]any{
+			"query":   args[0],
+			"symbol":  symbolRecordFromNode(node),
+			"callers": callers,
+		})
+	}
+
+	fmt.Printf("callers for %s (%d)\n", node.ID, len(callers))
+	if len(callers) == 0 {
+		fmt.Println("no callers found")
+		return nil
+	}
+	for _, caller := range callers {
+		fmt.Printf("- %s [%s] %s:%d", caller.Symbol.ID, caller.Symbol.Kind, caller.Symbol.File, caller.Symbol.Line)
+		if caller.Confidence != "" {
+			fmt.Printf(" (%s)", caller.Confidence)
+		}
+		fmt.Println()
+	}
+	return nil
+}
+
+func runCallees(cmd *cobra.Command, args []string) error {
+	rootPath, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to resolve working directory: %w", err)
+	}
+	asJSON, err := optionalBoolFlag(cmd, "json", false)
+	if err != nil {
+		return err
+	}
+
+	lookup, err := loadNavigationLookup(rootPath)
+	if err != nil {
+		return err
+	}
+	node, err := resolveSingleSymbol(lookup, args[0])
+	if err != nil {
+		return err
+	}
+
+	callees := collectCallees(lookup, node)
+	if asJSON {
+		return printJSON(map[string]any{
+			"query":   args[0],
+			"symbol":  symbolRecordFromNode(node),
+			"callees": callees,
+		})
+	}
+
+	fmt.Printf("callees for %s (%d)\n", node.ID, len(callees))
+	if len(callees) == 0 {
+		fmt.Println("no callees found")
+		return nil
+	}
+	for _, callee := range callees {
+		fmt.Printf("- %s [%s] %s:%d", callee.Symbol.ID, callee.Symbol.Kind, callee.Symbol.File, callee.Symbol.Line)
+		if callee.Confidence != "" {
+			fmt.Printf(" (%s)", callee.Confidence)
+		}
+		fmt.Println()
+	}
+	return nil
+}
+
+func runTrace(cmd *cobra.Command, args []string) error {
+	rootPath, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to resolve working directory: %w", err)
+	}
+	depth, err := cmd.Flags().GetInt("depth")
+	if err != nil {
+		return fmt.Errorf("failed to read --depth flag: %w", err)
+	}
+	if depth < 1 {
+		return fmt.Errorf("--depth must be >= 1")
+	}
+	asJSON, err := optionalBoolFlag(cmd, "json", false)
+	if err != nil {
+		return err
+	}
+
+	lookup, err := loadNavigationLookup(rootPath)
+	if err != nil {
+		return err
+	}
+	startNode, err := resolveSingleSymbol(lookup, args[0])
+	if err != nil {
+		return err
+	}
+
+	type queueItem struct {
+		id    string
+		depth int
+	}
+	queue := []queueItem{{id: startNode.ID, depth: 0}}
+	seenDepth := map[string]int{startNode.ID: 0}
+	hops := make([]navigationTraceHop, 0)
+
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+		if current.depth >= depth {
+			continue
+		}
+
+		fromNode := lookup.byID[current.id]
+		if fromNode == nil {
+			continue
+		}
+		for _, nextID := range fromNode.OutEdges {
+			toNode := lookup.byID[nextID]
+			if toNode == nil {
+				continue
+			}
+			nextDepth := current.depth + 1
+			hops = append(hops, navigationTraceHop{
+				Depth:      nextDepth,
+				From:       symbolRecordFromNode(fromNode),
+				To:         symbolRecordFromNode(toNode),
+				Confidence: lookup.edgeConfidence(fromNode.ID, toNode.ID),
+			})
+			if previousDepth, exists := seenDepth[nextID]; !exists || nextDepth < previousDepth {
+				seenDepth[nextID] = nextDepth
+				queue = append(queue, queueItem{id: nextID, depth: nextDepth})
+			}
+		}
+	}
+
+	sort.Slice(hops, func(i, j int) bool {
+		if hops[i].Depth != hops[j].Depth {
+			return hops[i].Depth < hops[j].Depth
+		}
+		if hops[i].From.ID != hops[j].From.ID {
+			return hops[i].From.ID < hops[j].From.ID
+		}
+		return hops[i].To.ID < hops[j].To.ID
+	})
+
+	if asJSON {
+		return printJSON(map[string]any{
+			"query": args[0],
+			"start": symbolRecordFromNode(startNode),
+			"depth": depth,
+			"hops":  hops,
+		})
+	}
+
+	fmt.Printf("trace from %s depth=%d hops=%d\n", startNode.ID, depth, len(hops))
+	if len(hops) == 0 {
+		fmt.Println("no outgoing hops found")
+		return nil
+	}
+	for _, hop := range hops {
+		fmt.Printf("- d=%d %s -> %s", hop.Depth, hop.From.ID, hop.To.ID)
+		if hop.Confidence != "" {
+			fmt.Printf(" (%s)", hop.Confidence)
+		}
+		fmt.Println()
+	}
+	return nil
+}
+
+func runPath(cmd *cobra.Command, args []string) error {
+	rootPath, err := os.Getwd()
+	if err != nil {
+		return fmt.Errorf("failed to resolve working directory: %w", err)
+	}
+	asJSON, err := optionalBoolFlag(cmd, "json", false)
+	if err != nil {
+		return err
+	}
+
+	lookup, err := loadNavigationLookup(rootPath)
+	if err != nil {
+		return err
+	}
+	fromNode, err := resolveSingleSymbol(lookup, args[0])
+	if err != nil {
+		return err
+	}
+	toNode, err := resolveSingleSymbol(lookup, args[1])
+	if err != nil {
+		return err
+	}
+
+	pathIDs := shortestPath(lookup, fromNode.ID, toNode.ID)
+	if len(pathIDs) == 0 {
+		return fmt.Errorf("no path found between %s and %s", fromNode.ID, toNode.ID)
+	}
+
+	pathNodes := make([]navigationSymbolRecord, 0, len(pathIDs))
+	edges := make([]map[string]string, 0, len(pathIDs)-1)
+	for i, id := range pathIDs {
+		node := lookup.byID[id]
+		if node == nil {
+			continue
+		}
+		pathNodes = append(pathNodes, symbolRecordFromNode(node))
+		if i == 0 {
+			continue
+		}
+		prevID := pathIDs[i-1]
+		edges = append(edges, map[string]string{
+			"from_id":    prevID,
+			"to_id":      id,
+			"confidence": lookup.edgeConfidence(prevID, id),
+		})
+	}
+
+	if asJSON {
+		return printJSON(map[string]any{
+			"from":   symbolRecordFromNode(fromNode),
+			"to":     symbolRecordFromNode(toNode),
+			"length": len(pathNodes) - 1,
+			"path":   pathNodes,
+			"edges":  edges,
+		})
+	}
+
+	fmt.Printf("path %s -> %s length=%d\n", fromNode.ID, toNode.ID, len(pathNodes)-1)
+	for i, node := range pathNodes {
+		fmt.Printf("%d. %s [%s] %s:%d\n", i+1, node.ID, node.Kind, node.File, node.Line)
+	}
+	return nil
+}
+
+func shortestPath(lookup *navigationLookup, fromID, toID string) []string {
+	if fromID == toID {
+		return []string{fromID}
+	}
+
+	queue := []string{fromID}
+	visited := map[string]bool{fromID: true}
+	parent := map[string]string{}
+
+	for len(queue) > 0 {
+		current := queue[0]
+		queue = queue[1:]
+		node := lookup.byID[current]
+		if node == nil {
+			continue
+		}
+		for _, nextID := range node.OutEdges {
+			if visited[nextID] {
+				continue
+			}
+			visited[nextID] = true
+			parent[nextID] = current
+			if nextID == toID {
+				return reconstructPath(parent, fromID, toID)
+			}
+			queue = append(queue, nextID)
+		}
+	}
+
+	return nil
+}
+
+func reconstructPath(parent map[string]string, fromID, toID string) []string {
+	out := []string{toID}
+	for current := toID; current != fromID; {
+		prev, ok := parent[current]
+		if !ok {
+			return nil
+		}
+		out = append(out, prev)
+		current = prev
+	}
+	for i, j := 0, len(out)-1; i < j; i, j = i+1, j-1 {
+		out[i], out[j] = out[j], out[i]
+	}
+	return out
 }
 
 func optionalBoolFlag(cmd *cobra.Command, name string, defaultValue bool) (bool, error) {
@@ -2569,6 +3205,7 @@ func recordOutputHashes(st *state.State, contextDir string, format output.Format
 	default:
 		return fmt.Errorf("unsupported format %q", format)
 	}
+	outputPaths = append(outputPaths, filepath.Join(contextDir, navigationIndexFile))
 
 	for _, outputPath := range outputPaths {
 		hash, err := hashFile(outputPath)
@@ -2663,9 +3300,9 @@ func outputsNeedRefresh(st *state.State, contextDir string, format output.Format
 func requiredOutputFiles(format output.Format) []string {
 	switch format {
 	case output.FormatText:
-		return []string{output.IndexFile, output.GraphFile}
+		return []string{output.IndexFile, output.GraphFile, navigationIndexFile}
 	case output.FormatJSONL:
-		return []string{output.SymbolsFile, output.EdgesFile, output.ManifestFile}
+		return []string{output.SymbolsFile, output.EdgesFile, output.ManifestFile, navigationIndexFile}
 	default:
 		return nil
 	}
