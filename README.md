@@ -29,6 +29,9 @@ skelly setup
 # Initialize .skelly/.context/ in your project
 skelly init
 
+# Initialize + generate LLM adapter files (Codex/Claude/Cursor)
+skelly init --llm codex,claude,cursor
+
 # Generate context files (all supported languages)
 skelly generate
 
@@ -50,17 +53,30 @@ skelly enrich --agent local
 # Enrich all symbols and cap work
 skelly enrich --agent local --scope all --max-symbols 200
 
+# Enrich with PageRank-priority ordering
+skelly enrich --agent local --scope all --order pagerank
+
 # Dry-run target preview
 skelly enrich --agent local --dry-run
 
 # Show what update would regenerate
 skelly status
 
+# Validate setup + staleness + integrations
+skelly doctor
+
 # Explain why each file is impacted
 skelly update --explain
 
 # Machine-readable output for CI
 skelly update --json
+
+# Navigation primitives
+skelly symbol Login
+skelly callers Login
+skelly callees Login
+skelly trace Login --depth 2
+skelly path Login ValidateToken
 
 # Install git pre-commit hook for auto-updates
 skelly install-hook
@@ -78,6 +94,7 @@ skelly install-hook
     ├── symbols.jsonl      # (jsonl format) one symbol record per line
     ├── edges.jsonl        # (jsonl format) one edge record per line
     ├── manifest.json      # (jsonl format) schema version + counts + hashes
+    ├── nav-index.json     # navigation index for symbol/callers/callees/trace/path
     └── enrich.jsonl       # (enrich command) symbol enrichment records
 ```
 
@@ -123,6 +140,10 @@ Observed:
 - Python
 - Ruby
 - TypeScript/JavaScript
+
+## Architecture
+
+- Pipeline map and component boundaries: `docs/ARCHITECTURE.md`
 
 ## Configuration
 
@@ -190,12 +211,18 @@ If `.skelly/agents.yaml` is missing, `skelly enrich` auto-creates:
 
 - Incremental updates parse only changed/new files and reuse cached symbol snapshots for unchanged files.
 - `--format text|jsonl` is supported for `generate` and `update` (default: `text`).
-- `enrich` supports `--agent`, `--scope changed|all`, `--max-symbols`, `--timeout`, and `--dry-run`.
+- `enrich` supports `--agent`, `--scope changed|all`, `--order source|pagerank`, `--max-symbols`, `--timeout`, and `--dry-run`.
 - `setup` is an interactive shortcut for first-time usage:
   - prompts for agent profile (or accepts `--agent`)
+  - prompts whether to run first-run full enrich (`scope=all`) or changed-only
   - runs `generate`
-  - runs `enrich` (default scope is `all` so the first run produces enrichment output)
-- `enrich` writes `.skelly/.context/enrich.jsonl` with structured input + machine-readable output fields (`summary`, `purpose`, `side_effects`, `confidence`).
+  - runs `enrich`
+- `init --llm ...` generates managed LLM adapter files (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules/skelly-context.mdc`) plus `CONTEXT.md`.
+- `doctor` reports setup health, stale context, and suggested remediation commands.
+- Navigation commands (`symbol`, `callers`, `callees`, `trace`, `path`) read from `.skelly/.context/nav-index.json`.
+- `enrich` uses cache keys: `symbol_id + file_hash + prompt_version + agent_profile + model`.
+- `enrich` stores cache/output records in `.skelly/.context/enrich.jsonl` and re-enriches only misses/stale entries.
+- `enrich` tolerates partial agent failures and records per-symbol error status instead of failing the whole run.
 - State includes parser versioning, per-file hashes, per-file symbols/imports, dependency links, and generated output hashes.
 - Calls are stored as structured call sites (name, qualifier/receiver, arity, line, raw expression).
 - Graph edges include confidence metadata (`resolved`, `heuristic`); ambiguous candidates stay unresolved (no edge).
@@ -213,7 +240,12 @@ If `.skelly/agents.yaml` is missing, `skelly enrich` auto-creates:
 Run:
 
 ```bash
+# Parse + graph throughput
 go test -bench BenchmarkParseAndGraph_MediumRepo ./internal/bench -run ^$ -benchmem
+
+# Resolver quality and navigation usability metrics
+go test -bench BenchmarkResolverQuality_Curated ./internal/bench -run ^$ -benchmem
+go test -bench BenchmarkNavigationUsability_CommonQueries ./internal/bench -run ^$ -benchmem
 ```
 
 ## v0.1 Exit Criteria
@@ -222,6 +254,16 @@ go test -bench BenchmarkParseAndGraph_MediumRepo ./internal/bench -run ^$ -bench
 - Deterministic: repeated runs produce stable IDs and stable output files.
 - Incremental: `skelly update` parses changed files and reuses cached snapshots.
 - Operational: CI runs `go vet`, `go test`, lint, and snapshot-style integration checks.
+
+## v0.2 Exit Criteria
+
+- Correctness hardening fixes are covered by regression tests.
+- DX setup supports `init --llm ...` and `doctor`.
+- Navigation primitives (`symbol`, `callers`, `callees`, `trace`, `path`) are available with `--json`.
+- Enrich caching is active with stable cache keys and partial-failure resilience.
+- Benchmarks report:
+  - resolver precision/recall on curated fixtures
+  - query-pack token footprint for common navigation flows
 
 ## Roadmap
 

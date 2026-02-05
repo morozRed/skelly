@@ -474,9 +474,11 @@ func parseJSImportAliases(raw string) []string {
 					continue
 				}
 				member = strings.TrimSpace(strings.TrimPrefix(member, "type "))
-				if strings.Contains(member, " as ") {
-					asParts := strings.Split(member, " as ")
-					member = strings.TrimSpace(asParts[len(asParts)-1])
+				base, alias := splitAliasByAs(member)
+				if alias != "" {
+					member = alias
+				} else {
+					member = base
 				}
 				if member != "" {
 					aliases = append(aliases, member)

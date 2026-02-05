@@ -39,6 +39,24 @@ func TestImpactedFilesClosure(t *testing.T) {
 	}
 }
 
+func TestMigrateStateSetsOutputVersion(t *testing.T) {
+	s := &State{
+		Version:       "1",
+		ParserVersion: "",
+		OutputVersion: "",
+		Files:         map[string]FileState{},
+	}
+
+	migrateState(s)
+
+	if s.OutputVersion != CurrentOutputVersion {
+		t.Fatalf("expected output version %q, got %q", CurrentOutputVersion, s.OutputVersion)
+	}
+	if s.ParserVersion != CurrentParserVersion {
+		t.Fatalf("expected parser version %q, got %q", CurrentParserVersion, s.ParserVersion)
+	}
+}
+
 func expectSet(t *testing.T, got, want []string) {
 	t.Helper()
 	if len(got) != len(want) {

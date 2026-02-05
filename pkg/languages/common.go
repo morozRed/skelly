@@ -93,6 +93,20 @@ func mergeImportAliases(dst map[string]string, src map[string]string) map[string
 	return dst
 }
 
+func splitAliasByAs(raw string) (base string, alias string) {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return "", ""
+	}
+	parts := strings.Split(raw, " as ")
+	if len(parts) == 1 {
+		return strings.TrimSpace(parts[0]), ""
+	}
+	base = strings.TrimSpace(strings.Join(parts[:len(parts)-1], " as "))
+	alias = strings.TrimSpace(parts[len(parts)-1])
+	return base, alias
+}
+
 func strconvInt(v int) string {
 	return strconv.Itoa(v)
 }

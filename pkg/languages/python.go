@@ -359,11 +359,7 @@ func parsePythonAliasedImport(raw string) (module, alias string) {
 	if raw == "" {
 		return "", ""
 	}
-	parts := strings.Split(raw, " as ")
-	module = strings.TrimSpace(parts[0])
-	if len(parts) > 1 {
-		alias = strings.TrimSpace(parts[1])
-	}
+	module, alias = splitAliasByAs(raw)
 	if alias == "" {
 		alias = defaultImportAlias(module)
 	}

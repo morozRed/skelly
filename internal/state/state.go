@@ -14,6 +14,7 @@ const (
 	StateFile            = ".state.json"
 	CurrentStateVersion  = "2"
 	CurrentParserVersion = "tree-sitter-v1"
+	CurrentOutputVersion = "context-v1"
 )
 
 // FileState tracks the state of a single file
@@ -31,6 +32,7 @@ type FileState struct {
 type State struct {
 	Version       string               `json:"version"`
 	ParserVersion string               `json:"parser_version,omitempty"`
+	OutputVersion string               `json:"output_version,omitempty"`
 	UpdatedAt     time.Time            `json:"updated_at"`
 	Files         map[string]FileState `json:"files"`
 	OutputHashes  map[string]string    `json:"output_hashes,omitempty"`
@@ -41,6 +43,7 @@ func NewState() *State {
 	return &State{
 		Version:       CurrentStateVersion,
 		ParserVersion: CurrentParserVersion,
+		OutputVersion: CurrentOutputVersion,
 		Files:         make(map[string]FileState),
 		OutputHashes:  make(map[string]string),
 	}
@@ -75,6 +78,9 @@ func (s *State) Save(contextDir string) error {
 	}
 	if s.ParserVersion == "" {
 		s.ParserVersion = CurrentParserVersion
+	}
+	if s.OutputVersion == "" {
+		s.OutputVersion = CurrentOutputVersion
 	}
 	if s.Files == nil {
 		s.Files = make(map[string]FileState)
@@ -231,6 +237,9 @@ func migrateState(s *State) {
 	}
 	if s.ParserVersion == "" {
 		s.ParserVersion = CurrentParserVersion
+	}
+	if s.OutputVersion == "" {
+		s.OutputVersion = CurrentOutputVersion
 	}
 
 	switch s.Version {

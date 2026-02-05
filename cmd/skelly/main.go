@@ -938,6 +938,15 @@ func runUpdate(cmd *cobra.Command, args []string) error {
 		)
 		return generateContext(rootPath, nil, format, asJSON)
 	}
+	if st.OutputVersion != state.CurrentOutputVersion {
+		fmt.Fprintf(
+			os.Stderr,
+			"warning: output schema version changed (%s -> %s); running full regenerate\n",
+			st.OutputVersion,
+			state.CurrentOutputVersion,
+		)
+		return generateContext(rootPath, nil, format, asJSON)
+	}
 
 	currentHashes, err := scanFileHashes(rootPath, registry, ignoreRules)
 	if err != nil {
