@@ -126,7 +126,7 @@ type FileSymbols struct {
 	Language      string
 	Symbols       []Symbol
 	Imports       []string          // imported modules/packages
-	ImportAliases map[string]string // alias -> module/package path
+	ImportAliases map[string]string // alias -> import target (module/package path, optionally module#symbol)
 	Hash          string            // file content hash for incremental updates
 }
 
