@@ -662,6 +662,103 @@ func B() {}
 	})
 }
 
+func TestEnrichCacheHitMissBehavior(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
+
+func A() { B() }
+func B() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		if err := runInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("runInit failed: %v", err)
+		}
+		mustWriteAgentProfile(t, root)
+		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("runGenerate failed: %v", err)
+		}
+
+		enrichCmd := newEnrichCmdForTest()
+		mustSetFlag(t, enrichCmd, "agent", "local")
+		mustSetFlag(t, enrichCmd, "scope", "all")
+		mustSetFlag(t, enrichCmd, "max-symbols", "1")
+		mustSetFlag(t, enrichCmd, "json", "true")
+
+		var first EnrichRunSummary
+		stdout := captureStdout(t, func() {
+			if err := runEnrich(enrichCmd, nil); err != nil {
+				t.Fatalf("first runEnrich failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &first); err != nil {
+			t.Fatalf("failed to decode first enrich summary: %v\noutput=%s", err, stdout)
+		}
+		if first.CacheMisses == 0 {
+			t.Fatalf("expected first enrich run to contain cache misses, got %+v", first)
+		}
+
+		var second EnrichRunSummary
+		stdout = captureStdout(t, func() {
+			if err := runEnrich(enrichCmd, nil); err != nil {
+				t.Fatalf("second runEnrich failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &second); err != nil {
+			t.Fatalf("failed to decode second enrich summary: %v\noutput=%s", err, stdout)
+		}
+		if second.CacheHits == 0 {
+			t.Fatalf("expected second enrich run to contain cache hits, got %+v", second)
+		}
+	})
+}
+
+func TestEnrichHandlesPartialAgentFailures(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
+
+func A() {}
+func B() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		if err := runInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("runInit failed: %v", err)
+		}
+		mustWriteFlakyAgentProfile(t, root)
+		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("runGenerate failed: %v", err)
+		}
+
+		enrichCmd := newEnrichCmdForTest()
+		mustSetFlag(t, enrichCmd, "agent", "flaky")
+		mustSetFlag(t, enrichCmd, "scope", "all")
+		mustSetFlag(t, enrichCmd, "max-symbols", "2")
+		mustSetFlag(t, enrichCmd, "json", "true")
+
+		var summary EnrichRunSummary
+		stdout := captureStdout(t, func() {
+			if err := runEnrich(enrichCmd, nil); err != nil {
+				t.Fatalf("runEnrich with flaky agent failed unexpectedly: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &summary); err != nil {
+			t.Fatalf("failed to decode enrich summary: %v\noutput=%s", err, stdout)
+		}
+		if summary.Failed == 0 || summary.Succeeded == 0 {
+			t.Fatalf("expected partial success and failure, got %+v", summary)
+		}
+
+		data, err := os.ReadFile(filepath.Join(root, output.ContextDir, "enrich.jsonl"))
+		if err != nil {
+			t.Fatalf("failed to read enrich.jsonl: %v", err)
+		}
+		if !strings.Contains(string(data), `"status":"error"`) {
+			t.Fatalf("expected enrich cache to include error status entries, got:\n%s", string(data))
+		}
+	})
+}
+
 func TestEnrichAutoCreatesDefaultAgentProfile(t *testing.T) {
 	root := t.TempDir()
 	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
@@ -791,6 +888,7 @@ func newEnrichCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().String("agent", "", "")
 	cmd.Flags().String("scope", "changed", "")
+	cmd.Flags().String("order", string(enrichOrderSource), "")
 	cmd.Flags().Int("max-symbols", 200, "")
 	cmd.Flags().Duration("timeout", 30*time.Second, "")
 	cmd.Flags().Bool("dry-run", false, "")
@@ -802,6 +900,7 @@ func newSetupCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().String("agent", "", "")
 	cmd.Flags().String("scope", "all", "")
+	cmd.Flags().String("order", string(enrichOrderSource), "")
 	cmd.Flags().Int("max-symbols", 200, "")
 	cmd.Flags().Duration("timeout", 30*time.Second, "")
 	cmd.Flags().String("format", "text", "")
@@ -1027,6 +1126,7 @@ response = {
     "side_effects": "None",
     "confidence": "low",
 }
+
 print(json.dumps(response))
 `)
 	mustWriteFile(t, filepath.Join(root, ".skelly", "agents.yaml"), `profiles:
@@ -1035,5 +1135,35 @@ print(json.dumps(response))
     timeout: 15s
     prompt_template: |
       Summarize {{ .Symbol.Name }} now
+`)
+}
+
+func mustWriteFlakyAgentProfile(t *testing.T, root string) {
+	t.Helper()
+
+	mustWriteFile(t, filepath.Join(root, ".skelly", "flaky_agent.py"), `#!/usr/bin/env python3
+import json
+import sys
+
+req = json.load(sys.stdin)
+symbol = req.get("input", {}).get("symbol", {})
+name = symbol.get("name", "")
+if name == "B":
+    print("not-json")
+    sys.exit(0)
+
+print(json.dumps({
+    "summary": f"Summary for {name}",
+    "purpose": f"Purpose for {name}",
+    "side_effects": "No side effects",
+    "confidence": "medium"
+}))
+`)
+
+	mustWriteFile(t, filepath.Join(root, ".skelly", "agents.yaml"), `profiles:
+  flaky:
+    command: ["python3", ".skelly/flaky_agent.py"]
+    prompt_template: |
+      Summarize {{ .Symbol.Name }}
 `)
 }

@@ -60,16 +60,21 @@ type RunSummary struct {
 }
 
 type EnrichRunSummary struct {
-	Mode       string   `json:"mode"`
-	Agent      string   `json:"agent"`
-	Scope      string   `json:"scope"`
-	RootPath   string   `json:"root_path"`
-	OutputFile string   `json:"output_file,omitempty"`
-	Files      int      `json:"files"`
-	Symbols    int      `json:"symbols"`
-	DryRun     bool     `json:"dry_run"`
-	DurationMS int64    `json:"duration_ms"`
-	Targets    []string `json:"targets,omitempty"`
+	Mode        string   `json:"mode"`
+	Agent       string   `json:"agent"`
+	Scope       string   `json:"scope"`
+	Order       string   `json:"order,omitempty"`
+	RootPath    string   `json:"root_path"`
+	OutputFile  string   `json:"output_file,omitempty"`
+	Files       int      `json:"files"`
+	Symbols     int      `json:"symbols"`
+	Succeeded   int      `json:"succeeded,omitempty"`
+	Failed      int      `json:"failed,omitempty"`
+	CacheHits   int      `json:"cache_hits,omitempty"`
+	CacheMisses int      `json:"cache_misses,omitempty"`
+	DryRun      bool     `json:"dry_run"`
+	DurationMS  int64    `json:"duration_ms"`
+	Targets     []string `json:"targets,omitempty"`
 }
 
 type DoctorSummary struct {
@@ -112,6 +117,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 	}
 	setupCmd.Flags().String("agent", "", "Agent profile name (prompted when omitted)")
 	setupCmd.Flags().String("scope", string(enrichScopeAll), "Enrichment scope: changed|all")
+	setupCmd.Flags().String("order", string(enrichOrderSource), "Enrichment order: source|pagerank")
 	setupCmd.Flags().Int("max-symbols", 200, "Maximum number of symbols to enrich")
 	setupCmd.Flags().Duration("timeout", 30*time.Second, "Max enrichment runtime")
 	setupCmd.Flags().String("format", string(output.FormatText), "Generate output format: text|jsonl")
@@ -199,6 +205,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 	}
 	enrichCmd.Flags().String("agent", "", "Agent profile name (required)")
 	enrichCmd.Flags().String("scope", "changed", "Enrichment scope: changed|all")
+	enrichCmd.Flags().String("order", string(enrichOrderSource), "Enrichment order: source|pagerank")
 	enrichCmd.Flags().Int("max-symbols", 200, "Maximum number of symbols to enrich")
 	enrichCmd.Flags().Duration("timeout", 30*time.Second, "Max enrichment runtime")
 	enrichCmd.Flags().Bool("dry-run", false, "Preview enrich targets without writing output")
@@ -511,6 +518,10 @@ func runSetup(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	order, err := parseEnrichOrder(cmd)
+	if err != nil {
+		return err
+	}
 	maxSymbols, err := cmd.Flags().GetInt("max-symbols")
 	if err != nil {
 		return fmt.Errorf("failed to read --max-symbols flag: %w", err)
@@ -554,7 +565,19 @@ func runSetup(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("agent profile %q not found in %s (available: %s)", agent, agentProfilesPath(rootPath), strings.Join(sortedProfileNames(profiles), ", "))
 	}
 
-	fmt.Printf("setup: agent=%s scope=%s format=%s\n", agent, scope, format)
+	if stdinIsInteractive() && cmd.Flags().Lookup("scope") != nil && !cmd.Flags().Changed("scope") {
+		runAll, err := promptYesNo("setup: run first-run enrich for all symbols now? [Y/n]: ", true)
+		if err != nil {
+			return err
+		}
+		if runAll {
+			scope = enrichScopeAll
+		} else {
+			scope = enrichScopeChanged
+		}
+	}
+
+	fmt.Printf("setup: agent=%s scope=%s order=%s format=%s\n", agent, scope, order, format)
 	fmt.Println("setup: running generate...")
 	if err := generateContext(rootPath, nil, format, false); err != nil {
 		return err
@@ -564,6 +587,7 @@ func runSetup(cmd *cobra.Command, args []string) error {
 	enrichCmd := &cobra.Command{}
 	enrichCmd.Flags().String("agent", "", "")
 	enrichCmd.Flags().String("scope", "changed", "")
+	enrichCmd.Flags().String("order", string(enrichOrderSource), "")
 	enrichCmd.Flags().Int("max-symbols", 200, "")
 	enrichCmd.Flags().Duration("timeout", 30*time.Second, "")
 	enrichCmd.Flags().Bool("dry-run", false, "")
@@ -572,6 +596,9 @@ func runSetup(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	if err := enrichCmd.Flags().Set("scope", string(scope)); err != nil {
+		return err
+	}
+	if err := enrichCmd.Flags().Set("order", string(order)); err != nil {
 		return err
 	}
 	if err := enrichCmd.Flags().Set("max-symbols", strconv.Itoa(maxSymbols)); err != nil {
@@ -634,6 +661,30 @@ func chooseSetupAgentProfile(profiles map[string]agentProfile) (string, error) {
 		return selection, nil
 	}
 	return "", fmt.Errorf("unknown agent profile %q (available: %s)", selection, strings.Join(names, ", "))
+}
+
+func promptYesNo(prompt string, defaultYes bool) (bool, error) {
+	if !stdinIsInteractive() {
+		return defaultYes, nil
+	}
+	fmt.Print(prompt)
+	reader := bufio.NewReader(os.Stdin)
+	value, err := reader.ReadString('\n')
+	if err != nil && !errors.Is(err, io.EOF) {
+		return false, fmt.Errorf("failed to read selection: %w", err)
+	}
+	value = strings.ToLower(strings.TrimSpace(value))
+	if value == "" {
+		return defaultYes, nil
+	}
+	switch value {
+	case "y", "yes":
+		return true, nil
+	case "n", "no":
+		return false, nil
+	default:
+		return defaultYes, nil
+	}
 }
 
 func stdinIsInteractive() bool {
@@ -1840,21 +1891,35 @@ func fileExists(path string) bool {
 }
 
 type enrichScope string
+type enrichOrder string
 
 const (
-	enrichScopeChanged enrichScope = "changed"
-	enrichScopeAll     enrichScope = "all"
-	enrichOutputFile               = "enrich.jsonl"
+	enrichScopeChanged  enrichScope = "changed"
+	enrichScopeAll      enrichScope = "all"
+	enrichOutputFile                = "enrich.jsonl"
+	enrichSchemaVersion             = "enrich-output-v1"
+)
+
+const (
+	enrichOrderSource   enrichOrder = "source"
+	enrichOrderPageRank enrichOrder = "pagerank"
 )
 
 type enrichRecord struct {
-	SymbolID    string             `json:"symbol_id"`
-	Agent       string             `json:"agent"`
-	Scope       string             `json:"scope"`
-	FileHash    string             `json:"file_hash"`
-	Input       enrichInputPayload `json:"input"`
-	Output      enrichOutput       `json:"output"`
-	GeneratedAt string             `json:"generated_at"`
+	SymbolID      string             `json:"symbol_id"`
+	Agent         string             `json:"agent"`
+	AgentProfile  string             `json:"agent_profile,omitempty"`
+	Model         string             `json:"model,omitempty"`
+	PromptVersion string             `json:"prompt_version,omitempty"`
+	CacheKey      string             `json:"cache_key,omitempty"`
+	Scope         string             `json:"scope"`
+	FileHash      string             `json:"file_hash"`
+	Input         enrichInputPayload `json:"input"`
+	Output        enrichOutput       `json:"output,omitempty"`
+	Status        string             `json:"status,omitempty"`
+	Error         string             `json:"error,omitempty"`
+	GeneratedAt   string             `json:"generated_at,omitempty"`
+	UpdatedAt     string             `json:"updated_at,omitempty"`
 }
 
 type enrichInputPayload struct {
@@ -1921,6 +1986,10 @@ func runEnrich(cmd *cobra.Command, args []string) error {
 	}
 
 	scope, err := parseEnrichScope(cmd)
+	if err != nil {
+		return err
+	}
+	order, err := parseEnrichOrder(cmd)
 	if err != nil {
 		return err
 	}
@@ -1995,6 +2064,7 @@ func runEnrich(cmd *cobra.Command, args []string) error {
 			Mode:       "enrich",
 			Agent:      agent,
 			Scope:      string(scope),
+			Order:      string(order),
 			RootPath:   rootPath,
 			OutputFile: filepath.Join(contextDir, enrichOutputFile),
 			Files:      0,
@@ -2007,90 +2077,137 @@ func runEnrich(cmd *cobra.Command, args []string) error {
 	parseResult := parseResultFromState(st, rootPath, currentHashes)
 	g := graph.BuildFromParseResult(parseResult)
 	lineCache := make(map[string][]string)
+	modelName := inferAgentModel(profile)
+	promptVersion := derivePromptVersion(profile)
+	cachePath := filepath.Join(contextDir, enrichOutputFile)
+	cacheRecords, err := loadEnrichCache(cachePath)
+	if err != nil {
+		return err
+	}
+
+	workItems := collectEnrichWorkItems(targetFiles, st, g, order)
 
 	deadline := time.Now().Add(timeout)
 	records := make([]enrichRecord, 0, maxSymbols)
-	selectedTargets := make([]string, 0)
+	selectedTargetsSet := make(map[string]bool)
+	succeeded := 0
+	failed := 0
+	cacheHits := 0
+	cacheMisses := 0
 
-	for _, file := range targetFiles {
+	for _, item := range workItems {
 		if time.Now().After(deadline) {
 			break
 		}
-
-		fileState, ok := st.Files[file]
-		if !ok {
-			continue
-		}
-		symbols := cloneSymbolsSorted(file, fileState.Symbols)
-		if len(symbols) == 0 {
-			continue
-		}
-		selectedTargets = append(selectedTargets, file)
-
-		for _, sym := range symbols {
-			if time.Now().After(deadline) || len(records) >= maxSymbols {
-				break
-			}
-			node := g.Nodes[sym.ID]
-			record, ok := buildEnrichRecord(rootPath, file, fileState, sym, node, lineCache, agent, scope)
-			if !ok {
-				continue
-			}
-
-			if !dryRun {
-				remaining := time.Until(deadline)
-				if remaining <= 0 {
-					break
-				}
-				callTimeout := remaining
-				if profile.Timeout > 0 && profile.Timeout < callTimeout {
-					callTimeout = profile.Timeout
-				}
-				agentOutput, err := executeAgentProfile(profile, enrichAgentRequest{
-					Agent:         agent,
-					Scope:         string(scope),
-					Prompt:        renderAgentPrompt(profile, record.Input),
-					Input:         record.Input,
-					OutputSchema:  enrichOutputSchema(),
-					SchemaVersion: "enrich-output-v1",
-				}, callTimeout, schemaFilePath)
-				if err != nil {
-					return fmt.Errorf("agent %q failed for %s: %w", agent, record.SymbolID, err)
-				}
-				record.Output = agentOutput
-				record.GeneratedAt = time.Now().UTC().Format(time.RFC3339)
-			}
-
-			records = append(records, record)
-		}
-
 		if len(records) >= maxSymbols {
 			break
 		}
+
+		record, ok := buildEnrichRecord(
+			rootPath,
+			item.File,
+			item.FileState,
+			item.Symbol,
+			item.Node,
+			lineCache,
+			agent,
+			scope,
+		)
+		if !ok {
+			continue
+		}
+		record.AgentProfile = agent
+		record.Model = modelName
+		record.PromptVersion = promptVersion
+		record.CacheKey = enrichCacheKey(record.SymbolID, record.FileHash, promptVersion, agent, modelName)
+		selectedTargetsSet[item.File] = true
+
+		if cached, exists := cacheRecords[record.CacheKey]; exists && strings.ToLower(strings.TrimSpace(cached.Status)) != "error" {
+			record = cached
+			record.Agent = agent
+			record.Scope = string(scope)
+			record.AgentProfile = agent
+			record.Model = modelName
+			record.PromptVersion = promptVersion
+			record.CacheKey = enrichCacheKey(record.SymbolID, record.FileHash, promptVersion, agent, modelName)
+			if record.UpdatedAt == "" {
+				record.UpdatedAt = record.GeneratedAt
+			}
+			cacheHits++
+			succeeded++
+			records = append(records, record)
+			continue
+		}
+
+		cacheMisses++
+		if dryRun {
+			record.Status = "dry-run"
+			records = append(records, record)
+			continue
+		}
+
+		remaining := time.Until(deadline)
+		if remaining <= 0 {
+			break
+		}
+		callTimeout := remaining
+		if profile.Timeout > 0 && profile.Timeout < callTimeout {
+			callTimeout = profile.Timeout
+		}
+
+		agentOutput, err := executeAgentProfile(profile, enrichAgentRequest{
+			Agent:         agent,
+			Scope:         string(scope),
+			Prompt:        renderAgentPrompt(profile, record.Input),
+			Input:         record.Input,
+			OutputSchema:  enrichOutputSchema(),
+			SchemaVersion: enrichSchemaVersion,
+		}, callTimeout, schemaFilePath)
+		timestamp := time.Now().UTC().Format(time.RFC3339)
+		record.GeneratedAt = timestamp
+		record.UpdatedAt = timestamp
+		if err != nil {
+			record.Status = "error"
+			record.Error = err.Error()
+			cacheRecords[record.CacheKey] = record
+			failed++
+			records = append(records, record)
+			continue
+		}
+
+		record.Output = agentOutput
+		record.Status = "success"
+		record.Error = ""
+		cacheRecords[record.CacheKey] = record
+		pruneEnrichCacheForSymbol(cacheRecords, record.CacheKey, record.SymbolID, agent)
+		succeeded++
+		records = append(records, record)
 	}
 
-	outputPath := filepath.Join(contextDir, enrichOutputFile)
+	selectedTargets := mapKeysSorted(selectedTargetsSet)
+	outputPath := cachePath
 	if !dryRun {
-		data, err := encodeJSONLines(records)
-		if err != nil {
-			return fmt.Errorf("failed to encode enrich output: %w", err)
-		}
-		if err := writeFileIfChanged(outputPath, data); err != nil {
-			return fmt.Errorf("failed to write enrich output: %w", err)
+		if err := writeEnrichCache(outputPath, cacheRecords); err != nil {
+			return err
 		}
 	}
 
 	return printEnrichSummary(EnrichRunSummary{
-		Mode:       "enrich",
-		Agent:      agent,
-		Scope:      string(scope),
-		RootPath:   rootPath,
-		OutputFile: outputPath,
-		Files:      len(selectedTargets),
-		Symbols:    len(records),
-		DryRun:     dryRun,
-		DurationMS: time.Since(start).Milliseconds(),
-		Targets:    selectedTargets,
+		Mode:        "enrich",
+		Agent:       agent,
+		Scope:       string(scope),
+		Order:       string(order),
+		RootPath:    rootPath,
+		OutputFile:  outputPath,
+		Files:       len(selectedTargets),
+		Symbols:     len(records),
+		Succeeded:   succeeded,
+		Failed:      failed,
+		CacheHits:   cacheHits,
+		CacheMisses: cacheMisses,
+		DryRun:      dryRun,
+		DurationMS:  time.Since(start).Milliseconds(),
+		Targets:     selectedTargets,
 	}, asJSON)
 }
 
@@ -2106,6 +2223,21 @@ func parseEnrichScope(cmd *cobra.Command) (enrichScope, error) {
 		return enrichScopeAll, nil
 	default:
 		return "", fmt.Errorf("unsupported --scope value %q (supported: changed, all)", raw)
+	}
+}
+
+func parseEnrichOrder(cmd *cobra.Command) (enrichOrder, error) {
+	raw, err := cmd.Flags().GetString("order")
+	if err != nil {
+		return "", fmt.Errorf("failed to read --order flag: %w", err)
+	}
+	switch enrichOrder(strings.ToLower(strings.TrimSpace(raw))) {
+	case enrichOrderSource, "":
+		return enrichOrderSource, nil
+	case enrichOrderPageRank:
+		return enrichOrderPageRank, nil
+	default:
+		return "", fmt.Errorf("unsupported --order value %q (supported: source, pagerank)", raw)
 	}
 }
 
@@ -2818,6 +2950,189 @@ func cloneSymbolsSorted(file string, symbols []parser.Symbol) []parser.Symbol {
 	return out
 }
 
+type enrichWorkItem struct {
+	File      string
+	FileState state.FileState
+	Symbol    parser.Symbol
+	Node      *graph.Node
+	PageRank  float64
+}
+
+func collectEnrichWorkItems(targetFiles []string, st *state.State, g *graph.Graph, order enrichOrder) []enrichWorkItem {
+	items := make([]enrichWorkItem, 0)
+	for _, file := range targetFiles {
+		fileState, ok := st.Files[file]
+		if !ok {
+			continue
+		}
+		symbols := cloneSymbolsSorted(file, fileState.Symbols)
+		for _, sym := range symbols {
+			node := g.Nodes[sym.ID]
+			pageRank := 0.0
+			if node != nil {
+				pageRank = node.PageRank
+			}
+			items = append(items, enrichWorkItem{
+				File:      file,
+				FileState: fileState,
+				Symbol:    sym,
+				Node:      node,
+				PageRank:  pageRank,
+			})
+		}
+	}
+
+	switch order {
+	case enrichOrderPageRank:
+		sort.Slice(items, func(i, j int) bool {
+			if items[i].PageRank == items[j].PageRank {
+				if items[i].File == items[j].File {
+					if items[i].Symbol.Line == items[j].Symbol.Line {
+						return items[i].Symbol.ID < items[j].Symbol.ID
+					}
+					return items[i].Symbol.Line < items[j].Symbol.Line
+				}
+				return items[i].File < items[j].File
+			}
+			return items[i].PageRank > items[j].PageRank
+		})
+	default:
+		// Source order already preserved by target file + line sorting.
+	}
+	return items
+}
+
+func derivePromptVersion(profile agentProfile) string {
+	seed := strings.TrimSpace(profile.PromptTemplate)
+	if seed == "" {
+		seed = defaultPromptTemplate()
+	}
+	sum := sha256.Sum256([]byte(seed))
+	return "prompt-v1-" + hex.EncodeToString(sum[:8])
+}
+
+func inferAgentModel(profile agentProfile) string {
+	if len(profile.Command) == 0 {
+		return "unknown"
+	}
+	return strings.TrimSpace(profile.Command[0])
+}
+
+func enrichCacheKey(symbolID, fileHash, promptVersion, agentProfile, model string) string {
+	seed := strings.Join([]string{
+		strings.TrimSpace(symbolID),
+		strings.TrimSpace(fileHash),
+		strings.TrimSpace(promptVersion),
+		strings.TrimSpace(agentProfile),
+		strings.TrimSpace(model),
+	}, "|")
+	sum := sha256.Sum256([]byte(seed))
+	return "cache-v1-" + hex.EncodeToString(sum[:8])
+}
+
+func loadEnrichCache(path string) (map[string]enrichRecord, error) {
+	cache := make(map[string]enrichRecord)
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return cache, nil
+		}
+		return nil, fmt.Errorf("failed to read enrich cache: %w", err)
+	}
+
+	scanner := bufio.NewScanner(bytes.NewReader(data))
+	for scanner.Scan() {
+		line := bytes.TrimSpace(scanner.Bytes())
+		if len(line) == 0 {
+			continue
+		}
+		var record enrichRecord
+		if err := json.Unmarshal(line, &record); err != nil {
+			continue
+		}
+		if record.AgentProfile == "" {
+			record.AgentProfile = record.Agent
+		}
+		if record.PromptVersion == "" {
+			record.PromptVersion = "prompt-v1-legacy"
+		}
+		if record.Model == "" {
+			record.Model = "unknown"
+		}
+		if record.CacheKey == "" {
+			record.CacheKey = enrichCacheKey(record.SymbolID, record.FileHash, record.PromptVersion, record.AgentProfile, record.Model)
+		}
+		if record.CacheKey == "" {
+			continue
+		}
+
+		existing, exists := cache[record.CacheKey]
+		if !exists {
+			cache[record.CacheKey] = record
+			continue
+		}
+		existingTS := existing.UpdatedAt
+		if existingTS == "" {
+			existingTS = existing.GeneratedAt
+		}
+		recordTS := record.UpdatedAt
+		if recordTS == "" {
+			recordTS = record.GeneratedAt
+		}
+		if recordTS >= existingTS {
+			cache[record.CacheKey] = record
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return nil, fmt.Errorf("failed to parse enrich cache: %w", err)
+	}
+	return cache, nil
+}
+
+func writeEnrichCache(path string, cache map[string]enrichRecord) error {
+	records := make([]enrichRecord, 0, len(cache))
+	for _, record := range cache {
+		records = append(records, record)
+	}
+	sort.Slice(records, func(i, j int) bool {
+		if records[i].SymbolID == records[j].SymbolID {
+			if records[i].AgentProfile == records[j].AgentProfile {
+				return records[i].CacheKey < records[j].CacheKey
+			}
+			return records[i].AgentProfile < records[j].AgentProfile
+		}
+		return records[i].SymbolID < records[j].SymbolID
+	})
+
+	data, err := encodeJSONLines(records)
+	if err != nil {
+		return fmt.Errorf("failed to encode enrich output: %w", err)
+	}
+	if err := writeFileIfChanged(path, data); err != nil {
+		return fmt.Errorf("failed to write enrich output: %w", err)
+	}
+	return nil
+}
+
+func pruneEnrichCacheForSymbol(cache map[string]enrichRecord, keepKey, symbolID, agentProfile string) {
+	for key, record := range cache {
+		if key == keepKey {
+			continue
+		}
+		if record.SymbolID != symbolID {
+			continue
+		}
+		profile := record.AgentProfile
+		if profile == "" {
+			profile = record.Agent
+		}
+		if profile != agentProfile {
+			continue
+		}
+		delete(cache, key)
+	}
+}
+
 func buildEnrichRecord(
 	rootPath string,
 	file string,
@@ -2843,10 +3158,12 @@ func buildEnrichRecord(
 	}
 
 	record := enrichRecord{
-		SymbolID: sym.ID,
-		Agent:    agent,
-		Scope:    string(scope),
-		FileHash: fileState.Hash,
+		SymbolID:     sym.ID,
+		Agent:        agent,
+		AgentProfile: agent,
+		Scope:        string(scope),
+		FileHash:     fileState.Hash,
+		Status:       "pending",
 		Input: enrichInputPayload{
 			Symbol: enrichSymbolMetadata{
 				ID:        sym.ID,
@@ -2901,7 +3218,20 @@ func printEnrichSummary(summary EnrichRunSummary, asJSON bool) error {
 	if summary.DryRun {
 		mode = "enrich (dry-run)"
 	}
-	fmt.Printf("%s: agent=%s scope=%s files=%d symbols=%d duration=%dms\n", mode, summary.Agent, summary.Scope, summary.Files, summary.Symbols, summary.DurationMS)
+	fmt.Printf(
+		"%s: agent=%s scope=%s order=%s files=%d symbols=%d succeeded=%d failed=%d cache_hits=%d cache_misses=%d duration=%dms\n",
+		mode,
+		summary.Agent,
+		summary.Scope,
+		summary.Order,
+		summary.Files,
+		summary.Symbols,
+		summary.Succeeded,
+		summary.Failed,
+		summary.CacheHits,
+		summary.CacheMisses,
+		summary.DurationMS,
+	)
 	if summary.OutputFile != "" {
 		fmt.Printf("output: %s\n", summary.OutputFile)
 	}
