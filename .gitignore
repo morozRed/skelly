@@ -7,3 +7,4 @@ skelly
 *.out
 
 *.md
+!README.md
