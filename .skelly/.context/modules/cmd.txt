@@ -124,7 +124,7 @@ called_by: [cmd/skelly/integration_test.go|489|func|TestSetupRunsGenerateAndEnri
 
 ### chooseSetupAgentProfile [func]
 sig: func chooseSetupAgentProfile(profiles map[string]agentProfile) (string, error)
-calls: [cmd/skelly/main.go|1042|func|agentProfilesPath|eb82bf6e{resolved}, cmd/skelly/main.go|1385|func|sortedProfileNames|1653ee3e{resolved}, cmd/skelly/main.go|321|func|stdinIsInteractive|4c333388{resolved}]
+calls: [cmd/skelly/main.go|1385|func|sortedProfileNames|1653ee3e{resolved}, cmd/skelly/main.go|321|func|stdinIsInteractive|4c333388{resolved}]
 called_by: [cmd/skelly/main.go|182|func|runSetup|a4582740]
 
 ### stdinIsInteractive [func]
@@ -213,7 +213,7 @@ called_by: [cmd/skelly/main.go|182|func|runSetup|a4582740, cmd/skelly/main.go|83
 
 ### agentProfilesPath [func]
 sig: func agentProfilesPath(rootPath string) string
-called_by: [cmd/skelly/main.go|1046|func|ensureDefaultAgentProfileFiles|303dd056, cmd/skelly/main.go|1101|func|loadAgentProfiles|7e5c3409, cmd/skelly/main.go|182|func|runSetup|a4582740, cmd/skelly/main.go|269|func|chooseSetupAgentProfile|ee879f72, cmd/skelly/main.go|837|func|runEnrich|b04320d1]
+called_by: [cmd/skelly/main.go|1046|func|ensureDefaultAgentProfileFiles|303dd056, cmd/skelly/main.go|1101|func|loadAgentProfiles|7e5c3409, cmd/skelly/main.go|182|func|runSetup|a4582740, cmd/skelly/main.go|837|func|runEnrich|b04320d1]
 
 ### ensureDefaultAgentProfileFiles [func]
 sig: func ensureDefaultAgentProfileFiles(rootPath string) (bool, error)

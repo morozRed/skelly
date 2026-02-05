@@ -1,7 +1,7 @@
 {
   "version": "2",
   "parser_version": "tree-sitter-v1",
-  "updated_at": "2026-02-05T12:47:29.712576+01:00",
+  "updated_at": "2026-02-05T20:10:39.553605+01:00",
   "files": {
     "cmd/skelly/integration_test.go": {
       "hash": "79f5b7596c775dfb",
@@ -2896,10 +2896,10 @@
         "cmd/skelly/main.go",
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712266+01:00"
+      "updated_at": "2026-02-05T20:10:39.553379+01:00"
     },
     "cmd/skelly/main.go": {
-      "hash": "89987328007551cc",
+      "hash": "129a5f6bd65551f1",
       "language": "go",
       "symbols": [
         {
@@ -3771,16 +3771,10 @@
               "raw": "len"
             },
             {
-              "name": "agentProfilesPath",
-              "arity": 1,
-              "line": 272,
-              "raw": "agentProfilesPath"
-            },
-            {
               "name": "Errorf",
               "qualifier": "fmt",
               "receiver": "fmt",
-              "arity": 2,
+              "arity": 1,
               "line": 272,
               "raw": "fmt.Errorf"
             },
@@ -10187,7 +10181,7 @@
         "internal/state/state.go",
         "pkg/languages/registry.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712267+01:00"
+      "updated_at": "2026-02-05T20:10:39.55338+01:00"
     },
     "fixtures/go/edge_cases.go": {
       "hash": "aa5c0c65918152b9",
@@ -10287,7 +10281,7 @@
         "context": "context",
         "fmt": "fmt"
       },
-      "updated_at": "2026-02-05T12:47:29.712267+01:00"
+      "updated_at": "2026-02-05T20:10:39.55338+01:00"
     },
     "fixtures/javascript/edge_cases.js": {
       "hash": "1bc09230a8113beb",
@@ -10343,7 +10337,7 @@
       "import_aliases": {
         "fs": "fs"
       },
-      "updated_at": "2026-02-05T12:47:29.712267+01:00"
+      "updated_at": "2026-02-05T20:10:39.55338+01:00"
     },
     "fixtures/python/edge_cases.py": {
       "hash": "8e5f2440c5a0942f",
@@ -10448,7 +10442,7 @@
         "os": "os",
         "pathlib": "pathlib"
       },
-      "updated_at": "2026-02-05T12:47:29.712267+01:00"
+      "updated_at": "2026-02-05T20:10:39.55338+01:00"
     },
     "fixtures/ruby/edge_cases.rb": {
       "hash": "a7dde1de41238014",
@@ -10534,7 +10528,7 @@
         "format": "helpers/format",
         "json": "json"
       },
-      "updated_at": "2026-02-05T12:47:29.712268+01:00"
+      "updated_at": "2026-02-05T20:10:39.55338+01:00"
     },
     "fixtures/typescript/edge_cases.ts": {
       "hash": "2af3d90ee886e389",
@@ -10643,7 +10637,7 @@
         "join": "path",
         "path": "path"
       },
-      "updated_at": "2026-02-05T12:47:29.712268+01:00"
+      "updated_at": "2026-02-05T20:10:39.553381+01:00"
     },
     "internal/bench/benchmark_test.go": {
       "hash": "469ada30b165c94b",
@@ -10838,7 +10832,7 @@
         "internal/graph/graph.go",
         "pkg/languages/registry.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712268+01:00"
+      "updated_at": "2026-02-05T20:10:39.553381+01:00"
     },
     "internal/graph/graph.go": {
       "hash": "2c9723257a1550ad",
@@ -12138,7 +12132,7 @@
       "dependencies": [
         "internal/parser/symbol_id.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712268+01:00"
+      "updated_at": "2026-02-05T20:10:39.553381+01:00"
     },
     "internal/graph/graph_test.go": {
       "hash": "d6bf4fe7d35af864",
@@ -12343,7 +12337,7 @@
       "dependencies": [
         "internal/graph/graph.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712269+01:00"
+      "updated_at": "2026-02-05T20:10:39.553381+01:00"
     },
     "internal/ignore/matcher.go": {
       "hash": "39e2217e127abfea",
@@ -12853,7 +12847,7 @@
         "regexp": "regexp",
         "strings": "strings"
       },
-      "updated_at": "2026-02-05T12:47:29.712269+01:00"
+      "updated_at": "2026-02-05T20:10:39.553381+01:00"
     },
     "internal/ignore/matcher_test.go": {
       "hash": "99495262ecd8371f",
@@ -12953,7 +12947,7 @@
       "dependencies": [
         "internal/ignore/matcher.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712269+01:00"
+      "updated_at": "2026-02-05T20:10:39.553381+01:00"
     },
     "internal/output/writer.go": {
       "hash": "f5a0baaf1ce41c56",
@@ -14401,7 +14395,7 @@
         "sort": "sort",
         "strings": "strings"
       },
-      "updated_at": "2026-02-05T12:47:29.712269+01:00"
+      "updated_at": "2026-02-05T20:10:39.553382+01:00"
     },
     "internal/parser/parser.go": {
       "hash": "769f21372ae795b8",
@@ -15123,7 +15117,7 @@
         "internal/ignore/matcher.go",
         "internal/parser/symbol_id.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712269+01:00"
+      "updated_at": "2026-02-05T20:10:39.553382+01:00"
     },
     "internal/parser/registry_test.go": {
       "hash": "6ceae8fbb89d5e2a",
@@ -15469,7 +15463,7 @@
       "dependencies": [
         "internal/parser/parser.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712269+01:00"
+      "updated_at": "2026-02-05T20:10:39.553382+01:00"
     },
     "internal/parser/symbol_id.go": {
       "hash": "17da189fcfdf36d1",
@@ -15537,7 +15531,7 @@
         "hex": "encoding/hex",
         "sha1": "crypto/sha1"
       },
-      "updated_at": "2026-02-05T12:47:29.71227+01:00"
+      "updated_at": "2026-02-05T20:10:39.553382+01:00"
     },
     "internal/parser/types.go": {
       "hash": "74b4c1fc05dd655c",
@@ -15716,7 +15710,7 @@
         "json": "encoding/json",
         "strings": "strings"
       },
-      "updated_at": "2026-02-05T12:47:29.712271+01:00"
+      "updated_at": "2026-02-05T20:10:39.553382+01:00"
     },
     "internal/state/state.go": {
       "hash": "d7640b0da5ab585f",
@@ -16183,7 +16177,7 @@
         "sort": "sort",
         "time": "time"
       },
-      "updated_at": "2026-02-05T12:47:29.712271+01:00"
+      "updated_at": "2026-02-05T20:10:39.553382+01:00"
     },
     "internal/state/state_test.go": {
       "hash": "0fb410a0d9b67ad1",
@@ -16370,7 +16364,7 @@
       "dependencies": [
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712271+01:00"
+      "updated_at": "2026-02-05T20:10:39.553383+01:00"
     },
     "pkg/languages/common.go": {
       "hash": "2650d3315a43b29d",
@@ -16645,7 +16639,7 @@
         "strconv": "strconv",
         "strings": "strings"
       },
-      "updated_at": "2026-02-05T12:47:29.712271+01:00"
+      "updated_at": "2026-02-05T20:10:39.553383+01:00"
     },
     "pkg/languages/go.go": {
       "hash": "8b71fcfca493112b",
@@ -17826,7 +17820,7 @@
       "dependencies": [
         "pkg/languages/common.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712271+01:00"
+      "updated_at": "2026-02-05T20:10:39.553383+01:00"
     },
     "pkg/languages/python.go": {
       "hash": "3c3660af9d3c1d7b",
@@ -19098,7 +19092,7 @@
       "dependencies": [
         "pkg/languages/common.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712271+01:00"
+      "updated_at": "2026-02-05T20:10:39.553383+01:00"
     },
     "pkg/languages/registry.go": {
       "hash": "bd60d756c4044329",
@@ -19189,7 +19183,7 @@
         "pkg/languages/ruby.go",
         "pkg/languages/typescript.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712271+01:00"
+      "updated_at": "2026-02-05T20:10:39.553383+01:00"
     },
     "pkg/languages/ruby.go": {
       "hash": "52387f1bd688e0b9",
@@ -20201,7 +20195,7 @@
       "dependencies": [
         "pkg/languages/common.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712271+01:00"
+      "updated_at": "2026-02-05T20:10:39.553383+01:00"
     },
     "pkg/languages/typescript.go": {
       "hash": "3efb2be551f6cc8c",
@@ -21831,13 +21825,13 @@
       "dependencies": [
         "pkg/languages/common.go"
       ],
-      "updated_at": "2026-02-05T12:47:29.712271+01:00"
+      "updated_at": "2026-02-05T20:10:39.553383+01:00"
     }
   },
   "output_hashes": {
-    "graph.txt": "7aa789e1e59e5745",
+    "graph.txt": "5c201190d24402f0",
     "index.txt": "51bc95e484c7aad7",
-    "modules/cmd.txt": "52b9508b208c0322",
+    "modules/cmd.txt": "b6d420d72a532e2b",
     "modules/fixtures.txt": "e8e92d5bef3f237c",
     "modules/internal.txt": "a491b27da1100fa7",
     "modules/pkg.txt": "6663f33de4b06440"
