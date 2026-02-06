@@ -423,6 +423,151 @@
       ]
     },
     {
+      "id": "internal/cli/cli_test.go|1004|func|TestInitNoGeneratePreservesExistingState|39636cbe",
+      "name": "TestInitNoGeneratePreservesExistingState",
+      "kind": "func",
+      "signature": "func TestInitNoGeneratePreservesExistingState(t *testing.T)",
+      "file": "internal/cli/cli_test.go",
+      "line": 1004,
+      "out_edges": [
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
+        "internal/state/state.go|53|func|Load|f5f32848"
+      ],
+      "out_confidence": [
+        {
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
+          "confidence": "heuristic"
+        },
+        {
+          "target_id": "internal/state/state.go|53|func|Load|f5f32848",
+          "confidence": "heuristic"
+        }
+      ]
+    },
+    {
+      "id": "internal/cli/cli_test.go|1052|func|TestInitAutoGeneratesContextForTSX|f0f793a1",
+      "name": "TestInitAutoGeneratesContextForTSX",
+      "kind": "func",
+      "signature": "func TestInitAutoGeneratesContextForTSX(t *testing.T)",
+      "file": "internal/cli/cli_test.go",
+      "line": 1052,
+      "out_edges": [
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
+      ],
+      "out_confidence": [
+        {
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
+          "confidence": "heuristic"
+        }
+      ]
+    },
+    {
+      "id": "internal/cli/cli_test.go|1068|func|TestSetupPrintsDeprecationWarning|70a4e29a",
+      "name": "TestSetupPrintsDeprecationWarning",
+      "kind": "func",
+      "signature": "func TestSetupPrintsDeprecationWarning(t *testing.T)",
+      "file": "internal/cli/cli_test.go",
+      "line": 1068,
+      "out_edges": [
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|775|func|newSetupCmdForTest|5f297dd0",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/generate.go|18|func|RunSetup|7116c91b",
+        "internal/parser/types.go|22|method|String|1c76ce16"
+      ],
+      "out_confidence": [
+        {
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|775|func|newSetupCmdForTest|5f297dd0",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/generate.go|18|func|RunSetup|7116c91b",
+          "confidence": "heuristic"
+        },
+        {
+          "target_id": "internal/parser/types.go|22|method|String|1c76ce16",
+          "confidence": "heuristic"
+        }
+      ]
+    },
+    {
+      "id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+      "name": "mustWriteFile",
+      "kind": "func",
+      "signature": "func mustWriteFile(t *testing.T, path, content string)",
+      "file": "internal/cli/cli_test.go",
+      "line": 1107,
+      "in_edges": [
+        "internal/cli/cli_test.go|1004|func|TestInitNoGeneratePreservesExistingState|39636cbe",
+        "internal/cli/cli_test.go|1052|func|TestInitAutoGeneratesContextForTSX|f0f793a1",
+        "internal/cli/cli_test.go|1068|func|TestSetupPrintsDeprecationWarning|70a4e29a",
+        "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc",
+        "internal/cli/cli_test.go|198|func|TestGenerateWritesNavigationIndex|387ae765",
+        "internal/cli/cli_test.go|21|func|TestInitGenerateUpdateFlow|868c0c0a",
+        "internal/cli/cli_test.go|234|func|TestNavigationCommandsJSON|5728a056",
+        "internal/cli/cli_test.go|345|func|TestGenerateParsesSupportedLanguageFixtures|8653b027",
+        "internal/cli/cli_test.go|399|func|TestGenerateJSONLDeterministic|7a44ea7e",
+        "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
+        "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
+        "internal/cli/cli_test.go|583|func|TestUpdateRefreshesMissingTextModulesOnNoop|3a8d06b8",
+        "internal/cli/cli_test.go|612|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
+        "internal/cli/cli_test.go|672|func|TestEnrichRequiresDescription|f93997f3",
+        "internal/cli/cli_test.go|698|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
+        "internal/cli/cli_test.go|725|func|TestSetupRunsGenerate|74b8ce6a",
+        "internal/cli/cli_test.go|944|func|TestInitAutoGeneratesContext|4d4da680",
+        "internal/cli/cli_test.go|963|func|TestInitNoGenerateSkipsGenerate|9076aede",
+        "internal/cli/cli_test.go|984|func|TestInitRejectsInvalidFormat|c05c6f48"
+      ]
+    },
+    {
       "id": "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc",
       "name": "TestDoctorReportsHealthyAndStaleStates",
       "kind": "func",
@@ -430,49 +575,49 @@
       "file": "internal/cli/cli_test.go",
       "line": 136,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
-        "internal/cli/cli_test.go|752|func|newDoctorCmdForTest|cc39f149",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
-        "internal/cli/cli_test.go|829|func|captureStdout|414fd395",
-        "internal/cli/cli_test.go|857|func|containsString|dcc1cc04",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|781|func|newDoctorCmdForTest|cc39f149",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
+        "internal/cli/cli_test.go|858|func|captureStdout|414fd395",
+        "internal/cli/cli_test.go|886|func|containsString|dcc1cc04",
         "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|752|func|newDoctorCmdForTest|cc39f149",
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|781|func|newDoctorCmdForTest|cc39f149",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|829|func|captureStdout|414fd395",
+          "target_id": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|857|func|containsString|dcc1cc04",
+          "target_id": "internal/cli/cli_test.go|858|func|captureStdout|414fd395",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|886|func|containsString|dcc1cc04",
           "confidence": "resolved"
         },
         {
@@ -484,7 +629,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         }
       ]
@@ -497,33 +642,33 @@
       "file": "internal/cli/cli_test.go",
       "line": 198,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
           "confidence": "resolved"
         },
         {
@@ -531,7 +676,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         }
       ]
@@ -544,34 +689,34 @@
       "file": "internal/cli/cli_test.go",
       "line": 21,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|732|func|newUpdateCmdForTest|ffe2f6dc",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|732|func|newUpdateCmdForTest|ffe2f6dc",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
           "confidence": "resolved"
         },
         {
@@ -579,7 +724,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         },
         {
@@ -596,19 +741,19 @@
       "file": "internal/cli/cli_test.go",
       "line": 234,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
-        "internal/cli/cli_test.go|758|func|newSymbolCmdForTest|4e0f4ad6",
-        "internal/cli/cli_test.go|764|func|newCallersCmdForTest|1c949104",
-        "internal/cli/cli_test.go|770|func|newCalleesCmdForTest|8a320a6d",
-        "internal/cli/cli_test.go|776|func|newTraceCmdForTest|8cf366e2",
-        "internal/cli/cli_test.go|783|func|newPathCmdForTest|2b067820",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
-        "internal/cli/cli_test.go|829|func|captureStdout|414fd395",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|787|func|newSymbolCmdForTest|4e0f4ad6",
+        "internal/cli/cli_test.go|793|func|newCallersCmdForTest|1c949104",
+        "internal/cli/cli_test.go|799|func|newCalleesCmdForTest|8a320a6d",
+        "internal/cli/cli_test.go|805|func|newTraceCmdForTest|8cf366e2",
+        "internal/cli/cli_test.go|812|func|newPathCmdForTest|2b067820",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
+        "internal/cli/cli_test.go|858|func|captureStdout|414fd395",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/nav/commands.go|12|func|RunSymbol|647400bb",
         "internal/nav/commands.go|139|func|RunTrace|e944a602",
         "internal/nav/commands.go|238|func|RunPath|7094a13d",
@@ -617,47 +762,47 @@
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|758|func|newSymbolCmdForTest|4e0f4ad6",
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|764|func|newCallersCmdForTest|1c949104",
+          "target_id": "internal/cli/cli_test.go|787|func|newSymbolCmdForTest|4e0f4ad6",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|770|func|newCalleesCmdForTest|8a320a6d",
+          "target_id": "internal/cli/cli_test.go|793|func|newCallersCmdForTest|1c949104",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|776|func|newTraceCmdForTest|8cf366e2",
+          "target_id": "internal/cli/cli_test.go|799|func|newCalleesCmdForTest|8a320a6d",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|783|func|newPathCmdForTest|2b067820",
+          "target_id": "internal/cli/cli_test.go|805|func|newTraceCmdForTest|8cf366e2",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|812|func|newPathCmdForTest|2b067820",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|829|func|captureStdout|414fd395",
+          "target_id": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|858|func|captureStdout|414fd395",
           "confidence": "resolved"
         },
         {
@@ -665,7 +810,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         },
         {
@@ -698,23 +843,23 @@
       "file": "internal/cli/cli_test.go",
       "line": 345,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
@@ -722,7 +867,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         }
       ]
@@ -735,43 +880,43 @@
       "file": "internal/cli/cli_test.go",
       "line": 399,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
-        "internal/cli/cli_test.go|813|func|assertNotExists|fbc8307b",
-        "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
-        "internal/cli/cli_test.go|874|func|assertSortedSymbolJSONL|64164312",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+        "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
+        "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
+        "internal/cli/cli_test.go|903|func|assertSortedSymbolJSONL|64164312",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|813|func|assertNotExists|fbc8307b",
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
+          "target_id": "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|874|func|assertSortedSymbolJSONL|64164312",
+          "target_id": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|903|func|assertSortedSymbolJSONL|64164312",
           "confidence": "resolved"
         },
         {
@@ -779,7 +924,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         }
       ]
@@ -792,40 +937,40 @@
       "file": "internal/cli/cli_test.go",
       "line": 475,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|732|func|newUpdateCmdForTest|ffe2f6dc",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
-        "internal/cli/cli_test.go|866|func|cloneStringMap|b79deb24",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
+        "internal/cli/cli_test.go|895|func|cloneStringMap|b79deb24",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/cli/update.go|19|func|RunUpdate|6316513e",
         "internal/state/state.go|53|func|Load|f5f32848"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|732|func|newUpdateCmdForTest|ffe2f6dc",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|866|func|cloneStringMap|b79deb24",
+          "target_id": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|895|func|cloneStringMap|b79deb24",
           "confidence": "resolved"
         },
         {
@@ -833,7 +978,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         },
         {
@@ -854,44 +999,44 @@
       "file": "internal/cli/cli_test.go",
       "line": 550,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|732|func|newUpdateCmdForTest|ffe2f6dc",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
-        "internal/cli/cli_test.go|813|func|assertNotExists|fbc8307b",
-        "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+        "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
+        "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|732|func|newUpdateCmdForTest|ffe2f6dc",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|813|func|assertNotExists|fbc8307b",
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
+          "target_id": "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
           "confidence": "resolved"
         },
         {
@@ -899,7 +1044,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         },
         {
@@ -909,41 +1054,93 @@
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|583|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
+      "id": "internal/cli/cli_test.go|583|func|TestUpdateRefreshesMissingTextModulesOnNoop|3a8d06b8",
+      "name": "TestUpdateRefreshesMissingTextModulesOnNoop",
+      "kind": "func",
+      "signature": "func TestUpdateRefreshesMissingTextModulesOnNoop(t *testing.T)",
+      "file": "internal/cli/cli_test.go",
+      "line": 583,
+      "out_edges": [
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+        "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
+        "internal/cli/update.go|19|func|RunUpdate|6316513e"
+      ],
+      "out_confidence": [
+        {
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
+          "confidence": "heuristic"
+        },
+        {
+          "target_id": "internal/cli/update.go|19|func|RunUpdate|6316513e",
+          "confidence": "heuristic"
+        }
+      ]
+    },
+    {
+      "id": "internal/cli/cli_test.go|612|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
       "name": "TestEnrichWritesJSONLForTarget",
       "kind": "func",
       "signature": "func TestEnrichWritesJSONLForTarget(t *testing.T)",
       "file": "internal/cli/cli_test.go",
-      "line": 583,
+      "line": 612,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|740|func|newEnrichCmdForTest|57d5aa4c",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|769|func|newEnrichCmdForTest|57d5aa4c",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|740|func|newEnrichCmdForTest|57d5aa4c",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|769|func|newEnrichCmdForTest|57d5aa4c",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
           "confidence": "resolved"
         },
         {
@@ -955,47 +1152,47 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         }
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|643|func|TestEnrichRequiresDescription|f93997f3",
+      "id": "internal/cli/cli_test.go|672|func|TestEnrichRequiresDescription|f93997f3",
       "name": "TestEnrichRequiresDescription",
       "kind": "func",
       "signature": "func TestEnrichRequiresDescription(t *testing.T)",
       "file": "internal/cli/cli_test.go",
-      "line": 643,
+      "line": 672,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
-        "internal/cli/cli_test.go|740|func|newEnrichCmdForTest|57d5aa4c",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|769|func|newEnrichCmdForTest|57d5aa4c",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|740|func|newEnrichCmdForTest|57d5aa4c",
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|769|func|newEnrichCmdForTest|57d5aa4c",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
@@ -1007,47 +1204,47 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         }
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|669|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
+      "id": "internal/cli/cli_test.go|698|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
       "name": "TestEnrichRejectsAmbiguousTarget",
       "kind": "func",
       "signature": "func TestEnrichRejectsAmbiguousTarget(t *testing.T)",
       "file": "internal/cli/cli_test.go",
-      "line": 669,
+      "line": 698,
       "out_edges": [
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
-        "internal/cli/cli_test.go|740|func|newEnrichCmdForTest|57d5aa4c",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|769|func|newEnrichCmdForTest|57d5aa4c",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
+          "target_id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|740|func|newEnrichCmdForTest|57d5aa4c",
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|769|func|newEnrichCmdForTest|57d5aa4c",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
@@ -1059,45 +1256,45 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         }
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|696|func|TestSetupRunsGenerate|74b8ce6a",
+      "id": "internal/cli/cli_test.go|725|func|TestSetupRunsGenerate|74b8ce6a",
       "name": "TestSetupRunsGenerate",
       "kind": "func",
       "signature": "func TestSetupRunsGenerate(t *testing.T)",
       "file": "internal/cli/cli_test.go",
-      "line": 696,
+      "line": 725,
       "out_edges": [
-        "internal/cli/cli_test.go|746|func|newSetupCmdForTest|5f297dd0",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
-        "internal/cli/cli_test.go|813|func|assertNotExists|fbc8307b",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|775|func|newSetupCmdForTest|5f297dd0",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+        "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
         "internal/cli/generate.go|18|func|RunSetup|7116c91b"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|746|func|newSetupCmdForTest|5f297dd0",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|775|func|newSetupCmdForTest|5f297dd0",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|813|func|assertNotExists|fbc8307b",
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
           "confidence": "resolved"
         },
         {
@@ -1107,12 +1304,12 @@
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+      "id": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
       "name": "newGenerateCmdForTest",
       "kind": "func",
       "signature": "func newGenerateCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 716,
+      "line": 745,
       "out_edges": [
         "internal/parser/types.go|22|method|String|1c76ce16"
       ],
@@ -1125,9 +1322,9 @@
         "internal/cli/cli_test.go|399|func|TestGenerateJSONLDeterministic|7a44ea7e",
         "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
         "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
-        "internal/cli/cli_test.go|583|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
-        "internal/cli/cli_test.go|643|func|TestEnrichRequiresDescription|f93997f3",
-        "internal/cli/cli_test.go|669|func|TestEnrichRejectsAmbiguousTarget|5b32f033"
+        "internal/cli/cli_test.go|612|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
+        "internal/cli/cli_test.go|672|func|TestEnrichRequiresDescription|f93997f3",
+        "internal/cli/cli_test.go|698|func|TestEnrichRejectsAmbiguousTarget|5b32f033"
       ],
       "out_confidence": [
         {
@@ -1137,24 +1334,28 @@
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
+      "id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
       "name": "newInitCmdForTest",
       "kind": "func",
       "signature": "func newInitCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 724,
+      "line": 753,
       "out_edges": [
         "internal/parser/types.go|22|method|String|1c76ce16"
       ],
       "in_edges": [
+        "internal/cli/cli_test.go|1004|func|TestInitNoGeneratePreservesExistingState|39636cbe",
+        "internal/cli/cli_test.go|1052|func|TestInitAutoGeneratesContextForTSX|f0f793a1",
         "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc",
         "internal/cli/cli_test.go|198|func|TestGenerateWritesNavigationIndex|387ae765",
         "internal/cli/cli_test.go|234|func|TestNavigationCommandsJSON|5728a056",
-        "internal/cli/cli_test.go|643|func|TestEnrichRequiresDescription|f93997f3",
-        "internal/cli/cli_test.go|669|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
-        "internal/cli/cli_test.go|915|func|TestInitAutoGeneratesContext|4d4da680",
+        "internal/cli/cli_test.go|583|func|TestUpdateRefreshesMissingTextModulesOnNoop|3a8d06b8",
+        "internal/cli/cli_test.go|672|func|TestEnrichRequiresDescription|f93997f3",
+        "internal/cli/cli_test.go|698|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
         "internal/cli/cli_test.go|92|func|TestInitWithLLMGeneratesIntegrationFilesIdempotently|66d6c693",
-        "internal/cli/cli_test.go|934|func|TestInitNoGenerateSkipsGenerate|9076aede"
+        "internal/cli/cli_test.go|944|func|TestInitAutoGeneratesContext|4d4da680",
+        "internal/cli/cli_test.go|963|func|TestInitNoGenerateSkipsGenerate|9076aede",
+        "internal/cli/cli_test.go|984|func|TestInitRejectsInvalidFormat|c05c6f48"
       ],
       "out_confidence": [
         {
@@ -1164,19 +1365,20 @@
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|732|func|newUpdateCmdForTest|ffe2f6dc",
+      "id": "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
       "name": "newUpdateCmdForTest",
       "kind": "func",
       "signature": "func newUpdateCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 732,
+      "line": 761,
       "out_edges": [
         "internal/parser/types.go|22|method|String|1c76ce16"
       ],
       "in_edges": [
         "internal/cli/cli_test.go|21|func|TestInitGenerateUpdateFlow|868c0c0a",
         "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
-        "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9"
+        "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
+        "internal/cli/cli_test.go|583|func|TestUpdateRefreshesMissingTextModulesOnNoop|3a8d06b8"
       ],
       "out_confidence": [
         {
@@ -1186,31 +1388,31 @@
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|740|func|newEnrichCmdForTest|57d5aa4c",
+      "id": "internal/cli/cli_test.go|769|func|newEnrichCmdForTest|57d5aa4c",
       "name": "newEnrichCmdForTest",
       "kind": "func",
       "signature": "func newEnrichCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 740,
+      "line": 769,
       "in_edges": [
-        "internal/cli/cli_test.go|583|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
-        "internal/cli/cli_test.go|643|func|TestEnrichRequiresDescription|f93997f3",
-        "internal/cli/cli_test.go|669|func|TestEnrichRejectsAmbiguousTarget|5b32f033"
+        "internal/cli/cli_test.go|612|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
+        "internal/cli/cli_test.go|672|func|TestEnrichRequiresDescription|f93997f3",
+        "internal/cli/cli_test.go|698|func|TestEnrichRejectsAmbiguousTarget|5b32f033"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|746|func|newSetupCmdForTest|5f297dd0",
+      "id": "internal/cli/cli_test.go|775|func|newSetupCmdForTest|5f297dd0",
       "name": "newSetupCmdForTest",
       "kind": "func",
       "signature": "func newSetupCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 746,
+      "line": 775,
       "out_edges": [
         "internal/parser/types.go|22|method|String|1c76ce16"
       ],
       "in_edges": [
-        "internal/cli/cli_test.go|696|func|TestSetupRunsGenerate|74b8ce6a",
-        "internal/cli/cli_test.go|955|func|TestSetupPrintsDeprecationWarning|70a4e29a"
+        "internal/cli/cli_test.go|1068|func|TestSetupPrintsDeprecationWarning|70a4e29a",
+        "internal/cli/cli_test.go|725|func|TestSetupRunsGenerate|74b8ce6a"
       ],
       "out_confidence": [
         {
@@ -1220,79 +1422,82 @@
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|752|func|newDoctorCmdForTest|cc39f149",
+      "id": "internal/cli/cli_test.go|781|func|newDoctorCmdForTest|cc39f149",
       "name": "newDoctorCmdForTest",
       "kind": "func",
       "signature": "func newDoctorCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 752,
+      "line": 781,
       "in_edges": [
         "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|758|func|newSymbolCmdForTest|4e0f4ad6",
+      "id": "internal/cli/cli_test.go|787|func|newSymbolCmdForTest|4e0f4ad6",
       "name": "newSymbolCmdForTest",
       "kind": "func",
       "signature": "func newSymbolCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 758,
+      "line": 787,
       "in_edges": [
         "internal/cli/cli_test.go|234|func|TestNavigationCommandsJSON|5728a056"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|764|func|newCallersCmdForTest|1c949104",
+      "id": "internal/cli/cli_test.go|793|func|newCallersCmdForTest|1c949104",
       "name": "newCallersCmdForTest",
       "kind": "func",
       "signature": "func newCallersCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 764,
+      "line": 793,
       "in_edges": [
         "internal/cli/cli_test.go|234|func|TestNavigationCommandsJSON|5728a056"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|770|func|newCalleesCmdForTest|8a320a6d",
+      "id": "internal/cli/cli_test.go|799|func|newCalleesCmdForTest|8a320a6d",
       "name": "newCalleesCmdForTest",
       "kind": "func",
       "signature": "func newCalleesCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 770,
+      "line": 799,
       "in_edges": [
         "internal/cli/cli_test.go|234|func|TestNavigationCommandsJSON|5728a056"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|776|func|newTraceCmdForTest|8cf366e2",
+      "id": "internal/cli/cli_test.go|805|func|newTraceCmdForTest|8cf366e2",
       "name": "newTraceCmdForTest",
       "kind": "func",
       "signature": "func newTraceCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 776,
+      "line": 805,
       "in_edges": [
         "internal/cli/cli_test.go|234|func|TestNavigationCommandsJSON|5728a056"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|783|func|newPathCmdForTest|2b067820",
+      "id": "internal/cli/cli_test.go|812|func|newPathCmdForTest|2b067820",
       "name": "newPathCmdForTest",
       "kind": "func",
       "signature": "func newPathCmdForTest() *cobra.Command",
       "file": "internal/cli/cli_test.go",
-      "line": 783,
+      "line": 812,
       "in_edges": [
         "internal/cli/cli_test.go|234|func|TestNavigationCommandsJSON|5728a056"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+      "id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
       "name": "withWorkingDir",
       "kind": "func",
       "signature": "func withWorkingDir(t *testing.T, dir string, fn func())",
       "file": "internal/cli/cli_test.go",
-      "line": 789,
+      "line": 818,
       "in_edges": [
+        "internal/cli/cli_test.go|1004|func|TestInitNoGeneratePreservesExistingState|39636cbe",
+        "internal/cli/cli_test.go|1052|func|TestInitAutoGeneratesContextForTSX|f0f793a1",
+        "internal/cli/cli_test.go|1068|func|TestSetupPrintsDeprecationWarning|70a4e29a",
         "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc",
         "internal/cli/cli_test.go|198|func|TestGenerateWritesNavigationIndex|387ae765",
         "internal/cli/cli_test.go|21|func|TestInitGenerateUpdateFlow|868c0c0a",
@@ -1301,155 +1506,124 @@
         "internal/cli/cli_test.go|399|func|TestGenerateJSONLDeterministic|7a44ea7e",
         "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
         "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
-        "internal/cli/cli_test.go|583|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
-        "internal/cli/cli_test.go|643|func|TestEnrichRequiresDescription|f93997f3",
-        "internal/cli/cli_test.go|669|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
-        "internal/cli/cli_test.go|696|func|TestSetupRunsGenerate|74b8ce6a",
-        "internal/cli/cli_test.go|915|func|TestInitAutoGeneratesContext|4d4da680",
+        "internal/cli/cli_test.go|583|func|TestUpdateRefreshesMissingTextModulesOnNoop|3a8d06b8",
+        "internal/cli/cli_test.go|612|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
+        "internal/cli/cli_test.go|672|func|TestEnrichRequiresDescription|f93997f3",
+        "internal/cli/cli_test.go|698|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
+        "internal/cli/cli_test.go|725|func|TestSetupRunsGenerate|74b8ce6a",
         "internal/cli/cli_test.go|92|func|TestInitWithLLMGeneratesIntegrationFilesIdempotently|66d6c693",
-        "internal/cli/cli_test.go|934|func|TestInitNoGenerateSkipsGenerate|9076aede",
-        "internal/cli/cli_test.go|955|func|TestSetupPrintsDeprecationWarning|70a4e29a"
+        "internal/cli/cli_test.go|944|func|TestInitAutoGeneratesContext|4d4da680",
+        "internal/cli/cli_test.go|963|func|TestInitNoGenerateSkipsGenerate|9076aede",
+        "internal/cli/cli_test.go|984|func|TestInitRejectsInvalidFormat|c05c6f48"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
+      "id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
       "name": "assertExists",
       "kind": "func",
       "signature": "func assertExists(t *testing.T, path string)",
       "file": "internal/cli/cli_test.go",
-      "line": 806,
+      "line": 835,
       "in_edges": [
+        "internal/cli/cli_test.go|1052|func|TestInitAutoGeneratesContextForTSX|f0f793a1",
         "internal/cli/cli_test.go|198|func|TestGenerateWritesNavigationIndex|387ae765",
         "internal/cli/cli_test.go|21|func|TestInitGenerateUpdateFlow|868c0c0a",
         "internal/cli/cli_test.go|399|func|TestGenerateJSONLDeterministic|7a44ea7e",
         "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
-        "internal/cli/cli_test.go|583|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
-        "internal/cli/cli_test.go|696|func|TestSetupRunsGenerate|74b8ce6a",
-        "internal/cli/cli_test.go|915|func|TestInitAutoGeneratesContext|4d4da680",
+        "internal/cli/cli_test.go|583|func|TestUpdateRefreshesMissingTextModulesOnNoop|3a8d06b8",
+        "internal/cli/cli_test.go|612|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
+        "internal/cli/cli_test.go|725|func|TestSetupRunsGenerate|74b8ce6a",
         "internal/cli/cli_test.go|92|func|TestInitWithLLMGeneratesIntegrationFilesIdempotently|66d6c693",
-        "internal/cli/cli_test.go|934|func|TestInitNoGenerateSkipsGenerate|9076aede"
+        "internal/cli/cli_test.go|944|func|TestInitAutoGeneratesContext|4d4da680",
+        "internal/cli/cli_test.go|963|func|TestInitNoGenerateSkipsGenerate|9076aede"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|813|func|assertNotExists|fbc8307b",
+      "id": "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
       "name": "assertNotExists",
       "kind": "func",
       "signature": "func assertNotExists(t *testing.T, path string)",
       "file": "internal/cli/cli_test.go",
-      "line": 813,
+      "line": 842,
       "in_edges": [
         "internal/cli/cli_test.go|399|func|TestGenerateJSONLDeterministic|7a44ea7e",
         "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
-        "internal/cli/cli_test.go|696|func|TestSetupRunsGenerate|74b8ce6a",
-        "internal/cli/cli_test.go|934|func|TestInitNoGenerateSkipsGenerate|9076aede"
+        "internal/cli/cli_test.go|583|func|TestUpdateRefreshesMissingTextModulesOnNoop|3a8d06b8",
+        "internal/cli/cli_test.go|725|func|TestSetupRunsGenerate|74b8ce6a",
+        "internal/cli/cli_test.go|963|func|TestInitNoGenerateSkipsGenerate|9076aede"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
+      "id": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
       "name": "mustSetFlag",
       "kind": "func",
       "signature": "func mustSetFlag(t *testing.T, cmd *cobra.Command, key, value string)",
       "file": "internal/cli/cli_test.go",
-      "line": 822,
+      "line": 851,
       "in_edges": [
+        "internal/cli/cli_test.go|1004|func|TestInitNoGeneratePreservesExistingState|39636cbe",
         "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc",
         "internal/cli/cli_test.go|234|func|TestNavigationCommandsJSON|5728a056",
         "internal/cli/cli_test.go|399|func|TestGenerateJSONLDeterministic|7a44ea7e",
         "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
         "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
         "internal/cli/cli_test.go|92|func|TestInitWithLLMGeneratesIntegrationFilesIdempotently|66d6c693",
-        "internal/cli/cli_test.go|934|func|TestInitNoGenerateSkipsGenerate|9076aede"
+        "internal/cli/cli_test.go|963|func|TestInitNoGenerateSkipsGenerate|9076aede",
+        "internal/cli/cli_test.go|984|func|TestInitRejectsInvalidFormat|c05c6f48"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|829|func|captureStdout|414fd395",
+      "id": "internal/cli/cli_test.go|858|func|captureStdout|414fd395",
       "name": "captureStdout",
       "kind": "func",
       "signature": "func captureStdout(t *testing.T, fn func()) string",
       "file": "internal/cli/cli_test.go",
-      "line": 829,
+      "line": 858,
       "in_edges": [
         "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc",
         "internal/cli/cli_test.go|234|func|TestNavigationCommandsJSON|5728a056"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|857|func|containsString|dcc1cc04",
+      "id": "internal/cli/cli_test.go|886|func|containsString|dcc1cc04",
       "name": "containsString",
       "kind": "func",
       "signature": "func containsString(values []string, target string) bool",
       "file": "internal/cli/cli_test.go",
-      "line": 857,
+      "line": 886,
       "in_edges": [
         "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|866|func|cloneStringMap|b79deb24",
+      "id": "internal/cli/cli_test.go|895|func|cloneStringMap|b79deb24",
       "name": "cloneStringMap",
       "kind": "func",
       "signature": "func cloneStringMap(input map[string]string) map[string]string",
       "file": "internal/cli/cli_test.go",
-      "line": 866,
+      "line": 895,
       "in_edges": [
         "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|874|func|assertSortedSymbolJSONL|64164312",
+      "id": "internal/cli/cli_test.go|903|func|assertSortedSymbolJSONL|64164312",
       "name": "assertSortedSymbolJSONL",
       "kind": "func",
       "signature": "func assertSortedSymbolJSONL(t *testing.T, data []byte)",
       "file": "internal/cli/cli_test.go",
-      "line": 874,
+      "line": 903,
       "in_edges": [
         "internal/cli/cli_test.go|399|func|TestGenerateJSONLDeterministic|7a44ea7e"
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|877|struct|symbolLine|55587f14",
+      "id": "internal/cli/cli_test.go|906|struct|symbolLine|55587f14",
       "name": "symbolLine",
       "kind": "struct",
       "signature": "type symbolLine struct",
       "file": "internal/cli/cli_test.go",
-      "line": 877
-    },
-    {
-      "id": "internal/cli/cli_test.go|915|func|TestInitAutoGeneratesContext|4d4da680",
-      "name": "TestInitAutoGeneratesContext",
-      "kind": "func",
-      "signature": "func TestInitAutoGeneratesContext(t *testing.T)",
-      "file": "internal/cli/cli_test.go",
-      "line": 915,
-      "out_edges": [
-        "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
-      ],
-      "out_confidence": [
-        {
-          "target_id": "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
-          "confidence": "resolved"
-        },
-        {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-          "confidence": "resolved"
-        },
-        {
-          "target_id": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
-          "confidence": "resolved"
-        },
-        {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
-          "confidence": "resolved"
-        },
-        {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
-          "confidence": "heuristic"
-        }
-      ]
+      "line": 906
     },
     {
       "id": "internal/cli/cli_test.go|92|func|TestInitWithLLMGeneratesIntegrationFilesIdempotently|66d6c693",
@@ -1459,142 +1633,154 @@
       "file": "internal/cli/cli_test.go",
       "line": 92,
       "out_edges": [
-        "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
-        "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+        "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
+          "target_id": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         }
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|934|func|TestInitNoGenerateSkipsGenerate|9076aede",
+      "id": "internal/cli/cli_test.go|944|func|TestInitAutoGeneratesContext|4d4da680",
+      "name": "TestInitAutoGeneratesContext",
+      "kind": "func",
+      "signature": "func TestInitAutoGeneratesContext(t *testing.T)",
+      "file": "internal/cli/cli_test.go",
+      "line": 944,
+      "out_edges": [
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
+      ],
+      "out_confidence": [
+        {
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
+          "confidence": "heuristic"
+        }
+      ]
+    },
+    {
+      "id": "internal/cli/cli_test.go|963|func|TestInitNoGenerateSkipsGenerate|9076aede",
       "name": "TestInitNoGenerateSkipsGenerate",
       "kind": "func",
       "signature": "func TestInitNoGenerateSkipsGenerate(t *testing.T)",
       "file": "internal/cli/cli_test.go",
-      "line": 934,
+      "line": 963,
       "out_edges": [
-        "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
-        "internal/cli/cli_test.go|813|func|assertNotExists|fbc8307b",
-        "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
+        "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
+        "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|813|func|assertNotExists|fbc8307b",
+          "target_id": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
+          "target_id": "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         }
       ]
     },
     {
-      "id": "internal/cli/cli_test.go|955|func|TestSetupPrintsDeprecationWarning|70a4e29a",
-      "name": "TestSetupPrintsDeprecationWarning",
+      "id": "internal/cli/cli_test.go|984|func|TestInitRejectsInvalidFormat|c05c6f48",
+      "name": "TestInitRejectsInvalidFormat",
       "kind": "func",
-      "signature": "func TestSetupPrintsDeprecationWarning(t *testing.T)",
+      "signature": "func TestInitRejectsInvalidFormat(t *testing.T)",
       "file": "internal/cli/cli_test.go",
-      "line": 955,
+      "line": 984,
       "out_edges": [
-        "internal/cli/cli_test.go|746|func|newSetupCmdForTest|5f297dd0",
-        "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
-        "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
-        "internal/cli/generate.go|18|func|RunSetup|7116c91b",
-        "internal/parser/types.go|22|method|String|1c76ce16"
+        "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
+        "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/cli_test.go|746|func|newSetupCmdForTest|5f297dd0",
+          "target_id": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "target_id": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "target_id": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/generate.go|18|func|RunSetup|7116c91b",
-          "confidence": "heuristic"
+          "target_id": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
+          "confidence": "resolved"
         },
         {
-          "target_id": "internal/parser/types.go|22|method|String|1c76ce16",
+          "target_id": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "confidence": "heuristic"
         }
-      ]
-    },
-    {
-      "id": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
-      "name": "mustWriteFile",
-      "kind": "func",
-      "signature": "func mustWriteFile(t *testing.T, path, content string)",
-      "file": "internal/cli/cli_test.go",
-      "line": 994,
-      "in_edges": [
-        "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc",
-        "internal/cli/cli_test.go|198|func|TestGenerateWritesNavigationIndex|387ae765",
-        "internal/cli/cli_test.go|21|func|TestInitGenerateUpdateFlow|868c0c0a",
-        "internal/cli/cli_test.go|234|func|TestNavigationCommandsJSON|5728a056",
-        "internal/cli/cli_test.go|345|func|TestGenerateParsesSupportedLanguageFixtures|8653b027",
-        "internal/cli/cli_test.go|399|func|TestGenerateJSONLDeterministic|7a44ea7e",
-        "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
-        "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
-        "internal/cli/cli_test.go|583|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
-        "internal/cli/cli_test.go|643|func|TestEnrichRequiresDescription|f93997f3",
-        "internal/cli/cli_test.go|669|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
-        "internal/cli/cli_test.go|696|func|TestSetupRunsGenerate|74b8ce6a",
-        "internal/cli/cli_test.go|915|func|TestInitAutoGeneratesContext|4d4da680",
-        "internal/cli/cli_test.go|934|func|TestInitNoGenerateSkipsGenerate|9076aede",
-        "internal/cli/cli_test.go|955|func|TestSetupPrintsDeprecationWarning|70a4e29a"
       ]
     },
     {
@@ -1675,7 +1861,7 @@
       "file": "internal/cli/enrich.go",
       "line": 19,
       "out_edges": [
-        "internal/cli/helpers.go|64|func|IsCorruptStateError|baeaa80d",
+        "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
         "internal/cli/summary.go|120|func|PrintEnrichSummary|791a3cb6",
         "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4",
         "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
@@ -1696,13 +1882,13 @@
         "internal/state/state.go|53|func|Load|f5f32848"
       ],
       "in_edges": [
-        "internal/cli/cli_test.go|583|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
-        "internal/cli/cli_test.go|643|func|TestEnrichRequiresDescription|f93997f3",
-        "internal/cli/cli_test.go|669|func|TestEnrichRejectsAmbiguousTarget|5b32f033"
+        "internal/cli/cli_test.go|612|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
+        "internal/cli/cli_test.go|672|func|TestEnrichRequiresDescription|f93997f3",
+        "internal/cli/cli_test.go|698|func|TestEnrichRejectsAmbiguousTarget|5b32f033"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/helpers.go|64|func|IsCorruptStateError|baeaa80d",
+          "target_id": "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
           "confidence": "heuristic"
         },
         {
@@ -1790,7 +1976,7 @@
         "internal/nav/types.go|25|struct|Lookup|77ff95db"
       ],
       "in_edges": [
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
@@ -1818,15 +2004,20 @@
       "file": "internal/cli/flags.go",
       "line": 56,
       "out_edges": [
+        "internal/nav/types.go|25|struct|Lookup|77ff95db",
         "internal/output/writer.go|36|func|ParseFormat|dab046c0"
       ],
       "in_edges": [
         "internal/cli/generate.go|18|func|RunSetup|7116c91b",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ],
       "out_confidence": [
+        {
+          "target_id": "internal/nav/types.go|25|struct|Lookup|77ff95db",
+          "confidence": "heuristic"
+        },
         {
           "target_id": "internal/output/writer.go|36|func|ParseFormat|dab046c0",
           "confidence": "heuristic"
@@ -1846,8 +2037,8 @@
         "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4"
       ],
       "in_edges": [
-        "internal/cli/cli_test.go|696|func|TestSetupRunsGenerate|74b8ce6a",
-        "internal/cli/cli_test.go|955|func|TestSetupPrintsDeprecationWarning|70a4e29a"
+        "internal/cli/cli_test.go|1068|func|TestSetupPrintsDeprecationWarning|70a4e29a",
+        "internal/cli/cli_test.go|725|func|TestSetupRunsGenerate|74b8ce6a"
       ],
       "out_confidence": [
         {
@@ -1885,9 +2076,9 @@
         "internal/cli/cli_test.go|399|func|TestGenerateJSONLDeterministic|7a44ea7e",
         "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
         "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
-        "internal/cli/cli_test.go|583|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
-        "internal/cli/cli_test.go|643|func|TestEnrichRequiresDescription|f93997f3",
-        "internal/cli/cli_test.go|669|func|TestEnrichRejectsAmbiguousTarget|5b32f033"
+        "internal/cli/cli_test.go|612|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
+        "internal/cli/cli_test.go|672|func|TestEnrichRequiresDescription|f93997f3",
+        "internal/cli/cli_test.go|698|func|TestEnrichRejectsAmbiguousTarget|5b32f033"
       ],
       "out_confidence": [
         {
@@ -1912,12 +2103,12 @@
       "file": "internal/cli/generate.go",
       "line": 75,
       "out_edges": [
-        "internal/cli/helpers.go|106|func|CollectFilePaths|0bd1d100",
-        "internal/cli/helpers.go|145|func|FilterFilesByLanguage|beed7416",
-        "internal/cli/helpers.go|159|func|ReportParseIssues|f2cf8ae4",
-        "internal/cli/helpers.go|169|func|PersistState|695683d9",
-        "internal/cli/helpers.go|73|func|LoadOutputHashesFromState|7824575d",
-        "internal/cli/helpers.go|89|func|CountRewrittenOutputs|2c593fab",
+        "internal/cli/helpers.go|107|func|CollectFilePaths|0bd1d100",
+        "internal/cli/helpers.go|185|func|FilterFilesByLanguage|beed7416",
+        "internal/cli/helpers.go|199|func|ReportParseIssues|f2cf8ae4",
+        "internal/cli/helpers.go|209|func|PersistState|695683d9",
+        "internal/cli/helpers.go|74|func|LoadOutputHashesFromState|7824575d",
+        "internal/cli/helpers.go|90|func|CountRewrittenOutputs|2c593fab",
         "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
         "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
         "internal/fileutil/state_helpers.go|41|func|EnsureSymbolIDs|bb4ea1dc",
@@ -1932,32 +2123,32 @@
       "in_edges": [
         "internal/cli/generate.go|18|func|RunSetup|7116c91b",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/helpers.go|106|func|CollectFilePaths|0bd1d100",
+          "target_id": "internal/cli/helpers.go|107|func|CollectFilePaths|0bd1d100",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|145|func|FilterFilesByLanguage|beed7416",
+          "target_id": "internal/cli/helpers.go|185|func|FilterFilesByLanguage|beed7416",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|159|func|ReportParseIssues|f2cf8ae4",
+          "target_id": "internal/cli/helpers.go|199|func|ReportParseIssues|f2cf8ae4",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|169|func|PersistState|695683d9",
+          "target_id": "internal/cli/helpers.go|209|func|PersistState|695683d9",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|73|func|LoadOutputHashesFromState|7824575d",
+          "target_id": "internal/cli/helpers.go|74|func|LoadOutputHashesFromState|7824575d",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|89|func|CountRewrittenOutputs|2c593fab",
+          "target_id": "internal/cli/helpers.go|90|func|CountRewrittenOutputs|2c593fab",
           "confidence": "heuristic"
         },
         {
@@ -2003,90 +2194,106 @@
       ]
     },
     {
-      "id": "internal/cli/helpers.go|106|func|CollectFilePaths|0bd1d100",
+      "id": "internal/cli/helpers.go|107|func|CollectFilePaths|0bd1d100",
       "name": "CollectFilePaths",
       "kind": "func",
       "signature": "func CollectFilePaths(files []parser.FileSymbols) []string",
       "file": "internal/cli/helpers.go",
-      "line": 106,
+      "line": 107,
       "in_edges": [
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1"
       ]
     },
     {
-      "id": "internal/cli/helpers.go|115|func|OutputsNeedRefresh|88daa4ae",
+      "id": "internal/cli/helpers.go|116|func|OutputsNeedRefresh|88daa4ae",
       "name": "OutputsNeedRefresh",
       "kind": "func",
       "signature": "func OutputsNeedRefresh(st *state.State, contextDir string, format output.Format) bool",
       "file": "internal/cli/helpers.go",
-      "line": 115,
+      "line": 116,
       "out_edges": [
-        "internal/cli/helpers.go|127|func|RequiredOutputFiles|b5d7372c"
+        "internal/cli/helpers.go|140|func|RequiredOutputFiles|b5d7372c",
+        "internal/cli/helpers.go|151|func|expectedTextModuleArtifacts|c6cdfe83"
       ],
       "in_edges": [
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/helpers.go|127|func|RequiredOutputFiles|b5d7372c",
+          "target_id": "internal/cli/helpers.go|140|func|RequiredOutputFiles|b5d7372c",
+          "confidence": "resolved"
+        },
+        {
+          "target_id": "internal/cli/helpers.go|151|func|expectedTextModuleArtifacts|c6cdfe83",
           "confidence": "resolved"
         }
       ]
     },
     {
-      "id": "internal/cli/helpers.go|127|func|RequiredOutputFiles|b5d7372c",
+      "id": "internal/cli/helpers.go|140|func|RequiredOutputFiles|b5d7372c",
       "name": "RequiredOutputFiles",
       "kind": "func",
       "signature": "func RequiredOutputFiles(format output.Format) []string",
       "file": "internal/cli/helpers.go",
-      "line": 127,
+      "line": 140,
       "in_edges": [
-        "internal/cli/helpers.go|115|func|OutputsNeedRefresh|88daa4ae"
+        "internal/cli/helpers.go|116|func|OutputsNeedRefresh|88daa4ae"
       ]
     },
     {
-      "id": "internal/cli/helpers.go|138|func|MaxInt|dc92babb",
+      "id": "internal/cli/helpers.go|151|func|expectedTextModuleArtifacts|c6cdfe83",
+      "name": "expectedTextModuleArtifacts",
+      "kind": "func",
+      "signature": "func expectedTextModuleArtifacts(st *state.State) []string",
+      "file": "internal/cli/helpers.go",
+      "line": 151,
+      "in_edges": [
+        "internal/cli/helpers.go|116|func|OutputsNeedRefresh|88daa4ae"
+      ]
+    },
+    {
+      "id": "internal/cli/helpers.go|178|func|MaxInt|dc92babb",
       "name": "MaxInt",
       "kind": "func",
       "signature": "func MaxInt(a, b int) int",
       "file": "internal/cli/helpers.go",
-      "line": 138,
+      "line": 178,
       "in_edges": [
         "internal/cli/status.go|17|func|RunStatus|1c524893",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ]
     },
     {
-      "id": "internal/cli/helpers.go|145|func|FilterFilesByLanguage|beed7416",
+      "id": "internal/cli/helpers.go|185|func|FilterFilesByLanguage|beed7416",
       "name": "FilterFilesByLanguage",
       "kind": "func",
       "signature": "func FilterFilesByLanguage(files []parser.FileSymbols, languageFilter map[string]bool) []parser.FileSymbols",
       "file": "internal/cli/helpers.go",
-      "line": 145,
+      "line": 185,
       "in_edges": [
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1"
       ]
     },
     {
-      "id": "internal/cli/helpers.go|159|func|ReportParseIssues|f2cf8ae4",
+      "id": "internal/cli/helpers.go|199|func|ReportParseIssues|f2cf8ae4",
       "name": "ReportParseIssues",
       "kind": "func",
       "signature": "func ReportParseIssues(issues []parser.ParseIssue)",
       "file": "internal/cli/helpers.go",
-      "line": 159,
+      "line": 199,
       "in_edges": [
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1"
       ]
     },
     {
-      "id": "internal/cli/helpers.go|169|func|PersistState|695683d9",
+      "id": "internal/cli/helpers.go|209|func|PersistState|695683d9",
       "name": "PersistState",
       "kind": "func",
       "signature": "func PersistState(contextDir string, files []parser.FileSymbols, g *graph.Graph, format output.Format) error",
       "file": "internal/cli/helpers.go",
-      "line": 169,
+      "line": 209,
       "out_edges": [
-        "internal/cli/helpers.go|19|func|RecordOutputHashes|938af67d",
+        "internal/cli/helpers.go|20|func|RecordOutputHashes|938af67d",
         "internal/fileutil/state_helpers.go|50|func|ApplyGraphDependencies|7703c4d0",
         "internal/state/state.go|112|method|SetFileData|052e85cb",
         "internal/state/state.go|42|func|NewState|fa5f911c",
@@ -2097,7 +2304,7 @@
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/helpers.go|19|func|RecordOutputHashes|938af67d",
+          "target_id": "internal/cli/helpers.go|20|func|RecordOutputHashes|938af67d",
           "confidence": "resolved"
         },
         {
@@ -2119,18 +2326,18 @@
       ]
     },
     {
-      "id": "internal/cli/helpers.go|19|func|RecordOutputHashes|938af67d",
+      "id": "internal/cli/helpers.go|20|func|RecordOutputHashes|938af67d",
       "name": "RecordOutputHashes",
       "kind": "func",
       "signature": "func RecordOutputHashes(st *state.State, contextDir string, format output.Format) error",
       "file": "internal/cli/helpers.go",
-      "line": 19,
+      "line": 20,
       "out_edges": [
         "internal/fileutil/hash.go|14|func|HashFile|6efb30f3",
         "internal/state/state.go|218|method|SetOutputHash|f1e02f46"
       ],
       "in_edges": [
-        "internal/cli/helpers.go|169|func|PersistState|695683d9",
+        "internal/cli/helpers.go|209|func|PersistState|695683d9",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ],
       "out_confidence": [
@@ -2145,12 +2352,12 @@
       ]
     },
     {
-      "id": "internal/cli/helpers.go|64|func|IsCorruptStateError|baeaa80d",
+      "id": "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
       "name": "IsCorruptStateError",
       "kind": "func",
       "signature": "func IsCorruptStateError(err error) bool",
       "file": "internal/cli/helpers.go",
-      "line": 64,
+      "line": 65,
       "in_edges": [
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
@@ -2158,14 +2365,14 @@
       ]
     },
     {
-      "id": "internal/cli/helpers.go|73|func|LoadOutputHashesFromState|7824575d",
+      "id": "internal/cli/helpers.go|74|func|LoadOutputHashesFromState|7824575d",
       "name": "LoadOutputHashesFromState",
       "kind": "func",
       "signature": "func LoadOutputHashesFromState(contextDir string) (map[string]string, error)",
       "file": "internal/cli/helpers.go",
-      "line": 73,
+      "line": 74,
       "out_edges": [
-        "internal/cli/helpers.go|81|func|CloneOutputHashes|e9d2faa0",
+        "internal/cli/helpers.go|82|func|CloneOutputHashes|e9d2faa0",
         "internal/state/state.go|53|func|Load|f5f32848"
       ],
       "in_edges": [
@@ -2173,7 +2380,7 @@
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/helpers.go|81|func|CloneOutputHashes|e9d2faa0",
+          "target_id": "internal/cli/helpers.go|82|func|CloneOutputHashes|e9d2faa0",
           "confidence": "resolved"
         },
         {
@@ -2183,24 +2390,24 @@
       ]
     },
     {
-      "id": "internal/cli/helpers.go|81|func|CloneOutputHashes|e9d2faa0",
+      "id": "internal/cli/helpers.go|82|func|CloneOutputHashes|e9d2faa0",
       "name": "CloneOutputHashes",
       "kind": "func",
       "signature": "func CloneOutputHashes(input map[string]string) map[string]string",
       "file": "internal/cli/helpers.go",
-      "line": 81,
+      "line": 82,
       "in_edges": [
-        "internal/cli/helpers.go|73|func|LoadOutputHashesFromState|7824575d",
+        "internal/cli/helpers.go|74|func|LoadOutputHashesFromState|7824575d",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ]
     },
     {
-      "id": "internal/cli/helpers.go|89|func|CountRewrittenOutputs|2c593fab",
+      "id": "internal/cli/helpers.go|90|func|CountRewrittenOutputs|2c593fab",
       "name": "CountRewrittenOutputs",
       "kind": "func",
       "signature": "func CountRewrittenOutputs(before, after map[string]string) int",
       "file": "internal/cli/helpers.go",
-      "line": 89,
+      "line": 90,
       "in_edges": [
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
@@ -2241,14 +2448,14 @@
       "file": "internal/cli/hook.go",
       "line": 52,
       "out_edges": [
-        "internal/enrich/types.go|57|struct|Output|72daceec"
+        "internal/enrich/types.go|56|struct|Output|72daceec"
       ],
       "in_edges": [
         "internal/cli/hook.go|20|func|RunInstallHook|ed52b2b4"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/enrich/types.go|57|struct|Output|72daceec",
+          "target_id": "internal/enrich/types.go|56|struct|Output|72daceec",
           "confidence": "heuristic"
         }
       ]
@@ -2331,18 +2538,19 @@
       ]
     },
     {
-      "id": "internal/cli/init.go|16|func|RunInit|f93470ee",
+      "id": "internal/cli/init.go|18|func|RunInit|f93470ee",
       "name": "RunInit",
       "kind": "func",
       "signature": "func RunInit(cmd *cobra.Command, args []string) error",
       "file": "internal/cli/init.go",
-      "line": 16,
+      "line": 18,
       "out_edges": [
         "internal/cli/flags.go|11|func|OptionalStringFlag|50d82790",
         "internal/cli/flags.go|56|func|ParseOutputFormat|2ace9670",
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
-        "internal/cli/init.go|74|func|hasSourceFiles|91a6ef84",
+        "internal/cli/init.go|89|func|hasSourceFiles|8c7b4b07",
         "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4",
+        "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
         "internal/llm/providers.go|14|func|ParseLLMProviders|3beec666",
         "internal/llm/providers.go|66|func|GenerateIntegrationFiles|9be01e47",
         "internal/nav/commands.go|302|func|OptionalBoolFlag|ae0f3fb6",
@@ -2352,6 +2560,8 @@
         "internal/state/state.go|75|method|Save|4d835bd5"
       ],
       "in_edges": [
+        "internal/cli/cli_test.go|1004|func|TestInitNoGeneratePreservesExistingState|39636cbe",
+        "internal/cli/cli_test.go|1052|func|TestInitAutoGeneratesContextForTSX|f0f793a1",
         "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc",
         "internal/cli/cli_test.go|198|func|TestGenerateWritesNavigationIndex|387ae765",
         "internal/cli/cli_test.go|21|func|TestInitGenerateUpdateFlow|868c0c0a",
@@ -2360,12 +2570,14 @@
         "internal/cli/cli_test.go|399|func|TestGenerateJSONLDeterministic|7a44ea7e",
         "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
         "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
-        "internal/cli/cli_test.go|583|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
-        "internal/cli/cli_test.go|643|func|TestEnrichRequiresDescription|f93997f3",
-        "internal/cli/cli_test.go|669|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
-        "internal/cli/cli_test.go|915|func|TestInitAutoGeneratesContext|4d4da680",
+        "internal/cli/cli_test.go|583|func|TestUpdateRefreshesMissingTextModulesOnNoop|3a8d06b8",
+        "internal/cli/cli_test.go|612|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
+        "internal/cli/cli_test.go|672|func|TestEnrichRequiresDescription|f93997f3",
+        "internal/cli/cli_test.go|698|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
         "internal/cli/cli_test.go|92|func|TestInitWithLLMGeneratesIntegrationFilesIdempotently|66d6c693",
-        "internal/cli/cli_test.go|934|func|TestInitNoGenerateSkipsGenerate|9076aede"
+        "internal/cli/cli_test.go|944|func|TestInitAutoGeneratesContext|4d4da680",
+        "internal/cli/cli_test.go|963|func|TestInitNoGenerateSkipsGenerate|9076aede",
+        "internal/cli/cli_test.go|984|func|TestInitRejectsInvalidFormat|c05c6f48"
       ],
       "out_confidence": [
         {
@@ -2381,11 +2593,15 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/init.go|74|func|hasSourceFiles|91a6ef84",
+          "target_id": "internal/cli/init.go|89|func|hasSourceFiles|8c7b4b07",
           "confidence": "resolved"
         },
         {
           "target_id": "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4",
+          "confidence": "heuristic"
+        },
+        {
+          "target_id": "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
           "confidence": "heuristic"
         },
         {
@@ -2419,14 +2635,28 @@
       ]
     },
     {
-      "id": "internal/cli/init.go|74|func|hasSourceFiles|91a6ef84",
+      "id": "internal/cli/init.go|89|func|hasSourceFiles|8c7b4b07",
       "name": "hasSourceFiles",
       "kind": "func",
-      "signature": "func hasSourceFiles(rootPath string) bool",
+      "signature": "func hasSourceFiles(rootPath string, ignoreRules []string) (bool, error)",
       "file": "internal/cli/init.go",
-      "line": 74,
+      "line": 89,
+      "out_edges": [
+        "internal/fileutil/hash.go|29|func|ScanFileHashes|7842a605",
+        "internal/languages/registry.go|6|func|NewDefaultRegistry|1f86a25d"
+      ],
       "in_edges": [
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
+      ],
+      "out_confidence": [
+        {
+          "target_id": "internal/fileutil/hash.go|29|func|ScanFileHashes|7842a605",
+          "confidence": "heuristic"
+        },
+        {
+          "target_id": "internal/languages/registry.go|6|func|NewDefaultRegistry|1f86a25d",
+          "confidence": "heuristic"
+        }
       ]
     },
     {
@@ -2457,8 +2687,8 @@
       "file": "internal/cli/status.go",
       "line": 17,
       "out_edges": [
-        "internal/cli/helpers.go|138|func|MaxInt|dc92babb",
-        "internal/cli/helpers.go|64|func|IsCorruptStateError|baeaa80d",
+        "internal/cli/helpers.go|178|func|MaxInt|dc92babb",
+        "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
         "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
         "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4",
         "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
@@ -2473,11 +2703,11 @@
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/helpers.go|138|func|MaxInt|dc92babb",
+          "target_id": "internal/cli/helpers.go|178|func|MaxInt|dc92babb",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|64|func|IsCorruptStateError|baeaa80d",
+          "target_id": "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
           "confidence": "heuristic"
         },
         {
@@ -2614,12 +2844,12 @@
       "out_edges": [
         "internal/cli/flags.go|56|func|ParseOutputFormat|2ace9670",
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
-        "internal/cli/helpers.go|115|func|OutputsNeedRefresh|88daa4ae",
-        "internal/cli/helpers.go|138|func|MaxInt|dc92babb",
-        "internal/cli/helpers.go|19|func|RecordOutputHashes|938af67d",
-        "internal/cli/helpers.go|64|func|IsCorruptStateError|baeaa80d",
-        "internal/cli/helpers.go|81|func|CloneOutputHashes|e9d2faa0",
-        "internal/cli/helpers.go|89|func|CountRewrittenOutputs|2c593fab",
+        "internal/cli/helpers.go|116|func|OutputsNeedRefresh|88daa4ae",
+        "internal/cli/helpers.go|178|func|MaxInt|dc92babb",
+        "internal/cli/helpers.go|20|func|RecordOutputHashes|938af67d",
+        "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
+        "internal/cli/helpers.go|82|func|CloneOutputHashes|e9d2faa0",
+        "internal/cli/helpers.go|90|func|CountRewrittenOutputs|2c593fab",
         "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
         "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4",
         "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
@@ -2648,7 +2878,8 @@
       "in_edges": [
         "internal/cli/cli_test.go|21|func|TestInitGenerateUpdateFlow|868c0c0a",
         "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
-        "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9"
+        "internal/cli/cli_test.go|550|func|TestUpdateCanSwitchToJSONLWithoutSourceChanges|fdd0b4a9",
+        "internal/cli/cli_test.go|583|func|TestUpdateRefreshesMissingTextModulesOnNoop|3a8d06b8"
       ],
       "out_confidence": [
         {
@@ -2660,27 +2891,27 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|115|func|OutputsNeedRefresh|88daa4ae",
+          "target_id": "internal/cli/helpers.go|116|func|OutputsNeedRefresh|88daa4ae",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|138|func|MaxInt|dc92babb",
+          "target_id": "internal/cli/helpers.go|178|func|MaxInt|dc92babb",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|19|func|RecordOutputHashes|938af67d",
+          "target_id": "internal/cli/helpers.go|20|func|RecordOutputHashes|938af67d",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|64|func|IsCorruptStateError|baeaa80d",
+          "target_id": "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|81|func|CloneOutputHashes|e9d2faa0",
+          "target_id": "internal/cli/helpers.go|82|func|CloneOutputHashes|e9d2faa0",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/helpers.go|89|func|CountRewrittenOutputs|2c593fab",
+          "target_id": "internal/cli/helpers.go|90|func|CountRewrittenOutputs|2c593fab",
           "confidence": "heuristic"
         },
         {
@@ -2793,7 +3024,7 @@
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|18|func|RunSetup|7116c91b",
         "internal/cli/hook.go|20|func|RunInstallHook|ed52b2b4",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ]
@@ -2809,6 +3040,7 @@
         "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ]
@@ -2923,55 +3155,55 @@
       ]
     },
     {
-      "id": "internal/enrich/types.go|16|struct|Record|57bafc0b",
+      "id": "internal/enrich/types.go|15|struct|Record|57bafc0b",
       "name": "Record",
       "kind": "struct",
       "signature": "type Record struct",
       "file": "internal/enrich/types.go",
-      "line": 16
+      "line": 15
     },
     {
-      "id": "internal/enrich/types.go|33|struct|InputPayload|dc90fe89",
+      "id": "internal/enrich/types.go|32|struct|InputPayload|dc90fe89",
       "name": "InputPayload",
       "kind": "struct",
       "signature": "type InputPayload struct",
       "file": "internal/enrich/types.go",
-      "line": 33
+      "line": 32
     },
     {
-      "id": "internal/enrich/types.go|41|struct|SymbolMetadata|07e3aaad",
+      "id": "internal/enrich/types.go|40|struct|SymbolMetadata|07e3aaad",
       "name": "SymbolMetadata",
       "kind": "struct",
       "signature": "type SymbolMetadata struct",
       "file": "internal/enrich/types.go",
-      "line": 41
+      "line": 40
     },
     {
-      "id": "internal/enrich/types.go|51|struct|SourceSpan|a0922ad3",
+      "id": "internal/enrich/types.go|50|struct|SourceSpan|a0922ad3",
       "name": "SourceSpan",
       "kind": "struct",
       "signature": "type SourceSpan struct",
       "file": "internal/enrich/types.go",
-      "line": 51
+      "line": 50
     },
     {
-      "id": "internal/enrich/types.go|57|struct|Output|72daceec",
+      "id": "internal/enrich/types.go|56|struct|Output|72daceec",
       "name": "Output",
       "kind": "struct",
       "signature": "type Output struct",
       "file": "internal/enrich/types.go",
-      "line": 57,
+      "line": 56,
       "in_edges": [
         "internal/cli/hook.go|52|func|ResolveGitPaths|e088b75f"
       ]
     },
     {
-      "id": "internal/enrich/types.go|64|struct|WorkItem|7f71a5be",
+      "id": "internal/enrich/types.go|63|struct|WorkItem|7f71a5be",
       "name": "WorkItem",
       "kind": "struct",
       "signature": "type WorkItem struct",
       "file": "internal/enrich/types.go",
-      "line": 64
+      "line": 63
     },
     {
       "id": "internal/enrich/types.go|9|struct|Scope|dc1a80ed",
@@ -3108,7 +3340,7 @@
       "file": "internal/fileutil/hash.go",
       "line": 14,
       "in_edges": [
-        "internal/cli/helpers.go|19|func|RecordOutputHashes|938af67d",
+        "internal/cli/helpers.go|20|func|RecordOutputHashes|938af67d",
         "internal/fileutil/hash.go|29|func|ScanFileHashes|7842a605"
       ]
     },
@@ -3128,6 +3360,7 @@
       "in_edges": [
         "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
+        "internal/cli/init.go|89|func|hasSourceFiles|8c7b4b07",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ],
@@ -3243,7 +3476,7 @@
         "internal/graph/graph.go|321|func|ParseNodeID|a1899dc9"
       ],
       "in_edges": [
-        "internal/cli/helpers.go|169|func|PersistState|695683d9",
+        "internal/cli/helpers.go|209|func|PersistState|695683d9",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ],
       "out_confidence": [
@@ -5074,6 +5307,7 @@
         "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
+        "internal/cli/init.go|89|func|hasSourceFiles|8c7b4b07",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ],
@@ -5996,7 +6230,7 @@
       "file": "internal/llm/providers.go",
       "line": 14,
       "in_edges": [
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ]
     },
     {
@@ -6052,7 +6286,7 @@
         "internal/llm/templates.go|5|func|BuildSkellySkillContent|af9e1c3e"
       ],
       "in_edges": [
-        "internal/cli/init.go|16|func|RunInit|f93470ee"
+        "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
       "out_confidence": [
         {
@@ -6280,7 +6514,7 @@
       ],
       "in_edges": [
         "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/nav/commands.go|12|func|RunSymbol|647400bb",
         "internal/nav/commands.go|139|func|RunTrace|e944a602",
         "internal/nav/commands.go|238|func|RunPath|7094a13d",
@@ -6589,6 +6823,7 @@
       "line": 25,
       "in_edges": [
         "internal/cli/flags.go|11|func|OptionalStringFlag|50d82790",
+        "internal/cli/flags.go|56|func|ParseOutputFormat|2ace9670",
         "internal/nav/commands.go|302|func|OptionalBoolFlag|ae0f3fb6"
       ]
     },
@@ -7022,7 +7257,7 @@
       "line": 55,
       "in_edges": [
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ]
     },
@@ -7034,7 +7269,7 @@
       "file": "internal/output/writer.go",
       "line": 63,
       "in_edges": [
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/output/writer.go|79|method|WriteAll|609927ff"
       ]
     },
@@ -7450,11 +7685,11 @@
       "line": 22,
       "in_edges": [
         "internal/bench/quality_benchmark_test.go|147|func|commonQueryPack|501e6102",
-        "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
-        "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
-        "internal/cli/cli_test.go|732|func|newUpdateCmdForTest|ffe2f6dc",
-        "internal/cli/cli_test.go|746|func|newSetupCmdForTest|5f297dd0",
-        "internal/cli/cli_test.go|955|func|TestSetupPrintsDeprecationWarning|70a4e29a",
+        "internal/cli/cli_test.go|1068|func|TestSetupPrintsDeprecationWarning|70a4e29a",
+        "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
+        "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
+        "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
+        "internal/cli/cli_test.go|775|func|newSetupCmdForTest|5f297dd0",
         "internal/cli/root.go|11|func|NewRootCommand|24aeae76",
         "internal/enrich/record.go|14|func|BuildRecord|76723a91",
         "internal/ignore/matcher.go|158|func|globToRegex|7ebb2a1f",
@@ -7525,7 +7760,7 @@
       "file": "internal/state/state.go",
       "line": 112,
       "in_edges": [
-        "internal/cli/helpers.go|169|func|PersistState|695683d9",
+        "internal/cli/helpers.go|209|func|PersistState|695683d9",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ]
     },
@@ -7627,7 +7862,7 @@
       "file": "internal/state/state.go",
       "line": 218,
       "in_edges": [
-        "internal/cli/helpers.go|19|func|RecordOutputHashes|938af67d"
+        "internal/cli/helpers.go|20|func|RecordOutputHashes|938af67d"
       ]
     },
     {
@@ -7674,8 +7909,8 @@
       "file": "internal/state/state.go",
       "line": 42,
       "in_edges": [
-        "internal/cli/helpers.go|169|func|PersistState|695683d9",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/helpers.go|209|func|PersistState|695683d9",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
         "internal/state/state.go|53|func|Load|f5f32848",
         "internal/state/state_test.go|29|func|TestImpactedFilesClosure|fc5bdd1f",
@@ -7694,11 +7929,12 @@
         "internal/state/state.go|42|func|NewState|fa5f911c"
       ],
       "in_edges": [
+        "internal/cli/cli_test.go|1004|func|TestInitNoGeneratePreservesExistingState|39636cbe",
         "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
         "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
-        "internal/cli/helpers.go|73|func|LoadOutputHashesFromState|7824575d",
+        "internal/cli/helpers.go|74|func|LoadOutputHashesFromState|7824575d",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ],
@@ -7721,8 +7957,8 @@
       "file": "internal/state/state.go",
       "line": 75,
       "in_edges": [
-        "internal/cli/helpers.go|169|func|PersistState|695683d9",
-        "internal/cli/init.go|16|func|RunInit|f93470ee",
+        "internal/cli/helpers.go|209|func|PersistState|695683d9",
+        "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ]
     },

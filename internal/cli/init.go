@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/morozRed/skelly/internal/fileutil"
+	"github.com/morozRed/skelly/internal/languages"
 	"github.com/morozRed/skelly/internal/llm"
 	"github.com/morozRed/skelly/internal/nav"
 	"github.com/morozRed/skelly/internal/output"
@@ -25,8 +27,14 @@ func RunInit(cmd *cobra.Command, args []string) error {
 	}
 
 	contextDir := filepath.Join(rootPath, output.ContextDir)
-	if err := state.NewState().Save(contextDir); err != nil {
-		return fmt.Errorf("failed to write initial state: %w", err)
+	statePath := filepath.Join(contextDir, state.StateFile)
+	if _, err := os.Stat(statePath); err != nil {
+		if !os.IsNotExist(err) {
+			return fmt.Errorf("failed to inspect state file: %w", err)
+		}
+		if err := state.NewState().Save(contextDir); err != nil {
+			return fmt.Errorf("failed to write initial state: %w", err)
+		}
 	}
 
 	llmRaw, err := OptionalStringFlag(cmd, "llm")
@@ -56,12 +64,19 @@ func RunInit(cmd *cobra.Command, args []string) error {
 
 	format, err := ParseOutputFormat(cmd)
 	if err != nil {
-		// If --format flag is not set (e.g. tests calling with bare Command), default to text.
-		format = output.FormatText
+		return err
 	}
 
 	// Auto-generate if there are parseable source files.
-	if hasSourceFiles(rootPath) {
+	ignoreRules, err := LoadIgnoreRules(rootPath)
+	if err != nil {
+		return err
+	}
+	hasSources, err := hasSourceFiles(rootPath, ignoreRules)
+	if err != nil {
+		return fmt.Errorf("failed to scan source files: %w", err)
+	}
+	if hasSources {
 		fmt.Println("Running initial generate...")
 		if err := GenerateContext(rootPath, nil, format, false); err != nil {
 			return err
@@ -71,27 +86,10 @@ func RunInit(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func hasSourceFiles(rootPath string) bool {
-	extensions := []string{".go", ".py", ".rb", ".ts", ".js"}
-	found := false
-	_ = filepath.Walk(rootPath, func(path string, info os.FileInfo, err error) error {
-		if err != nil || found {
-			return filepath.SkipDir
-		}
-		if info.IsDir() {
-			base := info.Name()
-			if base == ".git" || base == "node_modules" || base == ".skelly" || base == "vendor" {
-				return filepath.SkipDir
-			}
-			return nil
-		}
-		for _, ext := range extensions {
-			if strings.HasSuffix(path, ext) {
-				found = true
-				return filepath.SkipDir
-			}
-		}
-		return nil
-	})
-	return found
+func hasSourceFiles(rootPath string, ignoreRules []string) (bool, error) {
+	hashes, err := fileutil.ScanFileHashes(rootPath, languages.NewDefaultRegistry(), ignoreRules)
+	if err != nil {
+		return false, err
+	}
+	return len(hashes) > 0, nil
 }

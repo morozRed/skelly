@@ -2,7 +2,7 @@
   "version": "2",
   "parser_version": "tree-sitter-v1",
   "output_version": "context-v1",
-  "updated_at": "2026-02-06T13:26:36.913421+01:00",
+  "updated_at": "2026-02-06T18:36:03.137522+01:00",
   "files": {
     "cmd/skelly/main.go": {
       "hash": "8b4e227d3cb1d6d6",
@@ -55,7 +55,7 @@
       "dependencies": [
         "internal/cli/root.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912963+01:00"
+      "updated_at": "2026-02-06T18:35:42.554249+01:00"
     },
     "fixtures/go/edge_cases.go": {
       "hash": "aa5c0c65918152b9",
@@ -155,7 +155,7 @@
         "context": "context",
         "fmt": "fmt"
       },
-      "updated_at": "2026-02-06T13:26:36.912964+01:00"
+      "updated_at": "2026-02-06T18:35:42.55425+01:00"
     },
     "fixtures/javascript/edge_cases.js": {
       "hash": "1bc09230a8113beb",
@@ -211,7 +211,7 @@
       "import_aliases": {
         "fs": "fs"
       },
-      "updated_at": "2026-02-06T13:26:36.912964+01:00"
+      "updated_at": "2026-02-06T18:35:42.55425+01:00"
     },
     "fixtures/python/edge_cases.py": {
       "hash": "8e5f2440c5a0942f",
@@ -317,7 +317,7 @@
         "os": "os",
         "pathlib": "pathlib"
       },
-      "updated_at": "2026-02-06T13:26:36.912964+01:00"
+      "updated_at": "2026-02-06T18:35:42.55425+01:00"
     },
     "fixtures/ruby/edge_cases.rb": {
       "hash": "a7dde1de41238014",
@@ -403,7 +403,7 @@
         "format": "helpers/format",
         "json": "json"
       },
-      "updated_at": "2026-02-06T13:26:36.912965+01:00"
+      "updated_at": "2026-02-06T18:35:42.554251+01:00"
     },
     "fixtures/typescript/edge_cases.ts": {
       "hash": "2af3d90ee886e389",
@@ -512,7 +512,7 @@
         "join": "path",
         "path": "path"
       },
-      "updated_at": "2026-02-06T13:26:36.912965+01:00"
+      "updated_at": "2026-02-06T18:35:42.554251+01:00"
     },
     "internal/bench/benchmark_test.go": {
       "hash": "3d5f7cd1e19f767b",
@@ -708,7 +708,7 @@
         "internal/languages/registry.go",
         "internal/parser/parser.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912965+01:00"
+      "updated_at": "2026-02-06T18:35:42.554251+01:00"
     },
     "internal/bench/quality_benchmark_test.go": {
       "hash": "1a29936e47ae191e",
@@ -1018,10 +1018,10 @@
         "internal/graph/graph.go",
         "internal/parser/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912965+01:00"
+      "updated_at": "2026-02-06T18:35:42.554252+01:00"
     },
     "internal/cli/cli_test.go": {
-      "hash": "e59efbc36505c0fd",
+      "hash": "c01117cda9d22808",
       "language": "go",
       "symbols": [
         {
@@ -3179,10 +3179,10 @@
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|583|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
-          "Name": "TestEnrichWritesJSONLForTarget",
+          "ID": "internal/cli/cli_test.go|583|func|TestUpdateRefreshesMissingTextModulesOnNoop|3a8d06b8",
+          "Name": "TestUpdateRefreshesMissingTextModulesOnNoop",
           "Kind": 0,
-          "Signature": "func TestEnrichWritesJSONLForTarget(t *testing.T)",
+          "Signature": "func TestUpdateRefreshesMissingTextModulesOnNoop(t *testing.T)",
           "File": "",
           "Line": 583,
           "Doc": "",
@@ -3211,13 +3211,140 @@
             {
               "name": "withWorkingDir",
               "arity": 3,
-              "line": 591,
+              "line": 590,
               "raw": "withWorkingDir"
             },
             {
               "name": "RunInit",
               "arity": 2,
+              "line": 591,
+              "raw": "RunInit"
+            },
+            {
+              "name": "newInitCmdForTest",
+              "line": 591,
+              "raw": "newInitCmdForTest"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
               "line": 592,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 595,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 3,
+              "line": 596,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "assertExists",
+              "arity": 2,
+              "line": 597,
+              "raw": "assertExists"
+            },
+            {
+              "name": "Remove",
+              "qualifier": "os",
+              "receiver": "os",
+              "arity": 1,
+              "line": 599,
+              "raw": "os.Remove"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 600,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "assertNotExists",
+              "arity": 2,
+              "line": 602,
+              "raw": "assertNotExists"
+            },
+            {
+              "name": "RunUpdate",
+              "arity": 2,
+              "line": 604,
+              "raw": "RunUpdate"
+            },
+            {
+              "name": "newUpdateCmdForTest",
+              "line": 604,
+              "raw": "newUpdateCmdForTest"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 605,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "assertExists",
+              "arity": 2,
+              "line": 608,
+              "raw": "assertExists"
+            }
+          ],
+          "CalledBy": null
+        },
+        {
+          "ID": "internal/cli/cli_test.go|612|func|TestEnrichWritesJSONLForTarget|1f4a3cae",
+          "Name": "TestEnrichWritesJSONLForTarget",
+          "Kind": 0,
+          "Signature": "func TestEnrichWritesJSONLForTarget(t *testing.T)",
+          "File": "",
+          "Line": 612,
+          "Doc": "",
+          "Calls": [
+            {
+              "name": "TempDir",
+              "qualifier": "t",
+              "receiver": "t",
+              "line": 613,
+              "raw": "t.TempDir"
+            },
+            {
+              "name": "mustWriteFile",
+              "arity": 3,
+              "line": 614,
+              "raw": "mustWriteFile"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 614,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "withWorkingDir",
+              "arity": 3,
+              "line": 620,
+              "raw": "withWorkingDir"
+            },
+            {
+              "name": "RunInit",
+              "arity": 2,
+              "line": 621,
               "raw": "RunInit"
             },
             {
@@ -3225,144 +3352,19 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 593,
+              "line": 622,
               "raw": "t.Fatalf"
             },
             {
               "name": "RunGenerate",
               "arity": 2,
-              "line": 595,
+              "line": 624,
               "raw": "RunGenerate"
             },
             {
               "name": "newGenerateCmdForTest",
-              "line": 595,
-              "raw": "newGenerateCmdForTest"
-            },
-            {
-              "name": "Fatalf",
-              "qualifier": "t",
-              "receiver": "t",
-              "arity": 2,
-              "line": 596,
-              "raw": "t.Fatalf"
-            },
-            {
-              "name": "newEnrichCmdForTest",
-              "line": 599,
-              "raw": "newEnrichCmdForTest"
-            },
-            {
-              "name": "RunEnrich",
-              "arity": 2,
-              "line": 600,
-              "raw": "RunEnrich"
-            },
-            {
-              "name": "Fatalf",
-              "qualifier": "t",
-              "receiver": "t",
-              "arity": 2,
-              "line": 601,
-              "raw": "t.Fatalf"
-            },
-            {
-              "name": "Join",
-              "qualifier": "filepath",
-              "receiver": "filepath",
-              "arity": 3,
-              "line": 604,
-              "raw": "filepath.Join"
-            },
-            {
-              "name": "assertExists",
-              "arity": 2,
-              "line": 605,
-              "raw": "assertExists"
-            },
-            {
-              "name": "ReadFile",
-              "qualifier": "os",
-              "receiver": "os",
-              "arity": 1,
-              "line": 607,
-              "raw": "os.ReadFile"
-            },
-            {
-              "name": "Fatalf",
-              "qualifier": "t",
-              "receiver": "t",
-              "arity": 2,
-              "line": 609,
-              "raw": "t.Fatalf"
-            },
-            {
-              "name": "Split",
-              "qualifier": "bytes",
-              "receiver": "bytes",
-              "arity": 2,
-              "line": 611,
-              "raw": "bytes.Split"
-            },
-            {
-              "name": "TrimSpace",
-              "qualifier": "bytes",
-              "receiver": "bytes",
-              "arity": 1,
-              "line": 611,
-              "raw": "bytes.TrimSpace"
-            },
-            {
-              "name": "len",
-              "arity": 1,
-              "line": 612,
-              "raw": "len"
-            },
-            {
-              "name": "len",
-              "arity": 1,
-              "line": 613,
-              "raw": "len"
-            },
-            {
-              "name": "Fatalf",
-              "qualifier": "t",
-              "receiver": "t",
-              "arity": 2,
-              "line": 613,
-              "raw": "t.Fatalf"
-            },
-            {
-              "name": "Unmarshal",
-              "qualifier": "json",
-              "receiver": "json",
-              "arity": 2,
-              "line": 617,
-              "raw": "json.Unmarshal"
-            },
-            {
-              "name": "Fatalf",
-              "qualifier": "t",
-              "receiver": "t",
-              "arity": 2,
-              "line": 618,
-              "raw": "t.Fatalf"
-            },
-            {
-              "name": "Fatalf",
-              "qualifier": "t",
-              "receiver": "t",
-              "arity": 1,
-              "line": 621,
-              "raw": "t.Fatalf"
-            },
-            {
-              "name": "Contains",
-              "qualifier": "strings",
-              "receiver": "strings",
-              "arity": 2,
               "line": 624,
-              "raw": "strings.Contains"
+              "raw": "newGenerateCmdForTest"
             },
             {
               "name": "Fatalf",
@@ -3373,28 +3375,45 @@
               "raw": "t.Fatalf"
             },
             {
-              "name": "Fatalf",
-              "qualifier": "t",
-              "receiver": "t",
-              "arity": 1,
+              "name": "newEnrichCmdForTest",
+              "line": 628,
+              "raw": "newEnrichCmdForTest"
+            },
+            {
+              "name": "RunEnrich",
+              "arity": 2,
               "line": 629,
-              "raw": "t.Fatalf"
+              "raw": "RunEnrich"
             },
             {
               "name": "Fatalf",
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 632,
+              "line": 630,
               "raw": "t.Fatalf"
             },
             {
-              "name": "Fatalf",
-              "qualifier": "t",
-              "receiver": "t",
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 3,
+              "line": 633,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "assertExists",
               "arity": 2,
-              "line": 635,
-              "raw": "t.Fatalf"
+              "line": 634,
+              "raw": "assertExists"
+            },
+            {
+              "name": "ReadFile",
+              "qualifier": "os",
+              "receiver": "os",
+              "arity": 1,
+              "line": 636,
+              "raw": "os.ReadFile"
             },
             {
               "name": "Fatalf",
@@ -3403,117 +3422,98 @@
               "arity": 2,
               "line": 638,
               "raw": "t.Fatalf"
-            }
-          ],
-          "CalledBy": null
-        },
-        {
-          "ID": "internal/cli/cli_test.go|643|func|TestEnrichRequiresDescription|f93997f3",
-          "Name": "TestEnrichRequiresDescription",
-          "Kind": 0,
-          "Signature": "func TestEnrichRequiresDescription(t *testing.T)",
-          "File": "",
-          "Line": 643,
-          "Doc": "",
-          "Calls": [
-            {
-              "name": "TempDir",
-              "qualifier": "t",
-              "receiver": "t",
-              "line": 644,
-              "raw": "t.TempDir"
             },
             {
-              "name": "mustWriteFile",
-              "arity": 3,
-              "line": 645,
-              "raw": "mustWriteFile"
-            },
-            {
-              "name": "Join",
-              "qualifier": "filepath",
-              "receiver": "filepath",
+              "name": "Split",
+              "qualifier": "bytes",
+              "receiver": "bytes",
               "arity": 2,
-              "line": 645,
-              "raw": "filepath.Join"
+              "line": 640,
+              "raw": "bytes.Split"
             },
             {
-              "name": "withWorkingDir",
-              "arity": 3,
-              "line": 650,
-              "raw": "withWorkingDir"
+              "name": "TrimSpace",
+              "qualifier": "bytes",
+              "receiver": "bytes",
+              "arity": 1,
+              "line": 640,
+              "raw": "bytes.TrimSpace"
             },
             {
-              "name": "RunInit",
-              "arity": 2,
-              "line": 651,
-              "raw": "RunInit"
+              "name": "len",
+              "arity": 1,
+              "line": 641,
+              "raw": "len"
             },
             {
-              "name": "newInitCmdForTest",
-              "line": 651,
-              "raw": "newInitCmdForTest"
+              "name": "len",
+              "arity": 1,
+              "line": 642,
+              "raw": "len"
             },
             {
               "name": "Fatalf",
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 652,
+              "line": 642,
               "raw": "t.Fatalf"
             },
             {
-              "name": "RunGenerate",
+              "name": "Unmarshal",
+              "qualifier": "json",
+              "receiver": "json",
               "arity": 2,
-              "line": 654,
-              "raw": "RunGenerate"
-            },
-            {
-              "name": "newGenerateCmdForTest",
-              "line": 654,
-              "raw": "newGenerateCmdForTest"
+              "line": 646,
+              "raw": "json.Unmarshal"
             },
             {
               "name": "Fatalf",
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 655,
+              "line": 647,
               "raw": "t.Fatalf"
-            },
-            {
-              "name": "newEnrichCmdForTest",
-              "line": 658,
-              "raw": "newEnrichCmdForTest"
-            },
-            {
-              "name": "RunEnrich",
-              "arity": 2,
-              "line": 659,
-              "raw": "RunEnrich"
             },
             {
               "name": "Fatalf",
               "qualifier": "t",
               "receiver": "t",
               "arity": 1,
-              "line": 661,
+              "line": 650,
               "raw": "t.Fatalf"
-            },
-            {
-              "name": "Error",
-              "qualifier": "err",
-              "receiver": "err",
-              "line": 663,
-              "raw": "err.Error"
             },
             {
               "name": "Contains",
               "qualifier": "strings",
               "receiver": "strings",
               "arity": 2,
-              "line": 663,
+              "line": 653,
               "raw": "strings.Contains"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 654,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 1,
+              "line": 658,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 661,
+              "raw": "t.Fatalf"
             },
             {
               "name": "Fatalf",
@@ -3522,30 +3522,38 @@
               "arity": 2,
               "line": 664,
               "raw": "t.Fatalf"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 667,
+              "raw": "t.Fatalf"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|669|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
-          "Name": "TestEnrichRejectsAmbiguousTarget",
+          "ID": "internal/cli/cli_test.go|672|func|TestEnrichRequiresDescription|f93997f3",
+          "Name": "TestEnrichRequiresDescription",
           "Kind": 0,
-          "Signature": "func TestEnrichRejectsAmbiguousTarget(t *testing.T)",
+          "Signature": "func TestEnrichRequiresDescription(t *testing.T)",
           "File": "",
-          "Line": 669,
+          "Line": 672,
           "Doc": "",
           "Calls": [
             {
               "name": "TempDir",
               "qualifier": "t",
               "receiver": "t",
-              "line": 670,
+              "line": 673,
               "raw": "t.TempDir"
             },
             {
               "name": "mustWriteFile",
               "arity": 3,
-              "line": 671,
+              "line": 674,
               "raw": "mustWriteFile"
             },
             {
@@ -3553,24 +3561,24 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 671,
+              "line": 674,
               "raw": "filepath.Join"
             },
             {
               "name": "withWorkingDir",
               "arity": 3,
-              "line": 677,
+              "line": 679,
               "raw": "withWorkingDir"
             },
             {
               "name": "RunInit",
               "arity": 2,
-              "line": 678,
+              "line": 680,
               "raw": "RunInit"
             },
             {
               "name": "newInitCmdForTest",
-              "line": 678,
+              "line": 680,
               "raw": "newInitCmdForTest"
             },
             {
@@ -3578,18 +3586,18 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 679,
+              "line": 681,
               "raw": "t.Fatalf"
             },
             {
               "name": "RunGenerate",
               "arity": 2,
-              "line": 681,
+              "line": 683,
               "raw": "RunGenerate"
             },
             {
               "name": "newGenerateCmdForTest",
-              "line": 681,
+              "line": 683,
               "raw": "newGenerateCmdForTest"
             },
             {
@@ -3597,18 +3605,18 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 682,
+              "line": 684,
               "raw": "t.Fatalf"
             },
             {
               "name": "newEnrichCmdForTest",
-              "line": 685,
+              "line": 687,
               "raw": "newEnrichCmdForTest"
             },
             {
               "name": "RunEnrich",
               "arity": 2,
-              "line": 686,
+              "line": 688,
               "raw": "RunEnrich"
             },
             {
@@ -3616,14 +3624,14 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 1,
-              "line": 688,
+              "line": 690,
               "raw": "t.Fatalf"
             },
             {
               "name": "Error",
               "qualifier": "err",
               "receiver": "err",
-              "line": 690,
+              "line": 692,
               "raw": "err.Error"
             },
             {
@@ -3631,7 +3639,7 @@
               "qualifier": "strings",
               "receiver": "strings",
               "arity": 2,
-              "line": 690,
+              "line": 692,
               "raw": "strings.Contains"
             },
             {
@@ -3639,32 +3647,32 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 691,
+              "line": 693,
               "raw": "t.Fatalf"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|696|func|TestSetupRunsGenerate|74b8ce6a",
-          "Name": "TestSetupRunsGenerate",
+          "ID": "internal/cli/cli_test.go|698|func|TestEnrichRejectsAmbiguousTarget|5b32f033",
+          "Name": "TestEnrichRejectsAmbiguousTarget",
           "Kind": 0,
-          "Signature": "func TestSetupRunsGenerate(t *testing.T)",
+          "Signature": "func TestEnrichRejectsAmbiguousTarget(t *testing.T)",
           "File": "",
-          "Line": 696,
+          "Line": 698,
           "Doc": "",
           "Calls": [
             {
               "name": "TempDir",
               "qualifier": "t",
               "receiver": "t",
-              "line": 697,
+              "line": 699,
               "raw": "t.TempDir"
             },
             {
               "name": "mustWriteFile",
               "arity": 3,
-              "line": 698,
+              "line": 700,
               "raw": "mustWriteFile"
             },
             {
@@ -3672,24 +3680,143 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 698,
+              "line": 700,
               "raw": "filepath.Join"
             },
             {
               "name": "withWorkingDir",
               "arity": 3,
-              "line": 703,
+              "line": 706,
+              "raw": "withWorkingDir"
+            },
+            {
+              "name": "RunInit",
+              "arity": 2,
+              "line": 707,
+              "raw": "RunInit"
+            },
+            {
+              "name": "newInitCmdForTest",
+              "line": 707,
+              "raw": "newInitCmdForTest"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 708,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "RunGenerate",
+              "arity": 2,
+              "line": 710,
+              "raw": "RunGenerate"
+            },
+            {
+              "name": "newGenerateCmdForTest",
+              "line": 710,
+              "raw": "newGenerateCmdForTest"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 711,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "newEnrichCmdForTest",
+              "line": 714,
+              "raw": "newEnrichCmdForTest"
+            },
+            {
+              "name": "RunEnrich",
+              "arity": 2,
+              "line": 715,
+              "raw": "RunEnrich"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 1,
+              "line": 717,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "Error",
+              "qualifier": "err",
+              "receiver": "err",
+              "line": 719,
+              "raw": "err.Error"
+            },
+            {
+              "name": "Contains",
+              "qualifier": "strings",
+              "receiver": "strings",
+              "arity": 2,
+              "line": 719,
+              "raw": "strings.Contains"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 720,
+              "raw": "t.Fatalf"
+            }
+          ],
+          "CalledBy": null
+        },
+        {
+          "ID": "internal/cli/cli_test.go|725|func|TestSetupRunsGenerate|74b8ce6a",
+          "Name": "TestSetupRunsGenerate",
+          "Kind": 0,
+          "Signature": "func TestSetupRunsGenerate(t *testing.T)",
+          "File": "",
+          "Line": 725,
+          "Doc": "",
+          "Calls": [
+            {
+              "name": "TempDir",
+              "qualifier": "t",
+              "receiver": "t",
+              "line": 726,
+              "raw": "t.TempDir"
+            },
+            {
+              "name": "mustWriteFile",
+              "arity": 3,
+              "line": 727,
+              "raw": "mustWriteFile"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 727,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "withWorkingDir",
+              "arity": 3,
+              "line": 732,
               "raw": "withWorkingDir"
             },
             {
               "name": "newSetupCmdForTest",
-              "line": 704,
+              "line": 733,
               "raw": "newSetupCmdForTest"
             },
             {
               "name": "RunSetup",
               "arity": 2,
-              "line": 705,
+              "line": 734,
               "raw": "RunSetup"
             },
             {
@@ -3697,13 +3824,13 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 706,
+              "line": 735,
               "raw": "t.Fatalf"
             },
             {
               "name": "assertExists",
               "arity": 2,
-              "line": 709,
+              "line": 738,
               "raw": "assertExists"
             },
             {
@@ -3711,13 +3838,13 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 3,
-              "line": 709,
+              "line": 738,
               "raw": "filepath.Join"
             },
             {
               "name": "assertExists",
               "arity": 2,
-              "line": 710,
+              "line": 739,
               "raw": "assertExists"
             },
             {
@@ -3725,13 +3852,13 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 3,
-              "line": 710,
+              "line": 739,
               "raw": "filepath.Join"
             },
             {
               "name": "assertExists",
               "arity": 2,
-              "line": 711,
+              "line": 740,
               "raw": "assertExists"
             },
             {
@@ -3739,13 +3866,13 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 3,
-              "line": 711,
+              "line": 740,
               "raw": "filepath.Join"
             },
             {
               "name": "assertNotExists",
               "arity": 2,
-              "line": 712,
+              "line": 741,
               "raw": "assertNotExists"
             },
             {
@@ -3753,26 +3880,26 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 3,
-              "line": 712,
+              "line": 741,
               "raw": "filepath.Join"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|716|func|newGenerateCmdForTest|7d97dfab",
+          "ID": "internal/cli/cli_test.go|745|func|newGenerateCmdForTest|7d97dfab",
           "Name": "newGenerateCmdForTest",
           "Kind": 0,
           "Signature": "func newGenerateCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 716,
+          "Line": 745,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 718,
+              "line": 747,
               "raw": "cmd.Flags"
             },
             {
@@ -3780,14 +3907,14 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 718,
+              "line": 747,
               "raw": "cmd.Flags().StringSlice"
             },
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 719,
+              "line": 748,
               "raw": "cmd.Flags"
             },
             {
@@ -3795,14 +3922,14 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 719,
+              "line": 748,
               "raw": "cmd.Flags().String"
             },
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 720,
+              "line": 749,
               "raw": "cmd.Flags"
             },
             {
@@ -3810,26 +3937,26 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 720,
+              "line": 749,
               "raw": "cmd.Flags().Bool"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|724|func|newInitCmdForTest|dddd3af6",
+          "ID": "internal/cli/cli_test.go|753|func|newInitCmdForTest|dddd3af6",
           "Name": "newInitCmdForTest",
           "Kind": 0,
           "Signature": "func newInitCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 724,
+          "Line": 753,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 726,
+              "line": 755,
               "raw": "cmd.Flags"
             },
             {
@@ -3837,14 +3964,14 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 726,
+              "line": 755,
               "raw": "cmd.Flags().String"
             },
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 727,
+              "line": 756,
               "raw": "cmd.Flags"
             },
             {
@@ -3852,14 +3979,14 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 727,
+              "line": 756,
               "raw": "cmd.Flags().Bool"
             },
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 728,
+              "line": 757,
               "raw": "cmd.Flags"
             },
             {
@@ -3867,26 +3994,26 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 728,
+              "line": 757,
               "raw": "cmd.Flags().String"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|732|func|newUpdateCmdForTest|ffe2f6dc",
+          "ID": "internal/cli/cli_test.go|761|func|newUpdateCmdForTest|ffe2f6dc",
           "Name": "newUpdateCmdForTest",
           "Kind": 0,
           "Signature": "func newUpdateCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 732,
+          "Line": 761,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 734,
+              "line": 763,
               "raw": "cmd.Flags"
             },
             {
@@ -3894,14 +4021,14 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 734,
+              "line": 763,
               "raw": "cmd.Flags().Bool"
             },
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 735,
+              "line": 764,
               "raw": "cmd.Flags"
             },
             {
@@ -3909,14 +4036,14 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 735,
+              "line": 764,
               "raw": "cmd.Flags().String"
             },
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 736,
+              "line": 765,
               "raw": "cmd.Flags"
             },
             {
@@ -3924,26 +4051,26 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 736,
+              "line": 765,
               "raw": "cmd.Flags().Bool"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|740|func|newEnrichCmdForTest|57d5aa4c",
+          "ID": "internal/cli/cli_test.go|769|func|newEnrichCmdForTest|57d5aa4c",
           "Name": "newEnrichCmdForTest",
           "Kind": 0,
           "Signature": "func newEnrichCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 740,
+          "Line": 769,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 742,
+              "line": 771,
               "raw": "cmd.Flags"
             },
             {
@@ -3951,26 +4078,26 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 742,
+              "line": 771,
               "raw": "cmd.Flags().Bool"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|746|func|newSetupCmdForTest|5f297dd0",
+          "ID": "internal/cli/cli_test.go|775|func|newSetupCmdForTest|5f297dd0",
           "Name": "newSetupCmdForTest",
           "Kind": 0,
           "Signature": "func newSetupCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 746,
+          "Line": 775,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 748,
+              "line": 777,
               "raw": "cmd.Flags"
             },
             {
@@ -3978,26 +4105,26 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 748,
+              "line": 777,
               "raw": "cmd.Flags().String"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|752|func|newDoctorCmdForTest|cc39f149",
+          "ID": "internal/cli/cli_test.go|781|func|newDoctorCmdForTest|cc39f149",
           "Name": "newDoctorCmdForTest",
           "Kind": 0,
           "Signature": "func newDoctorCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 752,
+          "Line": 781,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 754,
+              "line": 783,
               "raw": "cmd.Flags"
             },
             {
@@ -4005,26 +4132,26 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 754,
+              "line": 783,
               "raw": "cmd.Flags().Bool"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|758|func|newSymbolCmdForTest|4e0f4ad6",
+          "ID": "internal/cli/cli_test.go|787|func|newSymbolCmdForTest|4e0f4ad6",
           "Name": "newSymbolCmdForTest",
           "Kind": 0,
           "Signature": "func newSymbolCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 758,
+          "Line": 787,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 760,
+              "line": 789,
               "raw": "cmd.Flags"
             },
             {
@@ -4032,26 +4159,26 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 760,
+              "line": 789,
               "raw": "cmd.Flags().Bool"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|764|func|newCallersCmdForTest|1c949104",
+          "ID": "internal/cli/cli_test.go|793|func|newCallersCmdForTest|1c949104",
           "Name": "newCallersCmdForTest",
           "Kind": 0,
           "Signature": "func newCallersCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 764,
+          "Line": 793,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 766,
+              "line": 795,
               "raw": "cmd.Flags"
             },
             {
@@ -4059,26 +4186,26 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 766,
+              "line": 795,
               "raw": "cmd.Flags().Bool"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|770|func|newCalleesCmdForTest|8a320a6d",
+          "ID": "internal/cli/cli_test.go|799|func|newCalleesCmdForTest|8a320a6d",
           "Name": "newCalleesCmdForTest",
           "Kind": 0,
           "Signature": "func newCalleesCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 770,
+          "Line": 799,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 772,
+              "line": 801,
               "raw": "cmd.Flags"
             },
             {
@@ -4086,26 +4213,26 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 772,
+              "line": 801,
               "raw": "cmd.Flags().Bool"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|776|func|newTraceCmdForTest|8cf366e2",
+          "ID": "internal/cli/cli_test.go|805|func|newTraceCmdForTest|8cf366e2",
           "Name": "newTraceCmdForTest",
           "Kind": 0,
           "Signature": "func newTraceCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 776,
+          "Line": 805,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 778,
+              "line": 807,
               "raw": "cmd.Flags"
             },
             {
@@ -4113,14 +4240,14 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 778,
+              "line": 807,
               "raw": "cmd.Flags().Int"
             },
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 779,
+              "line": 808,
               "raw": "cmd.Flags"
             },
             {
@@ -4128,26 +4255,26 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 779,
+              "line": 808,
               "raw": "cmd.Flags().Bool"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|783|func|newPathCmdForTest|2b067820",
+          "ID": "internal/cli/cli_test.go|812|func|newPathCmdForTest|2b067820",
           "Name": "newPathCmdForTest",
           "Kind": 0,
           "Signature": "func newPathCmdForTest() *cobra.Command",
           "File": "",
-          "Line": 783,
+          "Line": 812,
           "Doc": "",
           "Calls": [
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 785,
+              "line": 814,
               "raw": "cmd.Flags"
             },
             {
@@ -4155,33 +4282,33 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 3,
-              "line": 785,
+              "line": 814,
               "raw": "cmd.Flags().Bool"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|789|func|withWorkingDir|0aa02121",
+          "ID": "internal/cli/cli_test.go|818|func|withWorkingDir|0aa02121",
           "Name": "withWorkingDir",
           "Kind": 0,
           "Signature": "func withWorkingDir(t *testing.T, dir string, fn func())",
           "File": "",
-          "Line": 789,
+          "Line": 818,
           "Doc": "",
           "Calls": [
             {
               "name": "Helper",
               "qualifier": "t",
               "receiver": "t",
-              "line": 790,
+              "line": 819,
               "raw": "t.Helper"
             },
             {
               "name": "Getwd",
               "qualifier": "os",
               "receiver": "os",
-              "line": 792,
+              "line": 821,
               "raw": "os.Getwd"
             },
             {
@@ -4189,7 +4316,7 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 794,
+              "line": 823,
               "raw": "t.Fatalf"
             },
             {
@@ -4197,7 +4324,7 @@
               "qualifier": "os",
               "receiver": "os",
               "arity": 1,
-              "line": 796,
+              "line": 825,
               "raw": "os.Chdir"
             },
             {
@@ -4205,14 +4332,14 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 797,
+              "line": 826,
               "raw": "t.Fatalf"
             },
             {
               "name": "Chdir(originalWD)\n\t}",
               "qualifier": "func() {\n\t\t_ = os",
               "receiver": "func() {\n\t\t_ = os",
-              "line": 799,
+              "line": 828,
               "raw": "func() {\n\t\t_ = os.Chdir(originalWD)\n\t}"
             },
             {
@@ -4220,31 +4347,31 @@
               "qualifier": "os",
               "receiver": "os",
               "arity": 1,
-              "line": 800,
+              "line": 829,
               "raw": "os.Chdir"
             },
             {
               "name": "fn",
-              "line": 803,
+              "line": 832,
               "raw": "fn"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|806|func|assertExists|e2cd6831",
+          "ID": "internal/cli/cli_test.go|835|func|assertExists|e2cd6831",
           "Name": "assertExists",
           "Kind": 0,
           "Signature": "func assertExists(t *testing.T, path string)",
           "File": "",
-          "Line": 806,
+          "Line": 835,
           "Doc": "",
           "Calls": [
             {
               "name": "Helper",
               "qualifier": "t",
               "receiver": "t",
-              "line": 807,
+              "line": 836,
               "raw": "t.Helper"
             },
             {
@@ -4252,7 +4379,7 @@
               "qualifier": "os",
               "receiver": "os",
               "arity": 1,
-              "line": 808,
+              "line": 837,
               "raw": "os.Stat"
             },
             {
@@ -4260,26 +4387,26 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 3,
-              "line": 809,
+              "line": 838,
               "raw": "t.Fatalf"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|813|func|assertNotExists|fbc8307b",
+          "ID": "internal/cli/cli_test.go|842|func|assertNotExists|fbc8307b",
           "Name": "assertNotExists",
           "Kind": 0,
           "Signature": "func assertNotExists(t *testing.T, path string)",
           "File": "",
-          "Line": 813,
+          "Line": 842,
           "Doc": "",
           "Calls": [
             {
               "name": "Helper",
               "qualifier": "t",
               "receiver": "t",
-              "line": 814,
+              "line": 843,
               "raw": "t.Helper"
             },
             {
@@ -4287,7 +4414,7 @@
               "qualifier": "os",
               "receiver": "os",
               "arity": 1,
-              "line": 815,
+              "line": 844,
               "raw": "os.Stat"
             },
             {
@@ -4295,7 +4422,7 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 816,
+              "line": 845,
               "raw": "t.Fatalf"
             },
             {
@@ -4303,7 +4430,7 @@
               "qualifier": "os",
               "receiver": "os",
               "arity": 1,
-              "line": 817,
+              "line": 846,
               "raw": "os.IsNotExist"
             },
             {
@@ -4311,33 +4438,33 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 3,
-              "line": 818,
+              "line": 847,
               "raw": "t.Fatalf"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|822|func|mustSetFlag|6f3e3219",
+          "ID": "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
           "Name": "mustSetFlag",
           "Kind": 0,
           "Signature": "func mustSetFlag(t *testing.T, cmd *cobra.Command, key, value string)",
           "File": "",
-          "Line": 822,
+          "Line": 851,
           "Doc": "",
           "Calls": [
             {
               "name": "Helper",
               "qualifier": "t",
               "receiver": "t",
-              "line": 823,
+              "line": 852,
               "raw": "t.Helper"
             },
             {
               "name": "Flags",
               "qualifier": "cmd",
               "receiver": "cmd",
-              "line": 824,
+              "line": 853,
               "raw": "cmd.Flags"
             },
             {
@@ -4345,7 +4472,7 @@
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 2,
-              "line": 824,
+              "line": 853,
               "raw": "cmd.Flags().Set"
             },
             {
@@ -4353,33 +4480,33 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 4,
-              "line": 825,
+              "line": 854,
               "raw": "t.Fatalf"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|829|func|captureStdout|414fd395",
+          "ID": "internal/cli/cli_test.go|858|func|captureStdout|414fd395",
           "Name": "captureStdout",
           "Kind": 0,
           "Signature": "func captureStdout(t *testing.T, fn func()) string",
           "File": "",
-          "Line": 829,
+          "Line": 858,
           "Doc": "",
           "Calls": [
             {
               "name": "Helper",
               "qualifier": "t",
               "receiver": "t",
-              "line": 830,
+              "line": 859,
               "raw": "t.Helper"
             },
             {
               "name": "Pipe",
               "qualifier": "os",
               "receiver": "os",
-              "line": 833,
+              "line": 862,
               "raw": "os.Pipe"
             },
             {
@@ -4387,40 +4514,40 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 835,
+              "line": 864,
               "raw": "t.Fatalf"
             },
             {
               "name": "Close()\n\t}",
               "qualifier": "func() {\n\t\tos.Stdout = original\n\t\t_ = writer.Close()\n\t\t_ = reader",
               "receiver": "func() {\n\t\tos.Stdout = original\n\t\t_ = writer.Close()\n\t\t_ = reader",
-              "line": 838,
+              "line": 867,
               "raw": "func() {\n\t\tos.Stdout = original\n\t\t_ = writer.Close()\n\t\t_ = reader.Close()\n\t}"
             },
             {
               "name": "Close",
               "qualifier": "writer",
               "receiver": "writer",
-              "line": 840,
+              "line": 869,
               "raw": "writer.Close"
             },
             {
               "name": "Close",
               "qualifier": "reader",
               "receiver": "reader",
-              "line": 841,
+              "line": 870,
               "raw": "reader.Close"
             },
             {
               "name": "fn",
-              "line": 844,
+              "line": 873,
               "raw": "fn"
             },
             {
               "name": "Close",
               "qualifier": "writer",
               "receiver": "writer",
-              "line": 846,
+              "line": 875,
               "raw": "writer.Close"
             },
             {
@@ -4428,7 +4555,7 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 847,
+              "line": 876,
               "raw": "t.Fatalf"
             },
             {
@@ -4436,7 +4563,7 @@
               "qualifier": "io",
               "receiver": "io",
               "arity": 1,
-              "line": 850,
+              "line": 879,
               "raw": "io.ReadAll"
             },
             {
@@ -4444,67 +4571,67 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 852,
+              "line": 881,
               "raw": "t.Fatalf"
             },
             {
               "name": "string",
               "arity": 1,
-              "line": 854,
+              "line": 883,
               "raw": "string"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|857|func|containsString|dcc1cc04",
+          "ID": "internal/cli/cli_test.go|886|func|containsString|dcc1cc04",
           "Name": "containsString",
           "Kind": 0,
           "Signature": "func containsString(values []string, target string) bool",
           "File": "",
-          "Line": 857,
+          "Line": 886,
           "Doc": "",
           "Calls": null,
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|866|func|cloneStringMap|b79deb24",
+          "ID": "internal/cli/cli_test.go|895|func|cloneStringMap|b79deb24",
           "Name": "cloneStringMap",
           "Kind": 0,
           "Signature": "func cloneStringMap(input map[string]string) map[string]string",
           "File": "",
-          "Line": 866,
+          "Line": 895,
           "Doc": "",
           "Calls": [
             {
               "name": "len",
               "arity": 1,
-              "line": 867,
+              "line": 896,
               "raw": "len"
             },
             {
               "name": "make",
               "arity": 2,
-              "line": 867,
+              "line": 896,
               "raw": "make"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|874|func|assertSortedSymbolJSONL|64164312",
+          "ID": "internal/cli/cli_test.go|903|func|assertSortedSymbolJSONL|64164312",
           "Name": "assertSortedSymbolJSONL",
           "Kind": 0,
           "Signature": "func assertSortedSymbolJSONL(t *testing.T, data []byte)",
           "File": "",
-          "Line": 874,
+          "Line": 903,
           "Doc": "",
           "Calls": [
             {
               "name": "Helper",
               "qualifier": "t",
               "receiver": "t",
-              "line": 875,
+              "line": 904,
               "raw": "t.Helper"
             },
             {
@@ -4512,7 +4639,7 @@
               "qualifier": "bufio",
               "receiver": "bufio",
               "arity": 1,
-              "line": 883,
+              "line": 912,
               "raw": "bufio.NewScanner"
             },
             {
@@ -4520,27 +4647,27 @@
               "qualifier": "bytes",
               "receiver": "bytes",
               "arity": 1,
-              "line": 883,
+              "line": 912,
               "raw": "bytes.NewReader"
             },
             {
               "name": "Scan",
               "qualifier": "scanner",
               "receiver": "scanner",
-              "line": 886,
+              "line": 915,
               "raw": "scanner.Scan"
             },
             {
               "name": "Bytes",
               "qualifier": "scanner",
               "receiver": "scanner",
-              "line": 887,
+              "line": 916,
               "raw": "scanner.Bytes"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 888,
+              "line": 917,
               "raw": "len"
             },
             {
@@ -4548,7 +4675,7 @@
               "qualifier": "bytes",
               "receiver": "bytes",
               "arity": 1,
-              "line": 888,
+              "line": 917,
               "raw": "bytes.TrimSpace"
             },
             {
@@ -4556,7 +4683,7 @@
               "qualifier": "json",
               "receiver": "json",
               "arity": 2,
-              "line": 893,
+              "line": 922,
               "raw": "json.Unmarshal"
             },
             {
@@ -4564,7 +4691,7 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 894,
+              "line": 923,
               "raw": "t.Fatalf"
             },
             {
@@ -4572,7 +4699,7 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 3,
-              "line": 898,
+              "line": 927,
               "raw": "t.Fatalf"
             },
             {
@@ -4580,7 +4707,7 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 901,
+              "line": 930,
               "raw": "t.Fatalf"
             },
             {
@@ -4588,14 +4715,14 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 3,
-              "line": 904,
+              "line": 933,
               "raw": "t.Fatalf"
             },
             {
               "name": "Err",
               "qualifier": "scanner",
               "receiver": "scanner",
-              "line": 910,
+              "line": 939,
               "raw": "scanner.Err"
             },
             {
@@ -4603,43 +4730,43 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 911,
+              "line": 940,
               "raw": "t.Fatalf"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|877|struct|symbolLine|55587f14",
+          "ID": "internal/cli/cli_test.go|906|struct|symbolLine|55587f14",
           "Name": "symbolLine",
           "Kind": 3,
           "Signature": "type symbolLine struct",
           "File": "",
-          "Line": 877,
+          "Line": 906,
           "Doc": "",
           "Calls": null,
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|915|func|TestInitAutoGeneratesContext|4d4da680",
+          "ID": "internal/cli/cli_test.go|944|func|TestInitAutoGeneratesContext|4d4da680",
           "Name": "TestInitAutoGeneratesContext",
           "Kind": 0,
           "Signature": "func TestInitAutoGeneratesContext(t *testing.T)",
           "File": "",
-          "Line": 915,
+          "Line": 944,
           "Doc": "",
           "Calls": [
             {
               "name": "TempDir",
               "qualifier": "t",
               "receiver": "t",
-              "line": 916,
+              "line": 945,
               "raw": "t.TempDir"
             },
             {
               "name": "mustWriteFile",
               "arity": 3,
-              "line": 917,
+              "line": 946,
               "raw": "mustWriteFile"
             },
             {
@@ -4647,24 +4774,24 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 917,
+              "line": 946,
               "raw": "filepath.Join"
             },
             {
               "name": "withWorkingDir",
               "arity": 3,
-              "line": 922,
+              "line": 951,
               "raw": "withWorkingDir"
             },
             {
               "name": "newInitCmdForTest",
-              "line": 923,
+              "line": 952,
               "raw": "newInitCmdForTest"
             },
             {
               "name": "RunInit",
               "arity": 2,
-              "line": 924,
+              "line": 953,
               "raw": "RunInit"
             },
             {
@@ -4672,13 +4799,13 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 925,
+              "line": 954,
               "raw": "t.Fatalf"
             },
             {
               "name": "assertExists",
               "arity": 2,
-              "line": 929,
+              "line": 958,
               "raw": "assertExists"
             },
             {
@@ -4686,13 +4813,13 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 3,
-              "line": 929,
+              "line": 958,
               "raw": "filepath.Join"
             },
             {
               "name": "assertExists",
               "arity": 2,
-              "line": 930,
+              "line": 959,
               "raw": "assertExists"
             },
             {
@@ -4700,32 +4827,32 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 3,
-              "line": 930,
+              "line": 959,
               "raw": "filepath.Join"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|934|func|TestInitNoGenerateSkipsGenerate|9076aede",
+          "ID": "internal/cli/cli_test.go|963|func|TestInitNoGenerateSkipsGenerate|9076aede",
           "Name": "TestInitNoGenerateSkipsGenerate",
           "Kind": 0,
           "Signature": "func TestInitNoGenerateSkipsGenerate(t *testing.T)",
           "File": "",
-          "Line": 934,
+          "Line": 963,
           "Doc": "",
           "Calls": [
             {
               "name": "TempDir",
               "qualifier": "t",
               "receiver": "t",
-              "line": 935,
+              "line": 964,
               "raw": "t.TempDir"
             },
             {
               "name": "mustWriteFile",
               "arity": 3,
-              "line": 936,
+              "line": 965,
               "raw": "mustWriteFile"
             },
             {
@@ -4733,30 +4860,30 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 936,
+              "line": 965,
               "raw": "filepath.Join"
             },
             {
               "name": "withWorkingDir",
               "arity": 3,
-              "line": 941,
+              "line": 970,
               "raw": "withWorkingDir"
             },
             {
               "name": "newInitCmdForTest",
-              "line": 942,
+              "line": 971,
               "raw": "newInitCmdForTest"
             },
             {
               "name": "mustSetFlag",
               "arity": 4,
-              "line": 943,
+              "line": 972,
               "raw": "mustSetFlag"
             },
             {
               "name": "RunInit",
               "arity": 2,
-              "line": 944,
+              "line": 973,
               "raw": "RunInit"
             },
             {
@@ -4764,13 +4891,13 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 945,
+              "line": 974,
               "raw": "t.Fatalf"
             },
             {
               "name": "assertExists",
               "arity": 2,
-              "line": 949,
+              "line": 978,
               "raw": "assertExists"
             },
             {
@@ -4778,13 +4905,13 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 3,
-              "line": 949,
+              "line": 978,
               "raw": "filepath.Join"
             },
             {
               "name": "assertNotExists",
               "arity": 2,
-              "line": 950,
+              "line": 979,
               "raw": "assertNotExists"
             },
             {
@@ -4792,13 +4919,13 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 3,
-              "line": 950,
+              "line": 979,
               "raw": "filepath.Join"
             },
             {
               "name": "assertNotExists",
               "arity": 2,
-              "line": 951,
+              "line": 980,
               "raw": "assertNotExists"
             },
             {
@@ -4806,32 +4933,32 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 3,
-              "line": 951,
+              "line": 980,
               "raw": "filepath.Join"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|955|func|TestSetupPrintsDeprecationWarning|70a4e29a",
-          "Name": "TestSetupPrintsDeprecationWarning",
+          "ID": "internal/cli/cli_test.go|984|func|TestInitRejectsInvalidFormat|c05c6f48",
+          "Name": "TestInitRejectsInvalidFormat",
           "Kind": 0,
-          "Signature": "func TestSetupPrintsDeprecationWarning(t *testing.T)",
+          "Signature": "func TestInitRejectsInvalidFormat(t *testing.T)",
           "File": "",
-          "Line": 955,
+          "Line": 984,
           "Doc": "",
           "Calls": [
             {
               "name": "TempDir",
               "qualifier": "t",
               "receiver": "t",
-              "line": 956,
+              "line": 985,
               "raw": "t.TempDir"
             },
             {
               "name": "mustWriteFile",
               "arity": 3,
-              "line": 957,
+              "line": 986,
               "raw": "mustWriteFile"
             },
             {
@@ -4839,20 +4966,368 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 957,
+              "line": 986,
               "raw": "filepath.Join"
             },
             {
               "name": "withWorkingDir",
               "arity": 3,
-              "line": 962,
+              "line": 991,
+              "raw": "withWorkingDir"
+            },
+            {
+              "name": "newInitCmdForTest",
+              "line": 992,
+              "raw": "newInitCmdForTest"
+            },
+            {
+              "name": "mustSetFlag",
+              "arity": 4,
+              "line": 993,
+              "raw": "mustSetFlag"
+            },
+            {
+              "name": "RunInit",
+              "arity": 2,
+              "line": 994,
+              "raw": "RunInit"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 1,
+              "line": 996,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "Error",
+              "qualifier": "err",
+              "receiver": "err",
+              "line": 998,
+              "raw": "err.Error"
+            },
+            {
+              "name": "Contains",
+              "qualifier": "strings",
+              "receiver": "strings",
+              "arity": 2,
+              "line": 998,
+              "raw": "strings.Contains"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 999,
+              "raw": "t.Fatalf"
+            }
+          ],
+          "CalledBy": null
+        },
+        {
+          "ID": "internal/cli/cli_test.go|1004|func|TestInitNoGeneratePreservesExistingState|39636cbe",
+          "Name": "TestInitNoGeneratePreservesExistingState",
+          "Kind": 0,
+          "Signature": "func TestInitNoGeneratePreservesExistingState(t *testing.T)",
+          "File": "",
+          "Line": 1004,
+          "Doc": "",
+          "Calls": [
+            {
+              "name": "TempDir",
+              "qualifier": "t",
+              "receiver": "t",
+              "line": 1005,
+              "raw": "t.TempDir"
+            },
+            {
+              "name": "mustWriteFile",
+              "arity": 3,
+              "line": 1006,
+              "raw": "mustWriteFile"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 1006,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "withWorkingDir",
+              "arity": 3,
+              "line": 1011,
+              "raw": "withWorkingDir"
+            },
+            {
+              "name": "RunInit",
+              "arity": 2,
+              "line": 1012,
+              "raw": "RunInit"
+            },
+            {
+              "name": "newInitCmdForTest",
+              "line": 1012,
+              "raw": "newInitCmdForTest"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 1013,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 1016,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "Load",
+              "qualifier": "state",
+              "receiver": "state",
+              "arity": 1,
+              "line": 1017,
+              "raw": "state.Load"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 1019,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 1,
+              "line": 1023,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "len",
+              "arity": 1,
+              "line": 1025,
+              "raw": "len"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 1,
+              "line": 1026,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "newInitCmdForTest",
+              "line": 1029,
+              "raw": "newInitCmdForTest"
+            },
+            {
+              "name": "mustSetFlag",
+              "arity": 4,
+              "line": 1030,
+              "raw": "mustSetFlag"
+            },
+            {
+              "name": "RunInit",
+              "arity": 2,
+              "line": 1031,
+              "raw": "RunInit"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 1032,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "Load",
+              "qualifier": "state",
+              "receiver": "state",
+              "arity": 1,
+              "line": 1035,
+              "raw": "state.Load"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 1037,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 1,
+              "line": 1041,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "len",
+              "arity": 1,
+              "line": 1043,
+              "raw": "len"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 1,
+              "line": 1044,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 1,
+              "line": 1047,
+              "raw": "t.Fatalf"
+            }
+          ],
+          "CalledBy": null
+        },
+        {
+          "ID": "internal/cli/cli_test.go|1052|func|TestInitAutoGeneratesContextForTSX|f0f793a1",
+          "Name": "TestInitAutoGeneratesContextForTSX",
+          "Kind": 0,
+          "Signature": "func TestInitAutoGeneratesContextForTSX(t *testing.T)",
+          "File": "",
+          "Line": 1052,
+          "Doc": "",
+          "Calls": [
+            {
+              "name": "TempDir",
+              "qualifier": "t",
+              "receiver": "t",
+              "line": 1053,
+              "raw": "t.TempDir"
+            },
+            {
+              "name": "mustWriteFile",
+              "arity": 3,
+              "line": 1054,
+              "raw": "mustWriteFile"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 1054,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "withWorkingDir",
+              "arity": 3,
+              "line": 1057,
+              "raw": "withWorkingDir"
+            },
+            {
+              "name": "newInitCmdForTest",
+              "line": 1058,
+              "raw": "newInitCmdForTest"
+            },
+            {
+              "name": "RunInit",
+              "arity": 2,
+              "line": 1059,
+              "raw": "RunInit"
+            },
+            {
+              "name": "Fatalf",
+              "qualifier": "t",
+              "receiver": "t",
+              "arity": 2,
+              "line": 1060,
+              "raw": "t.Fatalf"
+            },
+            {
+              "name": "assertExists",
+              "arity": 2,
+              "line": 1063,
+              "raw": "assertExists"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 3,
+              "line": 1063,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "assertExists",
+              "arity": 2,
+              "line": 1064,
+              "raw": "assertExists"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 3,
+              "line": 1064,
+              "raw": "filepath.Join"
+            }
+          ],
+          "CalledBy": null
+        },
+        {
+          "ID": "internal/cli/cli_test.go|1068|func|TestSetupPrintsDeprecationWarning|70a4e29a",
+          "Name": "TestSetupPrintsDeprecationWarning",
+          "Kind": 0,
+          "Signature": "func TestSetupPrintsDeprecationWarning(t *testing.T)",
+          "File": "",
+          "Line": 1068,
+          "Doc": "",
+          "Calls": [
+            {
+              "name": "TempDir",
+              "qualifier": "t",
+              "receiver": "t",
+              "line": 1069,
+              "raw": "t.TempDir"
+            },
+            {
+              "name": "mustWriteFile",
+              "arity": 3,
+              "line": 1070,
+              "raw": "mustWriteFile"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 1070,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "withWorkingDir",
+              "arity": 3,
+              "line": 1075,
               "raw": "withWorkingDir"
             },
             {
               "name": "Pipe",
               "qualifier": "os",
               "receiver": "os",
-              "line": 965,
+              "line": 1078,
               "raw": "os.Pipe"
             },
             {
@@ -4860,25 +5335,25 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 967,
+              "line": 1080,
               "raw": "t.Fatalf"
             },
             {
               "name": "newSetupCmdForTest",
-              "line": 971,
+              "line": 1084,
               "raw": "newSetupCmdForTest"
             },
             {
               "name": "RunSetup",
               "arity": 2,
-              "line": 972,
+              "line": 1085,
               "raw": "RunSetup"
             },
             {
               "name": "Close",
               "qualifier": "w",
               "receiver": "w",
-              "line": 974,
+              "line": 1087,
               "raw": "w.Close"
             },
             {
@@ -4886,7 +5361,7 @@
               "qualifier": "io",
               "receiver": "io",
               "arity": 2,
-              "line": 978,
+              "line": 1091,
               "raw": "io.Copy"
             },
             {
@@ -4894,14 +5369,14 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 981,
+              "line": 1094,
               "raw": "t.Fatalf"
             },
             {
               "name": "String",
               "qualifier": "buf",
               "receiver": "buf",
-              "line": 984,
+              "line": 1097,
               "raw": "buf.String"
             },
             {
@@ -4909,7 +5384,7 @@
               "qualifier": "strings",
               "receiver": "strings",
               "arity": 2,
-              "line": 985,
+              "line": 1098,
               "raw": "strings.Contains"
             },
             {
@@ -4917,7 +5392,7 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 986,
+              "line": 1099,
               "raw": "t.Fatalf"
             },
             {
@@ -4925,7 +5400,7 @@
               "qualifier": "strings",
               "receiver": "strings",
               "arity": 2,
-              "line": 988,
+              "line": 1101,
               "raw": "strings.Contains"
             },
             {
@@ -4933,26 +5408,26 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 2,
-              "line": 989,
+              "line": 1102,
               "raw": "t.Fatalf"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/cli_test.go|994|func|mustWriteFile|d4805ab9",
+          "ID": "internal/cli/cli_test.go|1107|func|mustWriteFile|d4805ab9",
           "Name": "mustWriteFile",
           "Kind": 0,
           "Signature": "func mustWriteFile(t *testing.T, path, content string)",
           "File": "",
-          "Line": 994,
+          "Line": 1107,
           "Doc": "",
           "Calls": [
             {
               "name": "Helper",
               "qualifier": "t",
               "receiver": "t",
-              "line": 995,
+              "line": 1108,
               "raw": "t.Helper"
             },
             {
@@ -4960,7 +5435,7 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 1,
-              "line": 996,
+              "line": 1109,
               "raw": "filepath.Dir"
             },
             {
@@ -4968,7 +5443,7 @@
               "qualifier": "os",
               "receiver": "os",
               "arity": 2,
-              "line": 996,
+              "line": 1109,
               "raw": "os.MkdirAll"
             },
             {
@@ -4976,7 +5451,7 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 1,
-              "line": 997,
+              "line": 1110,
               "raw": "filepath.Dir"
             },
             {
@@ -4984,7 +5459,7 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 3,
-              "line": 997,
+              "line": 1110,
               "raw": "t.Fatalf"
             },
             {
@@ -4992,7 +5467,7 @@
               "qualifier": "os",
               "receiver": "os",
               "arity": 3,
-              "line": 999,
+              "line": 1112,
               "raw": "os.WriteFile"
             },
             {
@@ -5000,7 +5475,7 @@
               "qualifier": "t",
               "receiver": "t",
               "arity": 3,
-              "line": 1000,
+              "line": 1113,
               "raw": "t.Fatalf"
             }
           ],
@@ -5049,7 +5524,7 @@
         "internal/parser/types.go",
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912965+01:00"
+      "updated_at": "2026-02-06T18:35:42.554252+01:00"
     },
     "internal/cli/doctor.go": {
       "hash": "c4920d287fee5f7e",
@@ -5445,7 +5920,7 @@
         "internal/nav/commands.go",
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912966+01:00"
+      "updated_at": "2026-02-06T18:35:42.554253+01:00"
     },
     "internal/cli/enrich.go": {
       "hash": "e759211034265ff1",
@@ -5923,10 +6398,10 @@
         "internal/output/writer.go",
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912966+01:00"
+      "updated_at": "2026-02-06T18:35:42.554253+01:00"
     },
     "internal/cli/flags.go": {
-      "hash": "f199a1bc5212e2b0",
+      "hash": "7a768638a9e6b6a2",
       "language": "go",
       "symbols": [
         {
@@ -6081,11 +6556,26 @@
               "raw": "cmd.Flags"
             },
             {
-              "name": "GetString",
+              "name": "Lookup",
               "qualifier": "cmd.Flags()",
               "receiver": "cmd.Flags()",
               "arity": 1,
               "line": 57,
+              "raw": "cmd.Flags().Lookup"
+            },
+            {
+              "name": "Flags",
+              "qualifier": "cmd",
+              "receiver": "cmd",
+              "line": 61,
+              "raw": "cmd.Flags"
+            },
+            {
+              "name": "GetString",
+              "qualifier": "cmd.Flags()",
+              "receiver": "cmd.Flags()",
+              "arity": 1,
+              "line": 61,
               "raw": "cmd.Flags().GetString"
             },
             {
@@ -6093,7 +6583,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 59,
+              "line": 63,
               "raw": "fmt.Errorf"
             },
             {
@@ -6101,7 +6591,7 @@
               "qualifier": "output",
               "receiver": "output",
               "arity": 1,
-              "line": 61,
+              "line": 65,
               "raw": "output.ParseFormat"
             }
           ],
@@ -6124,7 +6614,7 @@
         "internal/nav/types.go",
         "internal/output/writer.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912966+01:00"
+      "updated_at": "2026-02-06T18:35:42.554253+01:00"
     },
     "internal/cli/generate.go": {
       "hash": "d7408c8dc13fd75d",
@@ -6574,34 +7064,26 @@
         "internal/parser/parser.go",
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912966+01:00"
+      "updated_at": "2026-02-06T18:35:42.554253+01:00"
     },
     "internal/cli/helpers.go": {
-      "hash": "ac3af2d35bc9fab1",
+      "hash": "95d40bc8b0d07ddd",
       "language": "go",
       "symbols": [
         {
-          "ID": "internal/cli/helpers.go|19|func|RecordOutputHashes|938af67d",
+          "ID": "internal/cli/helpers.go|20|func|RecordOutputHashes|938af67d",
           "Name": "RecordOutputHashes",
           "Kind": 0,
           "Signature": "func RecordOutputHashes(st *state.State, contextDir string, format output.Format) error",
           "File": "",
-          "Line": 19,
+          "Line": 20,
           "Doc": "",
           "Calls": [
             {
               "name": "make",
               "arity": 1,
-              "line": 20,
+              "line": 21,
               "raw": "make"
-            },
-            {
-              "name": "Join",
-              "qualifier": "filepath",
-              "receiver": "filepath",
-              "arity": 2,
-              "line": 26,
-              "raw": "filepath.Join"
             },
             {
               "name": "Join",
@@ -6612,11 +7094,19 @@
               "raw": "filepath.Join"
             },
             {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 28,
+              "raw": "filepath.Join"
+            },
+            {
               "name": "Glob",
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 1,
-              "line": 30,
+              "line": 31,
               "raw": "filepath.Glob"
             },
             {
@@ -6624,22 +7114,14 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 3,
-              "line": 30,
+              "line": 31,
               "raw": "filepath.Join"
             },
             {
               "name": "append",
               "arity": 2,
-              "line": 34,
+              "line": 35,
               "raw": "append"
-            },
-            {
-              "name": "Join",
-              "qualifier": "filepath",
-              "receiver": "filepath",
-              "arity": 2,
-              "line": 37,
-              "raw": "filepath.Join"
             },
             {
               "name": "Join",
@@ -6658,17 +7140,25 @@
               "raw": "filepath.Join"
             },
             {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 40,
+              "raw": "filepath.Join"
+            },
+            {
               "name": "Errorf",
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 42,
+              "line": 43,
               "raw": "fmt.Errorf"
             },
             {
               "name": "append",
               "arity": 2,
-              "line": 44,
+              "line": 45,
               "raw": "append"
             },
             {
@@ -6676,7 +7166,7 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 44,
+              "line": 45,
               "raw": "filepath.Join"
             },
             {
@@ -6684,7 +7174,7 @@
               "qualifier": "fileutil",
               "receiver": "fileutil",
               "arity": 1,
-              "line": 47,
+              "line": 48,
               "raw": "fileutil.HashFile"
             },
             {
@@ -6692,7 +7182,7 @@
               "qualifier": "os",
               "receiver": "os",
               "arity": 1,
-              "line": 49,
+              "line": 50,
               "raw": "os.IsNotExist"
             },
             {
@@ -6700,7 +7190,7 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 54,
+              "line": 55,
               "raw": "filepath.Rel"
             },
             {
@@ -6708,19 +7198,19 @@
               "qualifier": "st",
               "receiver": "st",
               "arity": 2,
-              "line": 58,
+              "line": 59,
               "raw": "st.SetOutputHash"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/helpers.go|64|func|IsCorruptStateError|baeaa80d",
+          "ID": "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
           "Name": "IsCorruptStateError",
           "Kind": 0,
           "Signature": "func IsCorruptStateError(err error) bool",
           "File": "",
-          "Line": 64,
+          "Line": 65,
           "Doc": "",
           "Calls": [
             {
@@ -6728,7 +7218,7 @@
               "qualifier": "errors",
               "receiver": "errors",
               "arity": 2,
-              "line": 66,
+              "line": 67,
               "raw": "errors.As"
             },
             {
@@ -6736,19 +7226,19 @@
               "qualifier": "errors",
               "receiver": "errors",
               "arity": 2,
-              "line": 70,
+              "line": 71,
               "raw": "errors.As"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/helpers.go|73|func|LoadOutputHashesFromState|7824575d",
+          "ID": "internal/cli/helpers.go|74|func|LoadOutputHashesFromState|7824575d",
           "Name": "LoadOutputHashesFromState",
           "Kind": 0,
           "Signature": "func LoadOutputHashesFromState(contextDir string) (map[string]string, error)",
           "File": "",
-          "Line": 73,
+          "Line": 74,
           "Doc": "",
           "Calls": [
             {
@@ -6756,91 +7246,91 @@
               "qualifier": "state",
               "receiver": "state",
               "arity": 1,
-              "line": 74,
+              "line": 75,
               "raw": "state.Load"
             },
             {
               "name": "CloneOutputHashes",
               "arity": 1,
-              "line": 78,
+              "line": 79,
               "raw": "CloneOutputHashes"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/helpers.go|81|func|CloneOutputHashes|e9d2faa0",
+          "ID": "internal/cli/helpers.go|82|func|CloneOutputHashes|e9d2faa0",
           "Name": "CloneOutputHashes",
           "Kind": 0,
           "Signature": "func CloneOutputHashes(input map[string]string) map[string]string",
           "File": "",
-          "Line": 81,
+          "Line": 82,
           "Doc": "",
           "Calls": [
             {
               "name": "len",
               "arity": 1,
-              "line": 82,
+              "line": 83,
               "raw": "len"
             },
             {
               "name": "make",
               "arity": 2,
-              "line": 82,
+              "line": 83,
               "raw": "make"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/helpers.go|89|func|CountRewrittenOutputs|2c593fab",
+          "ID": "internal/cli/helpers.go|90|func|CountRewrittenOutputs|2c593fab",
           "Name": "CountRewrittenOutputs",
           "Kind": 0,
           "Signature": "func CountRewrittenOutputs(before, after map[string]string) int",
           "File": "",
-          "Line": 89,
+          "Line": 90,
           "Doc": "",
           "Calls": [
             {
               "name": "len",
               "arity": 1,
-              "line": 91,
+              "line": 92,
               "raw": "len"
             },
             {
               "name": "make",
               "arity": 2,
-              "line": 91,
+              "line": 92,
               "raw": "make"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/helpers.go|106|func|CollectFilePaths|0bd1d100",
+          "ID": "internal/cli/helpers.go|107|func|CollectFilePaths|0bd1d100",
           "Name": "CollectFilePaths",
           "Kind": 0,
           "Signature": "func CollectFilePaths(files []parser.FileSymbols) []string",
           "File": "",
-          "Line": 106,
+          "Line": 107,
           "Doc": "",
           "Calls": [
             {
               "name": "len",
               "arity": 1,
-              "line": 107,
+              "line": 108,
               "raw": "len"
             },
             {
               "name": "make",
               "arity": 3,
-              "line": 107,
+              "line": 108,
               "raw": "make"
             },
             {
               "name": "append",
               "arity": 2,
-              "line": 109,
+              "line": 110,
               "raw": "append"
             },
             {
@@ -6848,25 +7338,25 @@
               "qualifier": "sort",
               "receiver": "sort",
               "arity": 1,
-              "line": 111,
+              "line": 112,
               "raw": "sort.Strings"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/helpers.go|115|func|OutputsNeedRefresh|88daa4ae",
+          "ID": "internal/cli/helpers.go|116|func|OutputsNeedRefresh|88daa4ae",
           "Name": "OutputsNeedRefresh",
           "Kind": 0,
           "Signature": "func OutputsNeedRefresh(st *state.State, contextDir string, format output.Format) bool",
           "File": "",
-          "Line": 115,
+          "Line": 116,
           "Doc": "",
           "Calls": [
             {
               "name": "RequiredOutputFiles",
               "arity": 1,
-              "line": 116,
+              "line": 117,
               "raw": "RequiredOutputFiles"
             },
             {
@@ -6874,7 +7364,7 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 120,
+              "line": 121,
               "raw": "filepath.Join"
             },
             {
@@ -6882,77 +7372,195 @@
               "qualifier": "os",
               "receiver": "os",
               "arity": 1,
-              "line": 120,
+              "line": 121,
+              "raw": "os.Stat"
+            },
+            {
+              "name": "expectedTextModuleArtifacts",
+              "arity": 1,
+              "line": 127,
+              "raw": "expectedTextModuleArtifacts"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 131,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "Stat",
+              "qualifier": "os",
+              "receiver": "os",
+              "arity": 1,
+              "line": 131,
               "raw": "os.Stat"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/helpers.go|127|func|RequiredOutputFiles|b5d7372c",
+          "ID": "internal/cli/helpers.go|140|func|RequiredOutputFiles|b5d7372c",
           "Name": "RequiredOutputFiles",
           "Kind": 0,
           "Signature": "func RequiredOutputFiles(format output.Format) []string",
           "File": "",
-          "Line": 127,
+          "Line": 140,
           "Doc": "",
           "Calls": null,
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/helpers.go|138|func|MaxInt|dc92babb",
-          "Name": "MaxInt",
+          "ID": "internal/cli/helpers.go|151|func|expectedTextModuleArtifacts|c6cdfe83",
+          "Name": "expectedTextModuleArtifacts",
           "Kind": 0,
-          "Signature": "func MaxInt(a, b int) int",
+          "Signature": "func expectedTextModuleArtifacts(st *state.State) []string",
           "File": "",
-          "Line": 138,
-          "Doc": "",
-          "Calls": null,
-          "CalledBy": null
-        },
-        {
-          "ID": "internal/cli/helpers.go|145|func|FilterFilesByLanguage|beed7416",
-          "Name": "FilterFilesByLanguage",
-          "Kind": 0,
-          "Signature": "func FilterFilesByLanguage(files []parser.FileSymbols, languageFilter map[string]bool) []parser.FileSymbols",
-          "File": "",
-          "Line": 145,
+          "Line": 151,
           "Doc": "",
           "Calls": [
             {
               "name": "len",
               "arity": 1,
-              "line": 146,
+              "line": 152,
               "raw": "len"
+            },
+            {
+              "name": "make",
+              "arity": 1,
+              "line": 156,
+              "raw": "make"
+            },
+            {
+              "name": "Dir",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 1,
+              "line": 159,
+              "raw": "filepath.Dir"
+            },
+            {
+              "name": "ToSlash",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 1,
+              "line": 161,
+              "raw": "filepath.ToSlash"
+            },
+            {
+              "name": "Split",
+              "qualifier": "strings",
+              "receiver": "strings",
+              "arity": 2,
+              "line": 161,
+              "raw": "strings.Split"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 150,
+              "line": 162,
+              "raw": "len"
+            },
+            {
+              "name": "ReplaceAll",
+              "qualifier": "strings",
+              "receiver": "strings",
+              "arity": 3,
+              "line": 166,
+              "raw": "strings.ReplaceAll"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 167,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "len",
+              "arity": 1,
+              "line": 170,
               "raw": "len"
             },
             {
               "name": "make",
               "arity": 3,
-              "line": 150,
+              "line": 170,
               "raw": "make"
             },
             {
               "name": "append",
               "arity": 2,
-              "line": 153,
+              "line": 172,
+              "raw": "append"
+            },
+            {
+              "name": "Strings",
+              "qualifier": "sort",
+              "receiver": "sort",
+              "arity": 1,
+              "line": 174,
+              "raw": "sort.Strings"
+            }
+          ],
+          "CalledBy": null
+        },
+        {
+          "ID": "internal/cli/helpers.go|178|func|MaxInt|dc92babb",
+          "Name": "MaxInt",
+          "Kind": 0,
+          "Signature": "func MaxInt(a, b int) int",
+          "File": "",
+          "Line": 178,
+          "Doc": "",
+          "Calls": null,
+          "CalledBy": null
+        },
+        {
+          "ID": "internal/cli/helpers.go|185|func|FilterFilesByLanguage|beed7416",
+          "Name": "FilterFilesByLanguage",
+          "Kind": 0,
+          "Signature": "func FilterFilesByLanguage(files []parser.FileSymbols, languageFilter map[string]bool) []parser.FileSymbols",
+          "File": "",
+          "Line": 185,
+          "Doc": "",
+          "Calls": [
+            {
+              "name": "len",
+              "arity": 1,
+              "line": 186,
+              "raw": "len"
+            },
+            {
+              "name": "len",
+              "arity": 1,
+              "line": 190,
+              "raw": "len"
+            },
+            {
+              "name": "make",
+              "arity": 3,
+              "line": 190,
+              "raw": "make"
+            },
+            {
+              "name": "append",
+              "arity": 2,
+              "line": 193,
               "raw": "append"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/helpers.go|159|func|ReportParseIssues|f2cf8ae4",
+          "ID": "internal/cli/helpers.go|199|func|ReportParseIssues|f2cf8ae4",
           "Name": "ReportParseIssues",
           "Kind": 0,
           "Signature": "func ReportParseIssues(issues []parser.ParseIssue)",
           "File": "",
-          "Line": 159,
+          "Line": 199,
           "Doc": "",
           "Calls": [
             {
@@ -6960,7 +7568,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 6,
-              "line": 162,
+              "line": 202,
               "raw": "fmt.Fprintf"
             },
             {
@@ -6968,26 +7576,26 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 5,
-              "line": 165,
+              "line": 205,
               "raw": "fmt.Fprintf"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/helpers.go|169|func|PersistState|695683d9",
+          "ID": "internal/cli/helpers.go|209|func|PersistState|695683d9",
           "Name": "PersistState",
           "Kind": 0,
           "Signature": "func PersistState(contextDir string, files []parser.FileSymbols, g *graph.Graph, format output.Format) error",
           "File": "",
-          "Line": 169,
+          "Line": 209,
           "Doc": "",
           "Calls": [
             {
               "name": "NewState",
               "qualifier": "state",
               "receiver": "state",
-              "line": 170,
+              "line": 210,
               "raw": "state.NewState"
             },
             {
@@ -6995,7 +7603,7 @@
               "qualifier": "st",
               "receiver": "st",
               "arity": 1,
-              "line": 172,
+              "line": 212,
               "raw": "st.SetFileData"
             },
             {
@@ -7003,13 +7611,13 @@
               "qualifier": "fileutil",
               "receiver": "fileutil",
               "arity": 3,
-              "line": 174,
+              "line": 214,
               "raw": "fileutil.ApplyGraphDependencies"
             },
             {
               "name": "RecordOutputHashes",
               "arity": 3,
-              "line": 175,
+              "line": 215,
               "raw": "RecordOutputHashes"
             },
             {
@@ -7017,7 +7625,7 @@
               "qualifier": "st",
               "receiver": "st",
               "arity": 1,
-              "line": 178,
+              "line": 218,
               "raw": "st.Save"
             }
           ],
@@ -7036,7 +7644,8 @@
         "github.com/morozRed/skelly/internal/state",
         "os",
         "path/filepath",
-        "sort"
+        "sort",
+        "strings"
       ],
       "import_aliases": {
         "errors": "errors",
@@ -7050,14 +7659,15 @@
         "output": "github.com/morozRed/skelly/internal/output",
         "parser": "github.com/morozRed/skelly/internal/parser",
         "sort": "sort",
-        "state": "github.com/morozRed/skelly/internal/state"
+        "state": "github.com/morozRed/skelly/internal/state",
+        "strings": "strings"
       },
       "dependencies": [
         "internal/fileutil/hash.go",
         "internal/fileutil/state_helpers.go",
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912966+01:00"
+      "updated_at": "2026-02-06T18:35:42.554253+01:00"
     },
     "internal/cli/hook.go": {
       "hash": "b2414863e999f918",
@@ -7391,7 +8001,7 @@
         "internal/fileutil/write.go",
         "internal/nav/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912966+01:00"
+      "updated_at": "2026-02-06T18:35:42.554253+01:00"
     },
     "internal/cli/hook_test.go": {
       "hash": "f88456fe8c36d436",
@@ -7527,24 +8137,24 @@
       "dependencies": [
         "internal/cli/hook.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912967+01:00"
+      "updated_at": "2026-02-06T18:35:42.554255+01:00"
     },
     "internal/cli/init.go": {
-      "hash": "bb58d6466e8ea040",
+      "hash": "4c3ef5dc788ac3b9",
       "language": "go",
       "symbols": [
         {
-          "ID": "internal/cli/init.go|16|func|RunInit|f93470ee",
+          "ID": "internal/cli/init.go|18|func|RunInit|f93470ee",
           "Name": "RunInit",
           "Kind": 0,
           "Signature": "func RunInit(cmd *cobra.Command, args []string) error",
           "File": "",
-          "Line": 16,
+          "Line": 18,
           "Doc": "",
           "Calls": [
             {
               "name": "resolveWorkingDirectory",
-              "line": 17,
+              "line": 19,
               "raw": "resolveWorkingDirectory"
             },
             {
@@ -7552,14 +8162,14 @@
               "qualifier": "output",
               "receiver": "output",
               "arity": 1,
-              "line": 22,
+              "line": 24,
               "raw": "output.NewWriter"
             },
             {
               "name": "Init",
               "qualifier": "writer",
               "receiver": "writer",
-              "line": 23,
+              "line": 25,
               "raw": "writer.Init"
             },
             {
@@ -7567,14 +8177,46 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 27,
+              "line": 29,
               "raw": "filepath.Join"
+            },
+            {
+              "name": "Join",
+              "qualifier": "filepath",
+              "receiver": "filepath",
+              "arity": 2,
+              "line": 30,
+              "raw": "filepath.Join"
+            },
+            {
+              "name": "Stat",
+              "qualifier": "os",
+              "receiver": "os",
+              "arity": 1,
+              "line": 31,
+              "raw": "os.Stat"
+            },
+            {
+              "name": "IsNotExist",
+              "qualifier": "os",
+              "receiver": "os",
+              "arity": 1,
+              "line": 32,
+              "raw": "os.IsNotExist"
+            },
+            {
+              "name": "Errorf",
+              "qualifier": "fmt",
+              "receiver": "fmt",
+              "arity": 2,
+              "line": 33,
+              "raw": "fmt.Errorf"
             },
             {
               "name": "NewState",
               "qualifier": "state",
               "receiver": "state",
-              "line": 28,
+              "line": 35,
               "raw": "state.NewState"
             },
             {
@@ -7582,7 +8224,7 @@
               "qualifier": "state.NewState()",
               "receiver": "state.NewState()",
               "arity": 1,
-              "line": 28,
+              "line": 35,
               "raw": "state.NewState().Save"
             },
             {
@@ -7590,13 +8232,13 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 29,
+              "line": 36,
               "raw": "fmt.Errorf"
             },
             {
               "name": "OptionalStringFlag",
               "arity": 2,
-              "line": 32,
+              "line": 40,
               "raw": "OptionalStringFlag"
             },
             {
@@ -7604,13 +8246,13 @@
               "qualifier": "llm",
               "receiver": "llm",
               "arity": 1,
-              "line": 36,
+              "line": 44,
               "raw": "llm.ParseLLMProviders"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 40,
+              "line": 48,
               "raw": "len"
             },
             {
@@ -7618,13 +8260,13 @@
               "qualifier": "llm",
               "receiver": "llm",
               "arity": 2,
-              "line": 41,
+              "line": 49,
               "raw": "llm.GenerateIntegrationFiles"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 45,
+              "line": 53,
               "raw": "len"
             },
             {
@@ -7632,7 +8274,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 46,
+              "line": 54,
               "raw": "fmt.Printf"
             },
             {
@@ -7640,7 +8282,7 @@
               "qualifier": "strings",
               "receiver": "strings",
               "arity": 2,
-              "line": 46,
+              "line": 54,
               "raw": "strings.Join"
             },
             {
@@ -7648,7 +8290,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 50,
+              "line": 58,
               "raw": "fmt.Printf"
             },
             {
@@ -7656,76 +8298,81 @@
               "qualifier": "nav",
               "receiver": "nav",
               "arity": 3,
-              "line": 52,
+              "line": 60,
               "raw": "nav.OptionalBoolFlag"
             },
             {
               "name": "ParseOutputFormat",
               "arity": 1,
-              "line": 57,
+              "line": 65,
               "raw": "ParseOutputFormat"
             },
             {
-              "name": "hasSourceFiles",
+              "name": "LoadIgnoreRules",
               "arity": 1,
-              "line": 64,
+              "line": 71,
+              "raw": "LoadIgnoreRules"
+            },
+            {
+              "name": "hasSourceFiles",
+              "arity": 2,
+              "line": 75,
               "raw": "hasSourceFiles"
+            },
+            {
+              "name": "Errorf",
+              "qualifier": "fmt",
+              "receiver": "fmt",
+              "arity": 2,
+              "line": 77,
+              "raw": "fmt.Errorf"
             },
             {
               "name": "Println",
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 1,
-              "line": 65,
+              "line": 80,
               "raw": "fmt.Println"
             },
             {
               "name": "GenerateContext",
               "arity": 4,
-              "line": 66,
+              "line": 81,
               "raw": "GenerateContext"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/init.go|74|func|hasSourceFiles|91a6ef84",
+          "ID": "internal/cli/init.go|89|func|hasSourceFiles|8c7b4b07",
           "Name": "hasSourceFiles",
           "Kind": 0,
-          "Signature": "func hasSourceFiles(rootPath string) bool",
+          "Signature": "func hasSourceFiles(rootPath string, ignoreRules []string) (bool, error)",
           "File": "",
-          "Line": 74,
+          "Line": 89,
           "Doc": "",
           "Calls": [
             {
-              "name": "Walk",
-              "qualifier": "filepath",
-              "receiver": "filepath",
-              "arity": 2,
-              "line": 77,
-              "raw": "filepath.Walk"
+              "name": "ScanFileHashes",
+              "qualifier": "fileutil",
+              "receiver": "fileutil",
+              "arity": 3,
+              "line": 90,
+              "raw": "fileutil.ScanFileHashes"
             },
             {
-              "name": "IsDir",
-              "qualifier": "info",
-              "receiver": "info",
-              "line": 81,
-              "raw": "info.IsDir"
+              "name": "NewDefaultRegistry",
+              "qualifier": "languages",
+              "receiver": "languages",
+              "line": 90,
+              "raw": "languages.NewDefaultRegistry"
             },
             {
-              "name": "Name",
-              "qualifier": "info",
-              "receiver": "info",
-              "line": 82,
-              "raw": "info.Name"
-            },
-            {
-              "name": "HasSuffix",
-              "qualifier": "strings",
-              "receiver": "strings",
-              "arity": 2,
-              "line": 89,
-              "raw": "strings.HasSuffix"
+              "name": "len",
+              "arity": 1,
+              "line": 94,
+              "raw": "len"
             }
           ],
           "CalledBy": null
@@ -7733,6 +8380,8 @@
       ],
       "imports": [
         "fmt",
+        "github.com/morozRed/skelly/internal/fileutil",
+        "github.com/morozRed/skelly/internal/languages",
         "github.com/morozRed/skelly/internal/llm",
         "github.com/morozRed/skelly/internal/nav",
         "github.com/morozRed/skelly/internal/output",
@@ -7745,7 +8394,9 @@
       "import_aliases": {
         "cobra": "github.com/spf13/cobra",
         "filepath": "path/filepath",
+        "fileutil": "github.com/morozRed/skelly/internal/fileutil",
         "fmt": "fmt",
+        "languages": "github.com/morozRed/skelly/internal/languages",
         "llm": "github.com/morozRed/skelly/internal/llm",
         "nav": "github.com/morozRed/skelly/internal/nav",
         "os": "os",
@@ -7757,12 +8408,14 @@
         "internal/cli/flags.go",
         "internal/cli/generate.go",
         "internal/cli/util.go",
+        "internal/fileutil/hash.go",
+        "internal/languages/registry.go",
         "internal/llm/providers.go",
         "internal/nav/commands.go",
         "internal/output/writer.go",
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912967+01:00"
+      "updated_at": "2026-02-06T18:35:42.554255+01:00"
     },
     "internal/cli/root.go": {
       "hash": "906c9a706e982eae",
@@ -8177,7 +8830,7 @@
       "dependencies": [
         "internal/parser/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912967+01:00"
+      "updated_at": "2026-02-06T18:35:42.554255+01:00"
     },
     "internal/cli/status.go": {
       "hash": "2dcb929e001f2d28",
@@ -8474,7 +9127,7 @@
         "internal/languages/registry.go",
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912967+01:00"
+      "updated_at": "2026-02-06T18:35:42.554255+01:00"
     },
     "internal/cli/summary.go": {
       "hash": "8a3cc9fa3e80b0bd",
@@ -8976,7 +9629,7 @@
         "os": "os",
         "strings": "strings"
       },
-      "updated_at": "2026-02-06T13:26:36.912968+01:00"
+      "updated_at": "2026-02-06T18:35:42.554255+01:00"
     },
     "internal/cli/update.go": {
       "hash": "2d5b6febcde4658a",
@@ -9704,7 +10357,7 @@
         "internal/parser/parser.go",
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912968+01:00"
+      "updated_at": "2026-02-06T18:35:42.554256+01:00"
     },
     "internal/cli/util.go": {
       "hash": "9f84d16d9b5143fb",
@@ -9868,7 +10521,7 @@
         "os": "os",
         "strings": "strings"
       },
-      "updated_at": "2026-02-06T13:26:36.912968+01:00"
+      "updated_at": "2026-02-06T18:35:42.554256+01:00"
     },
     "internal/enrich/cache.go": {
       "hash": "b11f7452a36c910e",
@@ -10182,7 +10835,7 @@
         "internal/fileutil/jsonl.go",
         "internal/fileutil/write.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912968+01:00"
+      "updated_at": "2026-02-06T18:35:42.554256+01:00"
     },
     "internal/enrich/record.go": {
       "hash": "e5490a087af61afe",
@@ -10352,10 +11005,10 @@
         "internal/parser/symbol_id.go",
         "internal/parser/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912968+01:00"
+      "updated_at": "2026-02-06T18:35:42.55426+01:00"
     },
     "internal/enrich/types.go": {
-      "hash": "56bd29876c9c929c",
+      "hash": "618967e531765cdb",
       "language": "go",
       "symbols": [
         {
@@ -10370,67 +11023,67 @@
           "CalledBy": null
         },
         {
-          "ID": "internal/enrich/types.go|16|struct|Record|57bafc0b",
+          "ID": "internal/enrich/types.go|15|struct|Record|57bafc0b",
           "Name": "Record",
           "Kind": 3,
           "Signature": "type Record struct",
           "File": "",
-          "Line": 16,
+          "Line": 15,
           "Doc": "",
           "Calls": null,
           "CalledBy": null
         },
         {
-          "ID": "internal/enrich/types.go|33|struct|InputPayload|dc90fe89",
+          "ID": "internal/enrich/types.go|32|struct|InputPayload|dc90fe89",
           "Name": "InputPayload",
           "Kind": 3,
           "Signature": "type InputPayload struct",
           "File": "",
-          "Line": 33,
+          "Line": 32,
           "Doc": "",
           "Calls": null,
           "CalledBy": null
         },
         {
-          "ID": "internal/enrich/types.go|41|struct|SymbolMetadata|07e3aaad",
+          "ID": "internal/enrich/types.go|40|struct|SymbolMetadata|07e3aaad",
           "Name": "SymbolMetadata",
           "Kind": 3,
           "Signature": "type SymbolMetadata struct",
           "File": "",
-          "Line": 41,
+          "Line": 40,
           "Doc": "",
           "Calls": null,
           "CalledBy": null
         },
         {
-          "ID": "internal/enrich/types.go|51|struct|SourceSpan|a0922ad3",
+          "ID": "internal/enrich/types.go|50|struct|SourceSpan|a0922ad3",
           "Name": "SourceSpan",
           "Kind": 3,
           "Signature": "type SourceSpan struct",
           "File": "",
-          "Line": 51,
+          "Line": 50,
           "Doc": "",
           "Calls": null,
           "CalledBy": null
         },
         {
-          "ID": "internal/enrich/types.go|57|struct|Output|72daceec",
+          "ID": "internal/enrich/types.go|56|struct|Output|72daceec",
           "Name": "Output",
           "Kind": 3,
           "Signature": "type Output struct",
           "File": "",
-          "Line": 57,
+          "Line": 56,
           "Doc": "",
           "Calls": null,
           "CalledBy": null
         },
         {
-          "ID": "internal/enrich/types.go|64|struct|WorkItem|7f71a5be",
+          "ID": "internal/enrich/types.go|63|struct|WorkItem|7f71a5be",
           "Name": "WorkItem",
           "Kind": 3,
           "Signature": "type WorkItem struct",
           "File": "",
-          "Line": 64,
+          "Line": 63,
           "Doc": "",
           "Calls": null,
           "CalledBy": null
@@ -10446,7 +11099,7 @@
         "parser": "github.com/morozRed/skelly/internal/parser",
         "state": "github.com/morozRed/skelly/internal/state"
       },
-      "updated_at": "2026-02-06T13:26:36.912968+01:00"
+      "updated_at": "2026-02-06T18:35:42.55426+01:00"
     },
     "internal/enrich/validate.go": {
       "hash": "601a96d84a2ef8d8",
@@ -10545,7 +11198,7 @@
         "fmt": "fmt",
         "strings": "strings"
       },
-      "updated_at": "2026-02-06T13:26:36.912968+01:00"
+      "updated_at": "2026-02-06T18:35:42.55426+01:00"
     },
     "internal/enrich/work.go": {
       "hash": "9ec9536f6083c34a",
@@ -10899,7 +11552,7 @@
       "dependencies": [
         "internal/parser/symbol_id.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912968+01:00"
+      "updated_at": "2026-02-06T18:35:42.554261+01:00"
     },
     "internal/fileutil/hash.go": {
       "hash": "0b5dab5444b721a5",
@@ -11071,7 +11724,7 @@
         "internal/ignore/matcher.go",
         "internal/parser/parser.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912968+01:00"
+      "updated_at": "2026-02-06T18:35:42.554261+01:00"
     },
     "internal/fileutil/jsonl.go": {
       "hash": "5bc45bb3d480440a",
@@ -11129,7 +11782,7 @@
         "bytes": "bytes",
         "json": "encoding/json"
       },
-      "updated_at": "2026-02-06T13:26:36.912969+01:00"
+      "updated_at": "2026-02-06T18:35:42.554261+01:00"
     },
     "internal/fileutil/printjson.go": {
       "hash": "3b560ced9495c5df",
@@ -11180,7 +11833,7 @@
         "json": "encoding/json",
         "os": "os"
       },
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554262+01:00"
     },
     "internal/fileutil/state_helpers.go": {
       "hash": "11e203cd00cf1c4e",
@@ -11500,7 +12153,7 @@
         "internal/graph/graph.go",
         "internal/parser/symbol_id.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554262+01:00"
     },
     "internal/fileutil/strings.go": {
       "hash": "0ef9477276de2513",
@@ -11655,7 +12308,7 @@
       "import_aliases": {
         "sort": "sort"
       },
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554262+01:00"
     },
     "internal/fileutil/write.go": {
       "hash": "651cce63c6709b9b",
@@ -11818,7 +12471,7 @@
         "os": "os",
         "strings": "strings"
       },
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554263+01:00"
     },
     "internal/graph/graph.go": {
       "hash": "ffb0f5e0deed7fda",
@@ -13242,7 +13895,7 @@
         "internal/nav/types.go",
         "internal/parser/symbol_id.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554263+01:00"
     },
     "internal/graph/graph_test.go": {
       "hash": "38e6738ab885ce77",
@@ -13579,7 +14232,7 @@
       "dependencies": [
         "internal/graph/graph.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554263+01:00"
     },
     "internal/ignore/matcher.go": {
       "hash": "39e2217e127abfea",
@@ -14092,7 +14745,7 @@
       "dependencies": [
         "internal/parser/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554263+01:00"
     },
     "internal/ignore/matcher_test.go": {
       "hash": "99495262ecd8371f",
@@ -14192,7 +14845,7 @@
       "dependencies": [
         "internal/ignore/matcher.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554263+01:00"
     },
     "internal/languages/common.go": {
       "hash": "19243b497dca54f9",
@@ -14411,7 +15064,7 @@
         "filepath": "path/filepath",
         "strings": "strings"
       },
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554263+01:00"
     },
     "internal/languages/go.go": {
       "hash": "93a9be083559a26b",
@@ -15586,7 +16239,7 @@
       "dependencies": [
         "internal/languages/common.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554263+01:00"
     },
     "internal/languages/python.go": {
       "hash": "8b3ac836c63597ce",
@@ -16969,7 +17622,7 @@
         "internal/languages/common.go",
         "internal/nav/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.91297+01:00"
+      "updated_at": "2026-02-06T18:35:42.554264+01:00"
     },
     "internal/languages/python_test.go": {
       "hash": "c8e5215237a88ade",
@@ -17064,7 +17717,7 @@
       "dependencies": [
         "internal/languages/python.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912971+01:00"
+      "updated_at": "2026-02-06T18:35:42.554264+01:00"
     },
     "internal/languages/registry.go": {
       "hash": "19e817e82c694bfa",
@@ -17155,7 +17808,7 @@
         "internal/languages/typescript.go",
         "internal/parser/parser.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912971+01:00"
+      "updated_at": "2026-02-06T18:35:42.554264+01:00"
     },
     "internal/languages/ruby.go": {
       "hash": "2d527ab13f3d92a9",
@@ -18161,7 +18814,7 @@
       "dependencies": [
         "internal/languages/common.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912971+01:00"
+      "updated_at": "2026-02-06T18:35:42.554264+01:00"
     },
     "internal/languages/typescript.go": {
       "hash": "458169f3c03be386",
@@ -19892,7 +20545,7 @@
         "internal/languages/common.go",
         "internal/nav/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912971+01:00"
+      "updated_at": "2026-02-06T18:35:42.554264+01:00"
     },
     "internal/languages/typescript_test.go": {
       "hash": "713799243c0c8826",
@@ -20029,7 +20682,7 @@
         "internal/languages/typescript.go",
         "internal/parser/registry_test.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912971+01:00"
+      "updated_at": "2026-02-06T18:35:42.554264+01:00"
     },
     "internal/llm/managed.go": {
       "hash": "7d8fbe3c4f074a8d",
@@ -20208,7 +20861,7 @@
         "internal/fileutil/write.go",
         "internal/nav/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912971+01:00"
+      "updated_at": "2026-02-06T18:35:42.554266+01:00"
     },
     "internal/llm/providers.go": {
       "hash": "1f40147773b89b1c",
@@ -20799,7 +21452,7 @@
         "internal/llm/managed.go",
         "internal/llm/templates.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912971+01:00"
+      "updated_at": "2026-02-06T18:35:42.554266+01:00"
     },
     "internal/llm/templates.go": {
       "hash": "649d6c820638cb80",
@@ -20865,7 +21518,7 @@
       "import_aliases": {
         "fmt": "fmt"
       },
-      "updated_at": "2026-02-06T13:26:36.912971+01:00"
+      "updated_at": "2026-02-06T18:35:42.554267+01:00"
     },
     "internal/nav/commands.go": {
       "hash": "aa0093998a007eaf",
@@ -21668,7 +22321,7 @@
         "internal/nav/index.go",
         "internal/nav/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912971+01:00"
+      "updated_at": "2026-02-06T18:35:42.554267+01:00"
     },
     "internal/nav/graph_ops.go": {
       "hash": "202e2cc527d7908a",
@@ -21842,7 +22495,7 @@
       "dependencies": [
         "internal/nav/index.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912972+01:00"
+      "updated_at": "2026-02-06T18:35:42.554267+01:00"
     },
     "internal/nav/index.go": {
       "hash": "7a41a821d7ecd9e8",
@@ -22248,7 +22901,7 @@
         "internal/fileutil/write.go",
         "internal/parser/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912972+01:00"
+      "updated_at": "2026-02-06T18:35:42.554268+01:00"
     },
     "internal/nav/types.go": {
       "hash": "5744d38f041bf833",
@@ -22332,7 +22985,7 @@
           "CalledBy": null
         }
       ],
-      "updated_at": "2026-02-06T13:26:36.912972+01:00"
+      "updated_at": "2026-02-06T18:35:42.554268+01:00"
     },
     "internal/output/writer.go": {
       "hash": "172a727436b1b219",
@@ -23715,7 +24368,7 @@
         "internal/graph/graph.go",
         "internal/parser/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912972+01:00"
+      "updated_at": "2026-02-06T18:35:42.554268+01:00"
     },
     "internal/parser/parser.go": {
       "hash": "5b3d54886fdac214",
@@ -24377,7 +25030,7 @@
         "internal/ignore/matcher.go",
         "internal/parser/symbol_id.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912972+01:00"
+      "updated_at": "2026-02-06T18:35:42.554269+01:00"
     },
     "internal/parser/registry_test.go": {
       "hash": "6ceae8fbb89d5e2a",
@@ -24723,7 +25376,7 @@
       "dependencies": [
         "internal/parser/parser.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912972+01:00"
+      "updated_at": "2026-02-06T18:35:42.554269+01:00"
     },
     "internal/parser/symbol_id.go": {
       "hash": "17da189fcfdf36d1",
@@ -24794,7 +25447,7 @@
       "dependencies": [
         "internal/parser/types.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912972+01:00"
+      "updated_at": "2026-02-06T18:35:42.554269+01:00"
     },
     "internal/parser/types.go": {
       "hash": "205bacb1e153f2f9",
@@ -24973,7 +25626,7 @@
         "json": "encoding/json",
         "strings": "strings"
       },
-      "updated_at": "2026-02-06T13:26:36.912972+01:00"
+      "updated_at": "2026-02-06T18:35:42.554269+01:00"
     },
     "internal/state/state.go": {
       "hash": "7497cf5a5210c86b",
@@ -25440,7 +26093,7 @@
         "sort": "sort",
         "time": "time"
       },
-      "updated_at": "2026-02-06T13:26:36.912973+01:00"
+      "updated_at": "2026-02-06T18:35:42.554271+01:00"
     },
     "internal/state/state_test.go": {
       "hash": "2101a19fbfc9a36f",
@@ -25661,15 +26314,13 @@
       "dependencies": [
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-06T13:26:36.912974+01:00"
+      "updated_at": "2026-02-06T18:35:42.554271+01:00"
     }
   },
   "output_hashes": {
-    "graph.txt": "87639a8575f27a2f",
-    "index.txt": "a57edc7cd8eba060",
-    "modules/cmd.txt": "ecb5c19a22b73771",
-    "modules/fixtures.txt": "5b8539d2b634acb4",
-    "modules/internal.txt": "cffa620b6e098b26",
-    "nav-index.json": "4595f8448faf5059"
+    "edges.jsonl": "95cd6b26ead598c9",
+    "manifest.json": "b5dc0357e758bd8c",
+    "nav-index.json": "2784038d04781c7b",
+    "symbols.jsonl": "e0f6f6ef2e607344"
   }
 }

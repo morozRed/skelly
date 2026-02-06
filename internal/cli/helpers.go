@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strings"
 
 	"github.com/morozRed/skelly/internal/fileutil"
 	"github.com/morozRed/skelly/internal/graph"
@@ -121,6 +122,18 @@ func OutputsNeedRefresh(st *state.State, contextDir string, format output.Format
 			return true
 		}
 	}
+
+	if format == output.FormatText {
+		for _, moduleArtifact := range expectedTextModuleArtifacts(st) {
+			if _, ok := st.OutputHashes[moduleArtifact]; !ok {
+				return true
+			}
+			if _, err := os.Stat(filepath.Join(contextDir, moduleArtifact)); err != nil {
+				return true
+			}
+		}
+	}
+
 	return false
 }
 
@@ -133,6 +146,33 @@ func RequiredOutputFiles(format output.Format) []string {
 	default:
 		return nil
 	}
+}
+
+func expectedTextModuleArtifacts(st *state.State) []string {
+	if st == nil || len(st.Files) == 0 {
+		return nil
+	}
+
+	modules := make(map[string]bool)
+	for file := range st.Files {
+		module := "root"
+		dir := filepath.Dir(file)
+		if dir != "." {
+			parts := strings.Split(filepath.ToSlash(dir), "/")
+			if len(parts) > 0 && parts[0] != "" {
+				module = parts[0]
+			}
+		}
+		filename := strings.ReplaceAll(module, "/", "_") + ".txt"
+		modules[filepath.Join(output.ModulesDir, filename)] = true
+	}
+
+	artifacts := make([]string, 0, len(modules))
+	for artifact := range modules {
+		artifacts = append(artifacts, artifact)
+	}
+	sort.Strings(artifacts)
+	return artifacts
 }
 
 func MaxInt(a, b int) int {

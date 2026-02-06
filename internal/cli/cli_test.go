@@ -580,6 +580,35 @@ func A() {}
 	})
 }
 
+func TestUpdateRefreshesMissingTextModulesOnNoop(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
+
+func A() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		if err := RunInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
+		}
+
+		contextDir := filepath.Join(root, output.ContextDir)
+		modulePath := filepath.Join(contextDir, "modules", "root.txt")
+		assertExists(t, modulePath)
+
+		if err := os.Remove(modulePath); err != nil {
+			t.Fatalf("failed to remove module artifact: %v", err)
+		}
+		assertNotExists(t, modulePath)
+
+		if err := RunUpdate(newUpdateCmdForTest(), nil); err != nil {
+			t.Fatalf("RunUpdate failed: %v", err)
+		}
+
+		assertExists(t, modulePath)
+	})
+}
+
 func TestEnrichWritesJSONLForTarget(t *testing.T) {
 	root := t.TempDir()
 	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
@@ -949,6 +978,90 @@ func Hello() {}
 		assertExists(t, filepath.Join(root, output.ContextDir, ".state.json"))
 		assertNotExists(t, filepath.Join(root, output.ContextDir, "index.txt"))
 		assertNotExists(t, filepath.Join(root, output.ContextDir, "graph.txt"))
+	})
+}
+
+func TestInitRejectsInvalidFormat(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "hello.go"), `package hello
+
+func Hello() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		initCmd := newInitCmdForTest()
+		mustSetFlag(t, initCmd, "format", "invalid")
+		err := RunInit(initCmd, nil)
+		if err == nil {
+			t.Fatalf("expected RunInit to fail for invalid --format")
+		}
+		if !strings.Contains(err.Error(), "unsupported format") {
+			t.Fatalf("unexpected error for invalid --format: %v", err)
+		}
+	})
+}
+
+func TestInitNoGeneratePreservesExistingState(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "hello.go"), `package hello
+
+func Hello() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		if err := RunInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
+		}
+
+		contextDir := filepath.Join(root, output.ContextDir)
+		stBefore, err := state.Load(contextDir)
+		if err != nil {
+			t.Fatalf("failed to load state before second init: %v", err)
+		}
+		beforeFile, ok := stBefore.Files["hello.go"]
+		if !ok {
+			t.Fatalf("expected hello.go in state before second init")
+		}
+		if len(beforeFile.Symbols) == 0 {
+			t.Fatalf("expected parsed symbols in state before second init")
+		}
+
+		initCmd := newInitCmdForTest()
+		mustSetFlag(t, initCmd, "no-generate", "true")
+		if err := RunInit(initCmd, nil); err != nil {
+			t.Fatalf("RunInit --no-generate failed: %v", err)
+		}
+
+		stAfter, err := state.Load(contextDir)
+		if err != nil {
+			t.Fatalf("failed to load state after second init: %v", err)
+		}
+		afterFile, ok := stAfter.Files["hello.go"]
+		if !ok {
+			t.Fatalf("expected hello.go in state after second init")
+		}
+		if len(afterFile.Symbols) == 0 {
+			t.Fatalf("expected parsed symbols to be preserved after --no-generate")
+		}
+		if afterFile.Hash != beforeFile.Hash {
+			t.Fatalf("expected file hash to remain unchanged after --no-generate")
+		}
+	})
+}
+
+func TestInitAutoGeneratesContextForTSX(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "app.tsx"), `export const App = () => 1
+`)
+
+	withWorkingDir(t, root, func() {
+		initCmd := newInitCmdForTest()
+		if err := RunInit(initCmd, nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
+		}
+
+		assertExists(t, filepath.Join(root, output.ContextDir, "index.txt"))
+		assertExists(t, filepath.Join(root, output.ContextDir, "graph.txt"))
 	})
 }
 

@@ -54,6 +54,10 @@ func ParseLanguageFilter(cmd *cobra.Command) (map[string]bool, error) {
 }
 
 func ParseOutputFormat(cmd *cobra.Command) (output.Format, error) {
+	if cmd == nil || cmd.Flags().Lookup("format") == nil {
+		return output.FormatText, nil
+	}
+
 	value, err := cmd.Flags().GetString("format")
 	if err != nil {
 		return "", fmt.Errorf("failed to read --format flag: %w", err)
