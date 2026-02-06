@@ -4,13 +4,12 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"io"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
 
-	"github.com/skelly-dev/skelly/internal/ignore"
+	"github.com/morozRed/skelly/internal/ignore"
 )
 
 // LanguageParser defines the interface each language must implement
@@ -179,20 +178,6 @@ func hashContent(content []byte) string {
 	h := sha256.New()
 	h.Write(content)
 	return hex.EncodeToString(h.Sum(nil))[:16] // short hash
-}
-
-func hashFile(path string) (string, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return "", err
-	}
-	defer f.Close()
-
-	h := sha256.New()
-	if _, err := io.Copy(h, f); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(h.Sum(nil))[:16], nil
 }
 
 func normalizeStrings(values []string) []string {

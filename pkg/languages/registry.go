@@ -1,6 +1,6 @@
 package languages
 
-import "github.com/skelly-dev/skelly/internal/parser"
+import "github.com/morozRed/skelly/internal/parser"
 
 // NewDefaultRegistry creates a registry with all supported language parsers
 func NewDefaultRegistry() *parser.Registry {

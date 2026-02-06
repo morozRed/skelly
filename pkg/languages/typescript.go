@@ -4,7 +4,7 @@ import (
 	"context"
 	"strings"
 
-	"github.com/skelly-dev/skelly/internal/parser"
+	"github.com/morozRed/skelly/internal/parser"
 	sitter "github.com/smacker/go-tree-sitter"
 	"github.com/smacker/go-tree-sitter/javascript"
 	"github.com/smacker/go-tree-sitter/typescript/typescript"

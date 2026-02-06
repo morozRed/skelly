@@ -10,10 +10,9 @@ import (
 	"reflect"
 	"strings"
 	"testing"
-	"time"
 
-	"github.com/skelly-dev/skelly/internal/output"
-	"github.com/skelly-dev/skelly/internal/state"
+	"github.com/morozRed/skelly/internal/output"
+	"github.com/morozRed/skelly/internal/state"
 	"github.com/spf13/cobra"
 )
 
@@ -557,7 +556,6 @@ func A() {}
 		if err := runInit(&cobra.Command{}, nil); err != nil {
 			t.Fatalf("runInit failed: %v", err)
 		}
-		mustWriteAgentProfile(t, root)
 		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
 			t.Fatalf("runGenerate failed: %v", err)
 		}
@@ -580,35 +578,7 @@ func A() {}
 	})
 }
 
-func TestEnrichDryRunChangedScope(t *testing.T) {
-	root := t.TempDir()
-	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
-
-func A() {}
-`)
-
-	withWorkingDir(t, root, func() {
-		if err := runInit(&cobra.Command{}, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
-		}
-		mustWriteAgentProfile(t, root)
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
-		}
-
-		enrichCmd := newEnrichCmdForTest()
-		mustSetFlag(t, enrichCmd, "agent", "local")
-		mustSetFlag(t, enrichCmd, "scope", "changed")
-		mustSetFlag(t, enrichCmd, "dry-run", "true")
-		if err := runEnrich(enrichCmd, nil); err != nil {
-			t.Fatalf("runEnrich dry-run failed: %v", err)
-		}
-
-		assertNotExists(t, filepath.Join(root, output.ContextDir, "enrich.jsonl"))
-	})
-}
-
-func TestEnrichAllWritesJSONL(t *testing.T) {
+func TestEnrichWritesJSONLForTarget(t *testing.T) {
 	root := t.TempDir()
 	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
 
@@ -620,16 +590,12 @@ func B() {}
 		if err := runInit(&cobra.Command{}, nil); err != nil {
 			t.Fatalf("runInit failed: %v", err)
 		}
-		mustWriteAgentProfile(t, root)
 		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
 			t.Fatalf("runGenerate failed: %v", err)
 		}
 
 		enrichCmd := newEnrichCmdForTest()
-		mustSetFlag(t, enrichCmd, "agent", "local")
-		mustSetFlag(t, enrichCmd, "scope", "all")
-		mustSetFlag(t, enrichCmd, "max-symbols", "1")
-		if err := runEnrich(enrichCmd, nil); err != nil {
+		if err := runEnrich(enrichCmd, []string{"demo.go:A", "Primary entrypoint for demo behavior."}); err != nil {
 			t.Fatalf("runEnrich failed: %v", err)
 		}
 
@@ -652,68 +618,53 @@ func B() {}
 		if row["symbol_id"] == "" {
 			t.Fatalf("expected enrich record to include symbol_id")
 		}
+		symbolID, _ := row["symbol_id"].(string)
+		if !strings.Contains(symbolID, "|A|") {
+			t.Fatalf("expected targeted enrich record for symbol A, got symbol_id=%q", symbolID)
+		}
 		outputValue, ok := row["output"].(map[string]any)
 		if !ok {
 			t.Fatalf("expected enrich output payload")
 		}
-		if outputValue["summary"] == "" {
-			t.Fatalf("expected enrich output.summary to be present")
+		if outputValue["summary"] != "Primary entrypoint for demo behavior." {
+			t.Fatalf("unexpected output.summary: %v", outputValue["summary"])
+		}
+		if outputValue["purpose"] != "Primary entrypoint for demo behavior." {
+			t.Fatalf("expected purpose default to description, got: %v", outputValue["purpose"])
+		}
+		if outputValue["confidence"] != "medium" {
+			t.Fatalf("expected confidence=medium, got: %v", outputValue["confidence"])
 		}
 	})
 }
 
-func TestEnrichCacheHitMissBehavior(t *testing.T) {
+func TestEnrichRequiresDescription(t *testing.T) {
 	root := t.TempDir()
 	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
 
-func A() { B() }
-func B() {}
+func A() {}
 `)
 
 	withWorkingDir(t, root, func() {
 		if err := runInit(newInitCmdForTest(), nil); err != nil {
 			t.Fatalf("runInit failed: %v", err)
 		}
-		mustWriteAgentProfile(t, root)
 		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
 			t.Fatalf("runGenerate failed: %v", err)
 		}
 
 		enrichCmd := newEnrichCmdForTest()
-		mustSetFlag(t, enrichCmd, "agent", "local")
-		mustSetFlag(t, enrichCmd, "scope", "all")
-		mustSetFlag(t, enrichCmd, "max-symbols", "1")
-		mustSetFlag(t, enrichCmd, "json", "true")
-
-		var first EnrichRunSummary
-		stdout := captureStdout(t, func() {
-			if err := runEnrich(enrichCmd, nil); err != nil {
-				t.Fatalf("first runEnrich failed: %v", err)
-			}
-		})
-		if err := json.Unmarshal([]byte(stdout), &first); err != nil {
-			t.Fatalf("failed to decode first enrich summary: %v\noutput=%s", err, stdout)
+		err := runEnrich(enrichCmd, []string{"demo.go:A"})
+		if err == nil {
+			t.Fatalf("expected runEnrich to fail without description")
 		}
-		if first.CacheMisses == 0 {
-			t.Fatalf("expected first enrich run to contain cache misses, got %+v", first)
-		}
-
-		var second EnrichRunSummary
-		stdout = captureStdout(t, func() {
-			if err := runEnrich(enrichCmd, nil); err != nil {
-				t.Fatalf("second runEnrich failed: %v", err)
-			}
-		})
-		if err := json.Unmarshal([]byte(stdout), &second); err != nil {
-			t.Fatalf("failed to decode second enrich summary: %v\noutput=%s", err, stdout)
-		}
-		if second.CacheHits == 0 {
-			t.Fatalf("expected second enrich run to contain cache hits, got %+v", second)
+		if !strings.Contains(err.Error(), "description is required") {
+			t.Fatalf("unexpected error: %v", err)
 		}
 	})
 }
 
-func TestEnrichHandlesPartialAgentFailures(t *testing.T) {
+func TestEnrichRejectsAmbiguousTarget(t *testing.T) {
 	root := t.TempDir()
 	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
 
@@ -725,132 +676,30 @@ func B() {}
 		if err := runInit(newInitCmdForTest(), nil); err != nil {
 			t.Fatalf("runInit failed: %v", err)
 		}
-		mustWriteFlakyAgentProfile(t, root)
 		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
 			t.Fatalf("runGenerate failed: %v", err)
 		}
 
 		enrichCmd := newEnrichCmdForTest()
-		mustSetFlag(t, enrichCmd, "agent", "flaky")
-		mustSetFlag(t, enrichCmd, "scope", "all")
-		mustSetFlag(t, enrichCmd, "max-symbols", "2")
-		mustSetFlag(t, enrichCmd, "json", "true")
-
-		var summary EnrichRunSummary
-		stdout := captureStdout(t, func() {
-			if err := runEnrich(enrichCmd, nil); err != nil {
-				t.Fatalf("runEnrich with flaky agent failed unexpectedly: %v", err)
-			}
-		})
-		if err := json.Unmarshal([]byte(stdout), &summary); err != nil {
-			t.Fatalf("failed to decode enrich summary: %v\noutput=%s", err, stdout)
+		err := runEnrich(enrichCmd, []string{"demo.go", "desc"})
+		if err == nil {
+			t.Fatalf("expected ambiguous target error")
 		}
-		if summary.Failed == 0 || summary.Succeeded == 0 {
-			t.Fatalf("expected partial success and failure, got %+v", summary)
-		}
-
-		data, err := os.ReadFile(filepath.Join(root, output.ContextDir, "enrich.jsonl"))
-		if err != nil {
-			t.Fatalf("failed to read enrich.jsonl: %v", err)
-		}
-		if !strings.Contains(string(data), `"status":"error"`) {
-			t.Fatalf("expected enrich cache to include error status entries, got:\n%s", string(data))
+		if !strings.Contains(err.Error(), "matched") {
+			t.Fatalf("unexpected error: %v", err)
 		}
 	})
 }
 
-func TestEnrichAutoCreatesDefaultAgentProfile(t *testing.T) {
+func TestSetupRunsGenerate(t *testing.T) {
 	root := t.TempDir()
 	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
 
 func A() {}
-`)
+	`)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(&cobra.Command{}, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
-		}
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
-		}
-
-		enrichCmd := newEnrichCmdForTest()
-		mustSetFlag(t, enrichCmd, "agent", "local")
-		mustSetFlag(t, enrichCmd, "scope", "all")
-		mustSetFlag(t, enrichCmd, "max-symbols", "1")
-		if err := runEnrich(enrichCmd, nil); err != nil {
-			t.Fatalf("runEnrich failed: %v", err)
-		}
-
-		assertExists(t, filepath.Join(root, ".skelly", "agents.yaml"))
-		assertExists(t, filepath.Join(root, ".skelly", "default_agent.py"))
-		assertExists(t, filepath.Join(root, ".skelly", "enrich-output-schema.json"))
-		assertExists(t, filepath.Join(root, output.ContextDir, "enrich.jsonl"))
-	})
-}
-
-func TestEnrichSupportsCommandPlaceholders(t *testing.T) {
-	root := t.TempDir()
-	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
-
-func A() {}
-`)
-
-	withWorkingDir(t, root, func() {
-		if err := runInit(&cobra.Command{}, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
-		}
-		mustWritePlaceholderAgentProfile(t, root)
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
-		}
-
-		enrichCmd := newEnrichCmdForTest()
-		mustSetFlag(t, enrichCmd, "agent", "codex")
-		mustSetFlag(t, enrichCmd, "scope", "all")
-		mustSetFlag(t, enrichCmd, "max-symbols", "1")
-		if err := runEnrich(enrichCmd, nil); err != nil {
-			t.Fatalf("runEnrich failed: %v", err)
-		}
-
-		enrichPath := filepath.Join(root, output.ContextDir, "enrich.jsonl")
-		data, err := os.ReadFile(enrichPath)
-		if err != nil {
-			t.Fatalf("failed to read enrich output: %v", err)
-		}
-		var row map[string]any
-		lines := bytes.Split(bytes.TrimSpace(data), []byte("\n"))
-		if len(lines) != 1 {
-			t.Fatalf("expected 1 enrich record, got %d", len(lines))
-		}
-		if err := json.Unmarshal(lines[0], &row); err != nil {
-			t.Fatalf("failed to decode enrich output: %v", err)
-		}
-		outputValue, ok := row["output"].(map[string]any)
-		if !ok {
-			t.Fatalf("expected output payload")
-		}
-		summary, _ := outputValue["summary"].(string)
-		if !strings.Contains(summary, "schema-properties=") {
-			t.Fatalf("expected summary to include schema marker, got: %q", summary)
-		}
-	})
-}
-
-func TestSetupRunsGenerateAndEnrich(t *testing.T) {
-	root := t.TempDir()
-	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
-
-func A() {}
-`)
-
-	withWorkingDir(t, root, func() {
-		mustWriteAgentProfile(t, root)
-
 		setupCmd := newSetupCmdForTest()
-		mustSetFlag(t, setupCmd, "agent", "local")
-		mustSetFlag(t, setupCmd, "scope", "all")
-		mustSetFlag(t, setupCmd, "max-symbols", "1")
 		if err := runSetup(setupCmd, nil); err != nil {
 			t.Fatalf("runSetup failed: %v", err)
 		}
@@ -858,7 +707,7 @@ func A() {}
 		assertExists(t, filepath.Join(root, output.ContextDir, "index.txt"))
 		assertExists(t, filepath.Join(root, output.ContextDir, "graph.txt"))
 		assertExists(t, filepath.Join(root, output.ContextDir, ".state.json"))
-		assertExists(t, filepath.Join(root, output.ContextDir, "enrich.jsonl"))
+		assertNotExists(t, filepath.Join(root, output.ContextDir, "enrich.jsonl"))
 	})
 }
 
@@ -886,23 +735,12 @@ func newUpdateCmdForTest() *cobra.Command {
 
 func newEnrichCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
-	cmd.Flags().String("agent", "", "")
-	cmd.Flags().String("scope", "changed", "")
-	cmd.Flags().String("order", string(enrichOrderSource), "")
-	cmd.Flags().Int("max-symbols", 200, "")
-	cmd.Flags().Duration("timeout", 30*time.Second, "")
-	cmd.Flags().Bool("dry-run", false, "")
 	cmd.Flags().Bool("json", false, "")
 	return cmd
 }
 
 func newSetupCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
-	cmd.Flags().String("agent", "", "")
-	cmd.Flags().String("scope", "all", "")
-	cmd.Flags().String("order", string(enrichOrderSource), "")
-	cmd.Flags().Int("max-symbols", 200, "")
-	cmd.Flags().Duration("timeout", 30*time.Second, "")
 	cmd.Flags().String("format", "text", "")
 	return cmd
 }
@@ -1078,92 +916,4 @@ func mustWriteFile(t *testing.T, path, content string) {
 	if err := os.WriteFile(path, []byte(content), 0644); err != nil {
 		t.Fatalf("failed to write file %s: %v", path, err)
 	}
-}
-
-func mustWriteAgentProfile(t *testing.T, root string) {
-	t.Helper()
-
-	mustWriteFile(t, filepath.Join(root, ".skelly", "mock_agent.py"), `#!/usr/bin/env python3
-import json
-import sys
-
-req = json.load(sys.stdin)
-symbol = req.get("input", {}).get("symbol", {})
-name = symbol.get("name", "unknown")
-print(json.dumps({
-    "summary": f"Summary for {name}",
-    "purpose": f"Purpose for {name}",
-    "side_effects": "No side effects",
-    "confidence": "medium"
-}))
-`)
-	mustWriteFile(t, filepath.Join(root, ".skelly", "agents.yaml"), `profiles:
-  local:
-    command: ["python3", ".skelly/mock_agent.py"]
-    prompt_template: |
-      Summarize {{ .Symbol.Name }}
-`)
-}
-
-func mustWritePlaceholderAgentProfile(t *testing.T, root string) {
-	t.Helper()
-
-	mustWriteFile(t, filepath.Join(root, ".skelly", "placeholder_agent.py"), `#!/usr/bin/env python3
-import json
-import sys
-
-request = json.loads(sys.argv[1])
-with open(sys.argv[2], "r", encoding="utf-8") as f:
-    schema = json.load(f)
-prompt = sys.argv[3]
-
-symbol = ((request.get("input") or {}).get("symbol") or {})
-name = symbol.get("name", "symbol")
-
-response = {
-    "summary": f"schema-properties={len((schema.get('properties') or {}))} prompt={prompt[:30]}",
-    "purpose": f"Purpose for {name}",
-    "side_effects": "None",
-    "confidence": "low",
-}
-
-print(json.dumps(response))
-`)
-	mustWriteFile(t, filepath.Join(root, ".skelly", "agents.yaml"), `profiles:
-  codex:
-    command: ["python3", ".skelly/placeholder_agent.py", REQUEST_JSON, JSON_SCHEMA, PROMPT]
-    timeout: 15s
-    prompt_template: |
-      Summarize {{ .Symbol.Name }} now
-`)
-}
-
-func mustWriteFlakyAgentProfile(t *testing.T, root string) {
-	t.Helper()
-
-	mustWriteFile(t, filepath.Join(root, ".skelly", "flaky_agent.py"), `#!/usr/bin/env python3
-import json
-import sys
-
-req = json.load(sys.stdin)
-symbol = req.get("input", {}).get("symbol", {})
-name = symbol.get("name", "")
-if name == "B":
-    print("not-json")
-    sys.exit(0)
-
-print(json.dumps({
-    "summary": f"Summary for {name}",
-    "purpose": f"Purpose for {name}",
-    "side_effects": "No side effects",
-    "confidence": "medium"
-}))
-`)
-
-	mustWriteFile(t, filepath.Join(root, ".skelly", "agents.yaml"), `profiles:
-  flaky:
-    command: ["python3", ".skelly/flaky_agent.py"]
-    prompt_template: |
-      Summarize {{ .Symbol.Name }}
-`)
 }

@@ -1,4 +1,4 @@
-module github.com/skelly-dev/skelly
+module github.com/morozRed/skelly
 
 go 1.25.7
 

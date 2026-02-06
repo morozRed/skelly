@@ -4,7 +4,7 @@ import (
 	"math"
 	"testing"
 
-	"github.com/skelly-dev/skelly/internal/parser"
+	"github.com/morozRed/skelly/internal/parser"
 )
 
 func TestBuildGraphUsesStableIDsAndScopedResolution(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/skelly-dev/skelly/internal/parser"
+	"github.com/morozRed/skelly/internal/parser"
 )
 
 // Node represents a symbol in the dependency graph

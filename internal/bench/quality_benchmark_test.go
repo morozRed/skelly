@@ -4,8 +4,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/skelly-dev/skelly/internal/graph"
-	"github.com/skelly-dev/skelly/internal/parser"
+	"github.com/morozRed/skelly/internal/graph"
+	"github.com/morozRed/skelly/internal/parser"
 )
 
 func BenchmarkResolverQuality_Curated(b *testing.B) {

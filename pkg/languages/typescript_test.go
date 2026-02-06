@@ -3,7 +3,7 @@ package languages
 import (
 	"testing"
 
-	"github.com/skelly-dev/skelly/internal/parser"
+	"github.com/morozRed/skelly/internal/parser"
 )
 
 func TestParseJSImportAliasesHandlesNamedAliases(t *testing.T) {

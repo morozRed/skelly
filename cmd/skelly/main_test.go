@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/skelly-dev/skelly/internal/output"
+	"github.com/morozRed/skelly/internal/output"
 )
 
 func TestBuildSkellyHookBlockPreservesFormat(t *testing.T) {

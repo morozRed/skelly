@@ -17,13 +17,13 @@ The output is ~5-10% of your codebase size while preserving the information LLMs
 ## Installation
 
 ```bash
-go install github.com/skelly-dev/skelly/cmd/skelly@latest
+go install github.com/morozRed/skelly/cmd/skelly@latest
 ```
 
 ## Usage
 
 ```bash
-# Guided first run: picks agent profile, then runs generate + enrich
+# First run helper: generates context in current repo
 skelly setup
 
 # Initialize .skelly/.context/ in your project
@@ -31,6 +31,8 @@ skelly init
 
 # Initialize + generate LLM adapter files (Codex/Claude/Cursor)
 skelly init --llm codex,claude,cursor
+
+# Note: --llm writes adapter/context files only.
 
 # Generate context files (all supported languages)
 skelly generate
@@ -47,17 +49,9 @@ skelly update
 # Incremental update with JSONL output
 skelly update --format jsonl
 
-# Enrich changed symbols (default scope is changed)
-skelly enrich --agent local
-
-# Enrich all symbols and cap work
-skelly enrich --agent local --scope all --max-symbols 200
-
-# Enrich with PageRank-priority ordering
-skelly enrich --agent local --scope all --order pagerank
-
-# Dry-run target preview
-skelly enrich --agent local --dry-run
+# Agent-authored symbol description
+# target accepts file path, file:symbol, file:line, or stable symbol id
+skelly enrich internal/parser/parser.go:ParseDirectory "Parses a directory and normalizes symbol metadata for indexing."
 
 # Show what update would regenerate
 skelly status
@@ -118,7 +112,7 @@ calls: [session.go:Delete]
 
 ## Verified On This Repo
 
-Ran on `github.com/skelly-dev/skelly` itself on February 5, 2026:
+Ran on `github.com/morozRed/skelly` itself on February 5, 2026:
 
 ```bash
 go run ./cmd/skelly generate --format jsonl
@@ -157,72 +151,28 @@ fixtures/
 
 Built-in excludes are applied by default (`.git/`, `.skelly/`, `.context/`, `node_modules/`, `vendor/`, `dist/`, `build/`, `target/`, `__pycache__/`) and can be overridden with negation rules in `.skellyignore`.
 
-Configure enrich agents in `.skelly/agents.yaml`:
+`skelly enrich` is agent-facing annotation UX. It updates exactly one symbol entry in `.skelly/.context/enrich.jsonl`:
 
-```yaml
-profiles:
-  local:
-    command: ["python3", ".skelly/mock_agent.py"]
-    timeout: 5s
-    prompt_template: |
-      Summarize {{ .Symbol.Name }} in {{ .Symbol.Path }}
+```bash
+skelly enrich <target> "<description>"
 ```
 
-You can pass dynamic values to command args using placeholders. Example:
-
-```yaml
-profiles:
-  codex:
-    command: ["codex", "e", PROMPT, JSON_SCHEMA]
-    timeout: 30s
-```
-
-Supported placeholders in `command`:
-- `PROMPT`
-- `JSON_SCHEMA` (path to `.skelly/enrich-output-schema.json`)
-- `JSON_SCHEMA_JSON` (schema JSON string)
-- `INPUT_JSON`
-- `REQUEST_JSON`
-- `INPUT_JSON_FILE` (path to temp input JSON file)
-- `REQUEST_JSON_FILE` (path to temp request JSON file)
-- `AGENT`
-- `SCOPE`
-- `SCHEMA_VERSION`
-
-The command receives JSON on stdin:
-
-```json
-{"agent":"local","scope":"changed","prompt":"...","input":{...},"output_schema":{...},"schema_version":"enrich-output-v1"}
-```
-
-And must return JSON on stdout:
-
-```json
-{"summary":"...","purpose":"...","side_effects":"...","confidence":"low|medium|high"}
-```
-
-`output_schema` is a JSON Schema object that defines the required response shape.
-
-If `.skelly/agents.yaml` is missing, `skelly enrich` auto-creates:
-- `.skelly/agents.yaml` with a `local` profile
-- `.skelly/default_agent.py` as a minimal working agent
+`<target>` supports:
+- `path/to/file.go`
+- `path/to/file.go:SymbolName`
+- `path/to/file.go:123`
+- stable symbol id (`path|line|kind|name|hash`)
 
 ## Current Behavior
 
 - Incremental updates parse only changed/new files and reuse cached symbol snapshots for unchanged files.
 - `--format text|jsonl` is supported for `generate` and `update` (default: `text`).
-- `enrich` supports `--agent`, `--scope changed|all`, `--order source|pagerank`, `--max-symbols`, `--timeout`, and `--dry-run`.
-- `setup` is an interactive shortcut for first-time usage:
-  - prompts for agent profile (or accepts `--agent`)
-  - prompts whether to run first-run full enrich (`scope=all`) or changed-only
-  - runs `generate`
-  - runs `enrich`
+- `enrich <target> "<description>"` writes one manual/agent-provided symbol description.
+- `setup` initializes context by running `generate`.
 - `init --llm ...` generates managed LLM adapter files (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules/skelly-context.mdc`) plus `CONTEXT.md`.
 - `doctor` reports setup health, stale context, and suggested remediation commands.
 - Navigation commands (`symbol`, `callers`, `callees`, `trace`, `path`) read from `.skelly/.context/nav-index.json`.
-- `enrich` uses cache keys: `symbol_id + file_hash + prompt_version + agent_profile + model`.
-- `enrich` stores cache/output records in `.skelly/.context/enrich.jsonl` and re-enriches only misses/stale entries.
-- `enrich` tolerates partial agent failures and records per-symbol error status instead of failing the whole run.
+- `enrich` stores symbol records in `.skelly/.context/enrich.jsonl` and upserts by cache key.
 - State includes parser versioning, per-file hashes, per-file symbols/imports, dependency links, and generated output hashes.
 - Calls are stored as structured call sites (name, qualifier/receiver, arity, line, raw expression).
 - Graph edges include confidence metadata (`resolved`, `heuristic`); ambiguous candidates stay unresolved (no edge).
@@ -260,7 +210,7 @@ go test -bench BenchmarkNavigationUsability_CommonQueries ./internal/bench -run 
 - Correctness hardening fixes are covered by regression tests.
 - DX setup supports `init --llm ...` and `doctor`.
 - Navigation primitives (`symbol`, `callers`, `callees`, `trace`, `path`) are available with `--json`.
-- Enrich caching is active with stable cache keys and partial-failure resilience.
+- Enrich supports agent-authored per-symbol descriptions via `skelly enrich <target> "<description>"`.
 - Benchmarks report:
   - resolver precision/recall on curated fixtures
   - query-pack token footprint for common navigation flows

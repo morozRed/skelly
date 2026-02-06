@@ -7,7 +7,7 @@ import (
 	"sort"
 	"time"
 
-	"github.com/skelly-dev/skelly/internal/parser"
+	"github.com/morozRed/skelly/internal/parser"
 )
 
 const (
