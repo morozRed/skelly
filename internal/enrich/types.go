@@ -8,10 +8,9 @@ import (
 
 type Scope string
 
-const (
-	ScopeTarget Scope = "target"
-	OutputFile        = "enrich.jsonl"
-)
+const ScopeTarget Scope = "target"
+
+const OutputFile = "enrich.jsonl"
 
 type Record struct {
 	SymbolID      string       `json:"symbol_id"`

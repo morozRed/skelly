@@ -975,7 +975,7 @@ func Hello() {}
 		os.Stderr = origStderr
 
 		var buf bytes.Buffer
-		io.Copy(&buf, r)
+		_, _ = io.Copy(&buf, r)
 
 		if runErr != nil {
 			t.Fatalf("RunSetup failed: %v", runErr)
