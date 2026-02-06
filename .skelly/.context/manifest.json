@@ -1,0 +1,19 @@
+{
+  "schema_version": "jsonl-v1",
+  "format": "jsonl",
+  "counts": {
+    "files": 29,
+    "symbols": 385,
+    "edges": 551
+  },
+  "artifacts": [
+    {
+      "path": "symbols.jsonl",
+      "hash": "db28267d0c17a8d6"
+    },
+    {
+      "path": "edges.jsonl",
+      "hash": "ad091ed937993de1"
+    }
+  ]
+}
