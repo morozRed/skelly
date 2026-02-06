@@ -2,57 +2,8 @@ package languages
 
 import (
 	"path/filepath"
-	"sort"
-	"strconv"
 	"strings"
-
-	"github.com/morozRed/skelly/internal/parser"
 )
-
-func dedupeCallSites(calls []parser.CallSite) []parser.CallSite {
-	if len(calls) == 0 {
-		return nil
-	}
-
-	seen := make(map[string]bool, len(calls))
-	out := make([]parser.CallSite, 0, len(calls))
-	for _, call := range calls {
-		call.Name = strings.TrimSpace(call.Name)
-		call.Qualifier = strings.TrimSpace(call.Qualifier)
-		call.Receiver = strings.TrimSpace(call.Receiver)
-		call.Raw = strings.TrimSpace(call.Raw)
-		if call.Name == "" {
-			continue
-		}
-
-		key := strings.Join([]string{
-			call.Name,
-			call.Qualifier,
-			call.Receiver,
-			strconvInt(call.Line),
-			strconvInt(call.Arity),
-		}, "|")
-		if seen[key] {
-			continue
-		}
-		seen[key] = true
-		out = append(out, call)
-	}
-
-	sort.Slice(out, func(i, j int) bool {
-		if out[i].Line != out[j].Line {
-			return out[i].Line < out[j].Line
-		}
-		if out[i].Qualifier != out[j].Qualifier {
-			return out[i].Qualifier < out[j].Qualifier
-		}
-		if out[i].Name != out[j].Name {
-			return out[i].Name < out[j].Name
-		}
-		return out[i].Raw < out[j].Raw
-	})
-	return out
-}
 
 func splitQualifiedName(raw string) (qualifier, name string) {
 	raw = strings.TrimSpace(raw)
@@ -105,8 +56,4 @@ func splitAliasByAs(raw string) (base string, alias string) {
 	base = strings.TrimSpace(strings.Join(parts[:len(parts)-1], " as "))
 	alias = strings.TrimSpace(parts[len(parts)-1])
 	return base, alias
-}
-
-func strconvInt(v int) string {
-	return strconv.Itoa(v)
 }

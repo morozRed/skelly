@@ -18,7 +18,7 @@ Use this skill when working in repositories that use `skelly` for codebase conte
 1. Validate context health:
    - `skelly doctor`
 2. Refresh context when needed:
-   - First run: `skelly init && skelly generate`
+   - First run: `skelly init`
    - Incremental: `skelly update`
 3. Query graph/navigation to find exact symbols and file positions:
    - `skelly symbol <name|id>`

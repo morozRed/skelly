@@ -260,7 +260,7 @@ func (r *RubyParser) extractCalls(bodyNode *sitter.Node, content []byte) []parse
 
 	calls := make([]parser.CallSite, 0)
 	r.collectCalls(bodyNode, content, &calls)
-	return dedupeCallSites(calls)
+	return calls
 }
 
 func (r *RubyParser) collectCalls(node *sitter.Node, content []byte, calls *[]parser.CallSite) {

@@ -1,0 +1,9 @@
+# Module: cmd
+
+## cmd/skelly/main.go
+imports: [github.com/morozRed/skelly/internal/cli, os]
+
+### main [func]
+sig: func main()
+calls: [internal/cli/root.go|11|func|NewRootCommand|24aeae76{heuristic}]
+

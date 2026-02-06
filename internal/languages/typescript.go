@@ -367,7 +367,7 @@ func (t *TypeScriptParser) extractCalls(node *sitter.Node, content []byte) []par
 
 	calls := make([]parser.CallSite, 0)
 	t.collectCalls(node, content, &calls)
-	return dedupeCallSites(calls)
+	return calls
 }
 
 func (t *TypeScriptParser) collectCalls(node *sitter.Node, content []byte, calls *[]parser.CallSite) {

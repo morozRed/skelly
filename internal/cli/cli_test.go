@@ -1,4 +1,4 @@
-package main
+package cli
 
 import (
 	"bufio"
@@ -11,6 +11,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/morozRed/skelly/internal/llm"
+	"github.com/morozRed/skelly/internal/nav"
 	"github.com/morozRed/skelly/internal/output"
 	"github.com/morozRed/skelly/internal/state"
 	"github.com/spf13/cobra"
@@ -28,13 +30,13 @@ func B() {}
 `)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(&cobra.Command{}, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(&cobra.Command{}, nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
 
 		genCmd := newGenerateCmdForTest()
-		if err := runGenerate(genCmd, []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(genCmd, []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
 		indexPath := filepath.Join(root, output.ContextDir, "index.txt")
@@ -49,8 +51,8 @@ func B() {}
 			t.Fatalf("failed to read graph file: %v", err)
 		}
 
-		if err := runGenerate(genCmd, []string{"."}); err != nil {
-			t.Fatalf("second runGenerate failed: %v", err)
+		if err := RunGenerate(genCmd, []string{"."}); err != nil {
+			t.Fatalf("second RunGenerate failed: %v", err)
 		}
 
 		secondGraph, err := os.ReadFile(graphPath)
@@ -73,8 +75,8 @@ func C() {}
 `)
 
 		updateCmd := newUpdateCmdForTest()
-		if err := runUpdate(updateCmd, nil); err != nil {
-			t.Fatalf("runUpdate failed: %v", err)
+		if err := RunUpdate(updateCmd, nil); err != nil {
+			t.Fatalf("RunUpdate failed: %v", err)
 		}
 
 		updatedGraph, err := os.ReadFile(graphPath)
@@ -93,8 +95,8 @@ func TestInitWithLLMGeneratesIntegrationFilesIdempotently(t *testing.T) {
 	withWorkingDir(t, root, func() {
 		initCmd := newInitCmdForTest()
 		mustSetFlag(t, initCmd, "llm", "codex,claude,cursor")
-		if err := runInit(initCmd, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(initCmd, nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
 
 		expected := []string{
@@ -113,12 +115,12 @@ func TestInitWithLLMGeneratesIntegrationFilesIdempotently(t *testing.T) {
 		if err != nil {
 			t.Fatalf("failed to read AGENTS.md: %v", err)
 		}
-		if !strings.Contains(string(agentsBefore), llmManagedBlockStart) {
+		if !strings.Contains(string(agentsBefore), llm.ManagedBlockStart) {
 			t.Fatalf("expected AGENTS.md to include managed block marker")
 		}
 
-		if err := runInit(initCmd, nil); err != nil {
-			t.Fatalf("second runInit failed: %v", err)
+		if err := RunInit(initCmd, nil); err != nil {
+			t.Fatalf("second RunInit failed: %v", err)
 		}
 
 		agentsAfter, err := os.ReadFile(filepath.Join(root, "AGENTS.md"))
@@ -141,19 +143,19 @@ func A() {}
 	withWorkingDir(t, root, func() {
 		initCmd := newInitCmdForTest()
 		mustSetFlag(t, initCmd, "llm", "all")
-		if err := runInit(initCmd, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(initCmd, nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
 		var healthy DoctorSummary
 		doctorCmd := newDoctorCmdForTest()
 		mustSetFlag(t, doctorCmd, "json", "true")
 		stdout := captureStdout(t, func() {
-			if err := runDoctor(doctorCmd, nil); err != nil {
-				t.Fatalf("runDoctor failed: %v", err)
+			if err := RunDoctor(doctorCmd, nil); err != nil {
+				t.Fatalf("RunDoctor failed: %v", err)
 			}
 		})
 		if err := json.Unmarshal([]byte(stdout), &healthy); err != nil {
@@ -174,8 +176,8 @@ func B() {}
 
 		var stale DoctorSummary
 		stdout = captureStdout(t, func() {
-			if err := runDoctor(doctorCmd, nil); err != nil {
-				t.Fatalf("runDoctor after edits failed: %v", err)
+			if err := RunDoctor(doctorCmd, nil); err != nil {
+				t.Fatalf("RunDoctor after edits failed: %v", err)
 			}
 		})
 		if err := json.Unmarshal([]byte(stdout), &stale); err != nil {
@@ -202,21 +204,21 @@ func B() {}
 `)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(newInitCmdForTest(), nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
-		indexPath := filepath.Join(root, output.ContextDir, navigationIndexFile)
+		indexPath := filepath.Join(root, output.ContextDir, nav.NavigationIndexFile)
 		assertExists(t, indexPath)
 
 		data, err := os.ReadFile(indexPath)
 		if err != nil {
 			t.Fatalf("failed to read navigation index: %v", err)
 		}
-		var payload navigationIndex
+		var payload nav.Index
 		if err := json.Unmarshal(data, &payload); err != nil {
 			t.Fatalf("failed to decode navigation index: %v", err)
 		}
@@ -239,22 +241,22 @@ func End() {}
 `)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(newInitCmdForTest(), nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
 		symbolCmd := newSymbolCmdForTest()
 		mustSetFlag(t, symbolCmd, "json", "true")
 		var symbolPayload struct {
-			Query   string                   `json:"query"`
-			Matches []navigationSymbolRecord `json:"matches"`
+			Query   string             `json:"query"`
+			Matches []nav.SymbolRecord `json:"matches"`
 		}
 		stdout := captureStdout(t, func() {
-			if err := runSymbol(symbolCmd, []string{"Mid"}); err != nil {
-				t.Fatalf("runSymbol failed: %v", err)
+			if err := nav.RunSymbol(symbolCmd, []string{"Mid"}); err != nil {
+				t.Fatalf("RunSymbol failed: %v", err)
 			}
 		})
 		if err := json.Unmarshal([]byte(stdout), &symbolPayload); err != nil {
@@ -268,11 +270,11 @@ func End() {}
 		callersCmd := newCallersCmdForTest()
 		mustSetFlag(t, callersCmd, "json", "true")
 		var callersPayload struct {
-			Callers []navigationEdgeRecord `json:"callers"`
+			Callers []nav.EdgeRecord `json:"callers"`
 		}
 		stdout = captureStdout(t, func() {
-			if err := runCallers(callersCmd, []string{"Mid"}); err != nil {
-				t.Fatalf("runCallers failed: %v", err)
+			if err := nav.RunCallers(callersCmd, []string{"Mid"}); err != nil {
+				t.Fatalf("RunCallers failed: %v", err)
 			}
 		})
 		if err := json.Unmarshal([]byte(stdout), &callersPayload); err != nil {
@@ -285,11 +287,11 @@ func End() {}
 		calleesCmd := newCalleesCmdForTest()
 		mustSetFlag(t, calleesCmd, "json", "true")
 		var calleesPayload struct {
-			Callees []navigationEdgeRecord `json:"callees"`
+			Callees []nav.EdgeRecord `json:"callees"`
 		}
 		stdout = captureStdout(t, func() {
-			if err := runCallees(calleesCmd, []string{midID}); err != nil {
-				t.Fatalf("runCallees failed: %v", err)
+			if err := nav.RunCallees(calleesCmd, []string{midID}); err != nil {
+				t.Fatalf("RunCallees failed: %v", err)
 			}
 		})
 		if err := json.Unmarshal([]byte(stdout), &calleesPayload); err != nil {
@@ -303,11 +305,11 @@ func End() {}
 		mustSetFlag(t, traceCmd, "depth", "2")
 		mustSetFlag(t, traceCmd, "json", "true")
 		var tracePayload struct {
-			Hops []navigationTraceHop `json:"hops"`
+			Hops []nav.TraceHop `json:"hops"`
 		}
 		stdout = captureStdout(t, func() {
-			if err := runTrace(traceCmd, []string{"Start"}); err != nil {
-				t.Fatalf("runTrace failed: %v", err)
+			if err := nav.RunTrace(traceCmd, []string{"Start"}); err != nil {
+				t.Fatalf("RunTrace failed: %v", err)
 			}
 		})
 		if err := json.Unmarshal([]byte(stdout), &tracePayload); err != nil {
@@ -320,12 +322,12 @@ func End() {}
 		pathCmd := newPathCmdForTest()
 		mustSetFlag(t, pathCmd, "json", "true")
 		var pathPayload struct {
-			Length int                      `json:"length"`
-			Path   []navigationSymbolRecord `json:"path"`
+			Length int                `json:"length"`
+			Path   []nav.SymbolRecord `json:"path"`
 		}
 		stdout = captureStdout(t, func() {
-			if err := runPath(pathCmd, []string{"Start", "End"}); err != nil {
-				t.Fatalf("runPath failed: %v", err)
+			if err := nav.RunPath(pathCmd, []string{"Start", "End"}); err != nil {
+				t.Fatalf("RunPath failed: %v", err)
 			}
 		})
 		if err := json.Unmarshal([]byte(stdout), &pathPayload); err != nil {
@@ -367,12 +369,12 @@ function helper() { return 1; }
 `)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(&cobra.Command{}, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(&cobra.Command{}, nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
 
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
 		indexData, err := os.ReadFile(filepath.Join(root, output.ContextDir, "index.txt"))
@@ -406,14 +408,14 @@ func B() {}
 `)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(&cobra.Command{}, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(&cobra.Command{}, nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
 
 		genCmd := newGenerateCmdForTest()
 		mustSetFlag(t, genCmd, "format", "jsonl")
-		if err := runGenerate(genCmd, []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(genCmd, []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
 		symbolsPath := filepath.Join(root, output.ContextDir, "symbols.jsonl")
@@ -441,8 +443,8 @@ func B() {}
 
 		assertSortedSymbolJSONL(t, firstSymbols)
 
-		if err := runGenerate(genCmd, []string{"."}); err != nil {
-			t.Fatalf("second runGenerate failed: %v", err)
+		if err := RunGenerate(genCmd, []string{"."}); err != nil {
+			t.Fatalf("second RunGenerate failed: %v", err)
 		}
 
 		secondSymbols, err := os.ReadFile(symbolsPath)
@@ -482,14 +484,14 @@ func B() {}
 `)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(&cobra.Command{}, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(&cobra.Command{}, nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
 
 		genCmd := newGenerateCmdForTest()
 		mustSetFlag(t, genCmd, "format", "jsonl")
-		if err := runGenerate(genCmd, []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(genCmd, []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
 		contextDir := filepath.Join(root, output.ContextDir)
@@ -501,8 +503,8 @@ func B() {}
 
 		updateCmd := newUpdateCmdForTest()
 		mustSetFlag(t, updateCmd, "format", "jsonl")
-		if err := runUpdate(updateCmd, nil); err != nil {
-			t.Fatalf("runUpdate failed: %v", err)
+		if err := RunUpdate(updateCmd, nil); err != nil {
+			t.Fatalf("RunUpdate failed: %v", err)
 		}
 
 		stUnchanged, err := state.Load(contextDir)
@@ -524,8 +526,8 @@ func B() {}
 func C() {}
 `)
 
-		if err := runUpdate(updateCmd, nil); err != nil {
-			t.Fatalf("runUpdate after changes failed: %v", err)
+		if err := RunUpdate(updateCmd, nil); err != nil {
+			t.Fatalf("RunUpdate after changes failed: %v", err)
 		}
 
 		stAfter, err := state.Load(contextDir)
@@ -553,11 +555,11 @@ func A() {}
 `)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(&cobra.Command{}, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(&cobra.Command{}, nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
 		contextDir := filepath.Join(root, output.ContextDir)
@@ -566,8 +568,8 @@ func A() {}
 
 		updateCmd := newUpdateCmdForTest()
 		mustSetFlag(t, updateCmd, "format", "jsonl")
-		if err := runUpdate(updateCmd, nil); err != nil {
-			t.Fatalf("runUpdate failed: %v", err)
+		if err := RunUpdate(updateCmd, nil); err != nil {
+			t.Fatalf("RunUpdate failed: %v", err)
 		}
 
 		assertExists(t, filepath.Join(contextDir, "symbols.jsonl"))
@@ -587,16 +589,16 @@ func B() {}
 `)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(&cobra.Command{}, nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(&cobra.Command{}, nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
 		enrichCmd := newEnrichCmdForTest()
-		if err := runEnrich(enrichCmd, []string{"demo.go:A", "Primary entrypoint for demo behavior."}); err != nil {
-			t.Fatalf("runEnrich failed: %v", err)
+		if err := RunEnrich(enrichCmd, []string{"demo.go:A", "Primary entrypoint for demo behavior."}); err != nil {
+			t.Fatalf("RunEnrich failed: %v", err)
 		}
 
 		enrichPath := filepath.Join(root, output.ContextDir, "enrich.jsonl")
@@ -646,17 +648,17 @@ func A() {}
 `)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(newInitCmdForTest(), nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
 		enrichCmd := newEnrichCmdForTest()
-		err := runEnrich(enrichCmd, []string{"demo.go:A"})
+		err := RunEnrich(enrichCmd, []string{"demo.go:A"})
 		if err == nil {
-			t.Fatalf("expected runEnrich to fail without description")
+			t.Fatalf("expected RunEnrich to fail without description")
 		}
 		if !strings.Contains(err.Error(), "description is required") {
 			t.Fatalf("unexpected error: %v", err)
@@ -673,15 +675,15 @@ func B() {}
 `)
 
 	withWorkingDir(t, root, func() {
-		if err := runInit(newInitCmdForTest(), nil); err != nil {
-			t.Fatalf("runInit failed: %v", err)
+		if err := RunInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
 		}
-		if err := runGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
-			t.Fatalf("runGenerate failed: %v", err)
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
 		}
 
 		enrichCmd := newEnrichCmdForTest()
-		err := runEnrich(enrichCmd, []string{"demo.go", "desc"})
+		err := RunEnrich(enrichCmd, []string{"demo.go", "desc"})
 		if err == nil {
 			t.Fatalf("expected ambiguous target error")
 		}
@@ -700,8 +702,8 @@ func A() {}
 
 	withWorkingDir(t, root, func() {
 		setupCmd := newSetupCmdForTest()
-		if err := runSetup(setupCmd, nil); err != nil {
-			t.Fatalf("runSetup failed: %v", err)
+		if err := RunSetup(setupCmd, nil); err != nil {
+			t.Fatalf("RunSetup failed: %v", err)
 		}
 
 		assertExists(t, filepath.Join(root, output.ContextDir, "index.txt"))
@@ -722,6 +724,8 @@ func newGenerateCmdForTest() *cobra.Command {
 func newInitCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().String("llm", "", "")
+	cmd.Flags().Bool("no-generate", false, "")
+	cmd.Flags().String("format", "text", "")
 	return cmd
 }
 
@@ -906,6 +910,85 @@ func assertSortedSymbolJSONL(t *testing.T, data []byte) {
 	if err := scanner.Err(); err != nil {
 		t.Fatalf("failed reading symbols jsonl: %v", err)
 	}
+}
+
+func TestInitAutoGeneratesContext(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "hello.go"), `package hello
+
+func Hello() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		initCmd := newInitCmdForTest()
+		if err := RunInit(initCmd, nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
+		}
+
+		// init should have auto-generated context files because source files exist.
+		assertExists(t, filepath.Join(root, output.ContextDir, "index.txt"))
+		assertExists(t, filepath.Join(root, output.ContextDir, "graph.txt"))
+	})
+}
+
+func TestInitNoGenerateSkipsGenerate(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "hello.go"), `package hello
+
+func Hello() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		initCmd := newInitCmdForTest()
+		mustSetFlag(t, initCmd, "no-generate", "true")
+		if err := RunInit(initCmd, nil); err != nil {
+			t.Fatalf("RunInit --no-generate failed: %v", err)
+		}
+
+		// State file should exist (created by Init), but context outputs should not.
+		assertExists(t, filepath.Join(root, output.ContextDir, ".state.json"))
+		assertNotExists(t, filepath.Join(root, output.ContextDir, "index.txt"))
+		assertNotExists(t, filepath.Join(root, output.ContextDir, "graph.txt"))
+	})
+}
+
+func TestSetupPrintsDeprecationWarning(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "hello.go"), `package hello
+
+func Hello() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		// RunSetup writes deprecation to stderr. Capture it.
+		origStderr := os.Stderr
+		r, w, err := os.Pipe()
+		if err != nil {
+			t.Fatalf("failed to create pipe: %v", err)
+		}
+		os.Stderr = w
+
+		setupCmd := newSetupCmdForTest()
+		runErr := RunSetup(setupCmd, nil)
+
+		w.Close()
+		os.Stderr = origStderr
+
+		var buf bytes.Buffer
+		io.Copy(&buf, r)
+
+		if runErr != nil {
+			t.Fatalf("RunSetup failed: %v", runErr)
+		}
+
+		stderr := buf.String()
+		if !strings.Contains(stderr, "deprecated") {
+			t.Fatalf("expected stderr to contain deprecation warning, got: %q", stderr)
+		}
+		if !strings.Contains(stderr, "skelly init") {
+			t.Fatalf("expected deprecation warning to mention 'skelly init', got: %q", stderr)
+		}
+	})
 }
 
 func mustWriteFile(t *testing.T, path, content string) {

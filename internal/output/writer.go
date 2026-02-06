@@ -1,7 +1,6 @@
 package output
 
 import (
-	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -11,6 +10,7 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/morozRed/skelly/internal/fileutil"
 	"github.com/morozRed/skelly/internal/graph"
 	"github.com/morozRed/skelly/internal/parser"
 )
@@ -135,7 +135,7 @@ func (w *Writer) WriteIndex(g *graph.Graph) error {
 	}
 
 	path := filepath.Join(w.contextDir, IndexFile)
-	return writeIfChanged(path, []byte(sb.String()))
+	return fileutil.WriteIfChanged(path, []byte(sb.String()))
 }
 
 // WriteGraph writes the graph.txt adjacency list
@@ -159,7 +159,7 @@ func (w *Writer) WriteGraph(g *graph.Graph) error {
 	}
 
 	path := filepath.Join(w.contextDir, GraphFile)
-	return writeIfChanged(path, []byte(sb.String()))
+	return fileutil.WriteIfChanged(path, []byte(sb.String()))
 }
 
 // WriteModules writes per-module/directory context files
@@ -251,7 +251,7 @@ func (w *Writer) writeModuleFile(module string, files []string, g *graph.Graph, 
 	// Sanitize module name for filename
 	filename := moduleFilename(module)
 	path := filepath.Join(w.contextDir, ModulesDir, filename)
-	return writeIfChanged(path, []byte(sb.String()))
+	return fileutil.WriteIfChanged(path, []byte(sb.String()))
 }
 
 func getModuleName(file string) string {
@@ -355,21 +355,21 @@ func (w *Writer) WriteJSONL(g *graph.Graph, parseResult *parser.ParseResult) err
 		}
 	}
 
-	symbolsData, err := encodeJSONL(symbols)
+	symbolsData, err := fileutil.EncodeJSONL(symbols)
 	if err != nil {
 		return err
 	}
 	symbolPath := filepath.Join(w.contextDir, SymbolsFile)
-	if err := writeIfChanged(symbolPath, symbolsData); err != nil {
+	if err := fileutil.WriteIfChanged(symbolPath, symbolsData); err != nil {
 		return err
 	}
 
-	edgesData, err := encodeJSONL(edges)
+	edgesData, err := fileutil.EncodeJSONL(edges)
 	if err != nil {
 		return err
 	}
 	edgesPath := filepath.Join(w.contextDir, EdgesFile)
-	if err := writeIfChanged(edgesPath, edgesData); err != nil {
+	if err := fileutil.WriteIfChanged(edgesPath, edgesData); err != nil {
 		return err
 	}
 
@@ -393,7 +393,7 @@ func (w *Writer) WriteJSONL(g *graph.Graph, parseResult *parser.ParseResult) err
 	manifestData = append(manifestData, '\n')
 
 	manifestPath := filepath.Join(w.contextDir, ManifestFile)
-	return writeIfChanged(manifestPath, manifestData)
+	return fileutil.WriteIfChanged(manifestPath, manifestData)
 }
 
 func (w *Writer) removeStaleModuleFiles(desired map[string]bool) error {
@@ -436,30 +436,7 @@ func (w *Writer) removeJSONLArtifacts() error {
 	return nil
 }
 
-func encodeJSONL[T any](records []T) ([]byte, error) {
-	var buf bytes.Buffer
-	encoder := json.NewEncoder(&buf)
-	encoder.SetEscapeHTML(false)
-	for _, record := range records {
-		if err := encoder.Encode(record); err != nil {
-			return nil, err
-		}
-	}
-	return buf.Bytes(), nil
-}
-
 func shortHash(data []byte) string {
 	sum := sha256.Sum256(data)
 	return hex.EncodeToString(sum[:])[:16]
-}
-
-func writeIfChanged(path string, data []byte) error {
-	current, err := os.ReadFile(path)
-	if err == nil && bytes.Equal(current, data) {
-		return nil
-	}
-	if err != nil && !os.IsNotExist(err) {
-		return err
-	}
-	return os.WriteFile(path, data, 0644)
 }

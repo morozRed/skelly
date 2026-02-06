@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/morozRed/skelly/internal/graph"
-	"github.com/morozRed/skelly/pkg/languages"
+	"github.com/morozRed/skelly/internal/languages"
 )
 
 func BenchmarkParseAndGraph_MediumRepo(b *testing.B) {

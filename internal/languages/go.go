@@ -248,7 +248,7 @@ func (g *GoParser) extractCalls(bodyNode *sitter.Node, content []byte) []parser.
 
 	calls := make([]parser.CallSite, 0)
 	g.collectCalls(bodyNode, content, &calls)
-	return dedupeCallSites(calls)
+	return calls
 }
 
 func (g *GoParser) collectCalls(node *sitter.Node, content []byte, calls *[]parser.CallSite) {

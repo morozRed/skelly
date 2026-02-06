@@ -275,7 +275,7 @@ func (p *PythonParser) extractCalls(bodyNode *sitter.Node, content []byte) []par
 
 	calls := make([]parser.CallSite, 0)
 	p.collectCalls(bodyNode, content, &calls)
-	return dedupeCallSites(calls)
+	return calls
 }
 
 func (p *PythonParser) collectCalls(node *sitter.Node, content []byte, calls *[]parser.CallSite) {

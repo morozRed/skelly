@@ -23,11 +23,11 @@ go install github.com/morozRed/skelly/cmd/skelly@latest
 ## Usage
 
 ```bash
-# First run helper: generates context in current repo
-skelly setup
-
-# Initialize .skelly/.context/ in your project
+# First run: initialize and generate context
 skelly init
+
+# Initialize .skelly/.context/ in your project (skip auto-generate)
+skelly init --no-generate
 
 # Initialize + generate LLM adapter files (Codex/Claude/Cursor)
 skelly init --llm codex,claude,cursor
@@ -168,7 +168,8 @@ skelly enrich <target> "<description>"
 - Incremental updates parse only changed/new files and reuse cached symbol snapshots for unchanged files.
 - `--format text|jsonl` is supported for `generate` and `update` (default: `text`).
 - `enrich <target> "<description>"` writes one manual/agent-provided symbol description.
-- `setup` initializes context by running `generate`.
+- `setup` is deprecated (hidden); use `init` instead.
+- `init` creates `.skelly/.context/`, optionally generates LLM adapter files, and auto-runs `generate` unless `--no-generate` is passed.
 - `init --llm ...` generates managed LLM adapter files (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules/skelly-context.mdc`) plus `CONTEXT.md`.
 - `doctor` reports setup health, stale context, and suggested remediation commands.
 - Navigation commands (`symbol`, `callers`, `callees`, `trace`, `path`) read from `.skelly/.context/nav-index.json`.
