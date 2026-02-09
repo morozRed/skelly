@@ -90,6 +90,9 @@ jq -s '
     ((.input_tokens // 0) + (.output_tokens // 0) + (.cache_read_tokens // 0) + (.cache_write_tokens // 0));
   def non_cache_tokens:
     ((.input_tokens // 0) + (.output_tokens // 0));
+  def infra_failed:
+    ((.opencode_exit_code // 0) == 86)
+    or (((.opencode_exit_code // 0) != 0) and ((.acceptance_exit_code // 0) == 99));
   def arm_summary($arm):
     (map(select(.arm == $arm))) as $rows
     | ($rows | length) as $runs
@@ -172,14 +175,18 @@ jq -s '
     {error: "no collected rows"}
   else
     . as $rows
-    | (arm_summary("with_skelly")) as $with
-    | (arm_summary("without_skelly")) as $without
+    | ($rows | map(select(infra_failed | not))) as $effective
+    | ($rows | map(select(infra_failed))) as $excluded
+    | ($effective | arm_summary("with_skelly")) as $with
+    | ($effective | arm_summary("without_skelly")) as $without
     | {
         generated_at_utc: (now | todateiso8601),
         run_count: ($rows | length),
+        effective_run_count: ($effective | length),
+        excluded_infra_failures: ($excluded | length),
         task_count: ([$rows[].task_id] | unique | length),
         arm_summaries: [$with, $without],
-        paired: (paired_summary),
+        paired: ($effective | paired_summary),
         decision: decision($with; $without)
       }
   end
@@ -192,7 +199,7 @@ jq -s '
     if .error then
       "Error: \(.error)"
     else
-      "Generated: \(.generated_at_utc)\nRuns: \(.run_count)\nTasks: \(.task_count)\nDecision: \(.decision)"
+      "Generated: \(.generated_at_utc)\nRuns: \(.run_count)\nEffective runs: \(.effective_run_count)\nExcluded infra failures: \(.excluded_infra_failures)\nTasks: \(.task_count)\nDecision: \(.decision)"
     end
   ' "$OUT_JSON"
   echo
