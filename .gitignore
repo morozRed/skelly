@@ -11,3 +11,6 @@ bin/
 !TASKS.md
 !docs/
 !docs/*.md
+
+# Benchmark artifacts
+benchmark/
