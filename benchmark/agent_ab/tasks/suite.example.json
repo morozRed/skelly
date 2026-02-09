@@ -1,0 +1,18 @@
+{
+  "suite_id": "pilot_example",
+  "description": "Smoke example for validating benchmark harness wiring.",
+  "tasks": [
+    {
+      "id": "cli_setup_warning_regression",
+      "prompt_file": "benchmark/agent_ab/tasks/prompts/example_cli_task.md",
+      "acceptance_command": "go test ./internal/cli -run TestSetupPrintsDeprecationWarning -count=1",
+      "setup_commands": [],
+      "timeout_seconds": 900,
+      "tags": [
+        "bugfix",
+        "cli",
+        "smoke"
+      ]
+    }
+  ]
+}
