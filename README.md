@@ -217,6 +217,27 @@ benchmark/agent_ab/scripts/analyze.sh --input benchmark/agent_ab/results/<run_id
 
 `run.sh` uses your normal OpenCode config by default (`--opencode-state system`); pass `--opencode-state isolated` for isolated benchmark state.  
 Set `--model provider/model` explicitly for reproducible runs. The harness fails fast on deprecated models (for example `anthropic/claude-opus-4-6`).
+Only generated benchmark artifacts under `benchmark/agent_ab/results/` are intended to be git-ignored.
+
+### Latest Benchmark Snapshot
+
+From a local run on February 9, 2026 (`--repeats 5`, task `cli_update_incremental_jsonl`):
+
+- Runs: 10 total (5 `with_skelly`, 5 `without_skelly`)
+- Success rate: 100% for both arms
+- Median duration: 22s (`with_skelly`) vs 58s (`without_skelly`)
+- Median non-cache tokens: 22,858 (`with_skelly`) vs 79,423 (`without_skelly`)
+- Median tool calls: 2 (`with_skelly`) vs 12 (`without_skelly`)
+
+Reproduce:
+
+```bash
+benchmark/agent_ab/scripts/run.sh \
+  --suite benchmark/agent_ab/tasks/suite.skelly_advantage.json \
+  --repeats 5 \
+  --model openai/gpt-5-mini \
+  --collect-analyze
+```
 
 ## v0.1 Exit Criteria
 

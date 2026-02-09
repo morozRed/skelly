@@ -11,6 +11,7 @@ bin/
 !TASKS.md
 !docs/
 !docs/*.md
+!benchmark/**/*.md
 
 # Benchmark artifacts
-benchmark/
+benchmark/agent_ab/results/
