@@ -17,6 +17,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var suspiciousContextPrefixes = []string{
+	"benchmark/agent_ab/results/",
+	"benchmark/agent_ab/workspaces/",
+	".bench/",
+}
+
 func RunDoctor(cmd *cobra.Command, args []string) error {
 	rootPath, err := resolveWorkingDirectory()
 	if err != nil {
@@ -53,6 +59,19 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 			summary.Missing = append(summary.Missing, "valid state file")
 			summary.Suggestions = append(summary.Suggestions, "run skelly generate")
 		} else {
+			summary.IndexedFiles = len(st.Files)
+			for file := range st.Files {
+				for _, prefix := range suspiciousContextPrefixes {
+					if strings.HasPrefix(file, prefix) {
+						summary.SuspiciousIndexed++
+						if len(summary.SuspiciousIndexedList) < 8 {
+							summary.SuspiciousIndexedList = append(summary.SuspiciousIndexedList, file)
+						}
+						break
+					}
+				}
+			}
+
 			registry := languages.NewDefaultRegistry()
 			ignoreRules, err := LoadIgnoreRules(rootPath)
 			if err != nil {
@@ -78,6 +97,12 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 			summary.Changed = len(fileutil.DedupeStrings(changed))
 			summary.Deleted = len(deleted)
 			summary.Clean = summary.Changed == 0 && summary.Deleted == 0
+
+			if summary.SuspiciousIndexed > 0 {
+				summary.Missing = append(summary.Missing, "context scope includes generated workspace artifacts")
+				summary.Suggestions = append(summary.Suggestions, "add benchmark/agent_ab/results/ to .skellyignore")
+				summary.Suggestions = append(summary.Suggestions, "run skelly update")
+			}
 		}
 	}
 
@@ -120,6 +145,9 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 	}
 	fmt.Printf("doctor: %s\n", status)
 	fmt.Printf("context: format=%s clean=%t changed=%d deleted=%d\n", summary.Format, summary.Clean, summary.Changed, summary.Deleted)
+	if summary.IndexedFiles > 0 {
+		fmt.Printf("context size: indexed_files=%d\n", summary.IndexedFiles)
+	}
 	fmt.Printf("integrations: skills=%t context=%t codex=%t claude=%t cursor=%t\n",
 		summary.Integrations["skills"],
 		summary.Integrations["context"],
@@ -127,6 +155,12 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 		summary.Integrations["claude"],
 		summary.Integrations["cursor"],
 	)
+	if summary.SuspiciousIndexed > 0 {
+		fmt.Printf("context scope warning: suspicious_indexed_files=%d (%s)\n",
+			summary.SuspiciousIndexed,
+			SummarizePaths(summary.SuspiciousIndexedList, 5),
+		)
+	}
 	if len(summary.Missing) > 0 {
 		fmt.Printf("missing (%d): %s\n", len(summary.Missing), strings.Join(summary.Missing, ", "))
 	}
