@@ -5,14 +5,14 @@ import "fmt"
 func BuildSkellySkillContent() string {
 	return `# Skelly Skill
 
-Use Skelly context artifacts and commands before opening many source files.
+Use Skelly CLI commands before opening many source files.
 
 Workflow:
 1. Run skelly doctor to validate context freshness.
 2. If stale, run skelly update.
-3. Prefer .skelly/.context/manifest.json, symbols.jsonl, and edges.jsonl when present.
-4. Fall back to index.txt and graph.txt for text mode repos.
-5. Use skelly status before major changes to understand impacted files.
+3. Use navigation commands first: skelly symbol, skelly callers, skelly callees, skelly trace, skelly path.
+4. Use skelly status before major changes to understand impacted files.
+5. Avoid reading .skelly/.context/* files directly unless debugging or CLI output is insufficient.
 `
 }
 
@@ -23,10 +23,14 @@ This repository uses Skelly as the canonical code context layer for LLM tools.
 
 - Canonical skill instructions: .skelly/skills/skelly.md
 - Context directory: .skelly/.context/
-- Preferred machine-readable artifacts:
-  - .skelly/.context/symbols.jsonl
-  - .skelly/.context/edges.jsonl
-  - .skelly/.context/manifest.json
+- Preferred workflow: use Skelly CLI commands for navigation and impact analysis.
+  - skelly symbol <target>
+  - skelly callers <target>
+  - skelly callees <target>
+  - skelly trace <target>
+  - skelly path <from> <to>
+  - skelly status
+- Treat .skelly/.context/* files as implementation detail; avoid direct reads unless debugging.
 
 Recommended command sequence:
 1. skelly doctor
@@ -43,18 +47,19 @@ Use Skelly outputs before broad code reads.
 1. Run skelly doctor at session start.
 2. If stale, run skelly update.
 3. Follow .skelly/skills/skelly.md.
-4. Use CONTEXT.md for canonical artifact paths.
+4. Prefer Skelly CLI commands over direct reads of .skelly/.context/* files.
 `, agentName)
 }
 
 func BuildCursorRuleContent() string {
 	return `---
-description: Use Skelly context artifacts for code navigation
+description: Use Skelly CLI for code navigation
 alwaysApply: true
 ---
 
 Run skelly doctor first. If context is stale, run skelly update.
 Use .skelly/skills/skelly.md and CONTEXT.md as primary guidance.
-Prefer .skelly/.context/symbols.jsonl, .skelly/.context/edges.jsonl, and .skelly/.context/manifest.json when available.
+Prefer Skelly CLI commands (symbol/callers/callees/trace/path/status) for navigation and impact analysis.
+Avoid direct reads of .skelly/.context/* unless debugging or CLI output is insufficient.
 `
 }

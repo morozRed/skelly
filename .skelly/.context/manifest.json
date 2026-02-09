@@ -4,16 +4,16 @@
   "counts": {
     "files": 59,
     "symbols": 392,
-    "edges": 606
+    "edges": 607
   },
   "artifacts": [
     {
       "path": "symbols.jsonl",
-      "hash": "e0f6f6ef2e607344"
+      "hash": "df944dc2de6b561b"
     },
     {
       "path": "edges.jsonl",
-      "hash": "95cd6b26ead598c9"
+      "hash": "4ea018d17c96371c"
     }
   ]
 }

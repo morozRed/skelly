@@ -583,7 +583,7 @@
         "internal/cli/cli_test.go|851|func|mustSetFlag|6f3e3219",
         "internal/cli/cli_test.go|858|func|captureStdout|414fd395",
         "internal/cli/cli_test.go|886|func|containsString|dcc1cc04",
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
         "internal/cli/generate.go|40|func|RunGenerate|28325528",
         "internal/cli/init.go|18|func|RunInit|f93470ee"
       ],
@@ -621,7 +621,7 @@
           "confidence": "resolved"
         },
         {
-          "target_id": "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+          "target_id": "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
           "confidence": "heuristic"
         },
         {
@@ -1784,13 +1784,14 @@
       ]
     },
     {
-      "id": "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+      "id": "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
       "name": "RunDoctor",
       "kind": "func",
       "signature": "func RunDoctor(cmd *cobra.Command, args []string) error",
       "file": "internal/cli/doctor.go",
-      "line": 20,
+      "line": 26,
       "out_edges": [
+        "internal/cli/summary.go|161|func|SummarizePaths|5beb39f7",
         "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4",
         "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
         "internal/fileutil/hash.go|29|func|ScanFileHashes|7842a605",
@@ -1807,6 +1808,10 @@
         "internal/cli/cli_test.go|136|func|TestDoctorReportsHealthyAndStaleStates|f52eafcc"
       ],
       "out_confidence": [
+        {
+          "target_id": "internal/cli/summary.go|161|func|SummarizePaths|5beb39f7",
+          "confidence": "heuristic"
+        },
         {
           "target_id": "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4",
           "confidence": "heuristic"
@@ -1862,7 +1867,7 @@
       "line": 19,
       "out_edges": [
         "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
-        "internal/cli/summary.go|120|func|PrintEnrichSummary|791a3cb6",
+        "internal/cli/summary.go|123|func|PrintEnrichSummary|791a3cb6",
         "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4",
         "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
         "internal/enrich/cache.go|113|func|PruneCacheForSymbol|8f98a278",
@@ -1892,7 +1897,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/summary.go|120|func|PrintEnrichSummary|791a3cb6",
+          "target_id": "internal/cli/summary.go|123|func|PrintEnrichSummary|791a3cb6",
           "confidence": "heuristic"
         },
         {
@@ -2109,7 +2114,7 @@
         "internal/cli/helpers.go|209|func|PersistState|695683d9",
         "internal/cli/helpers.go|74|func|LoadOutputHashesFromState|7824575d",
         "internal/cli/helpers.go|90|func|CountRewrittenOutputs|2c593fab",
-        "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
+        "internal/cli/summary.go|64|func|PrintRunSummary|cc5d4cee",
         "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
         "internal/fileutil/state_helpers.go|41|func|EnsureSymbolIDs|bb4ea1dc",
         "internal/graph/graph.go|50|func|BuildFromParseResult|6a44055d",
@@ -2152,7 +2157,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
+          "target_id": "internal/cli/summary.go|64|func|PrintRunSummary|cc5d4cee",
           "confidence": "heuristic"
         },
         {
@@ -2689,7 +2694,7 @@
       "out_edges": [
         "internal/cli/helpers.go|178|func|MaxInt|dc92babb",
         "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
-        "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
+        "internal/cli/summary.go|64|func|PrintRunSummary|cc5d4cee",
         "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4",
         "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
         "internal/fileutil/hash.go|29|func|ScanFileHashes|7842a605",
@@ -2711,7 +2716,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
+          "target_id": "internal/cli/summary.go|64|func|PrintRunSummary|cc5d4cee",
           "confidence": "heuristic"
         },
         {
@@ -2765,35 +2770,36 @@
       "line": 10
     },
     {
-      "id": "internal/cli/summary.go|120|func|PrintEnrichSummary|791a3cb6",
+      "id": "internal/cli/summary.go|123|func|PrintEnrichSummary|791a3cb6",
       "name": "PrintEnrichSummary",
       "kind": "func",
       "signature": "func PrintEnrichSummary(summary EnrichRunSummary, asJSON bool) error",
       "file": "internal/cli/summary.go",
-      "line": 120,
+      "line": 123,
       "out_edges": [
-        "internal/cli/summary.go|158|func|SummarizePaths|5beb39f7"
+        "internal/cli/summary.go|161|func|SummarizePaths|5beb39f7"
       ],
       "in_edges": [
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915"
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/summary.go|158|func|SummarizePaths|5beb39f7",
+          "target_id": "internal/cli/summary.go|161|func|SummarizePaths|5beb39f7",
           "confidence": "resolved"
         }
       ]
     },
     {
-      "id": "internal/cli/summary.go|158|func|SummarizePaths|5beb39f7",
+      "id": "internal/cli/summary.go|161|func|SummarizePaths|5beb39f7",
       "name": "SummarizePaths",
       "kind": "func",
       "signature": "func SummarizePaths(paths []string, max int) string",
       "file": "internal/cli/summary.go",
-      "line": 158,
+      "line": 161,
       "in_edges": [
-        "internal/cli/summary.go|120|func|PrintEnrichSummary|791a3cb6",
-        "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee"
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
+        "internal/cli/summary.go|123|func|PrintEnrichSummary|791a3cb6",
+        "internal/cli/summary.go|64|func|PrintRunSummary|cc5d4cee"
       ]
     },
     {
@@ -2813,14 +2819,14 @@
       "line": 47
     },
     {
-      "id": "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
+      "id": "internal/cli/summary.go|64|func|PrintRunSummary|cc5d4cee",
       "name": "PrintRunSummary",
       "kind": "func",
       "signature": "func PrintRunSummary(summary RunSummary, asJSON bool) error",
       "file": "internal/cli/summary.go",
-      "line": 61,
+      "line": 64,
       "out_edges": [
-        "internal/cli/summary.go|158|func|SummarizePaths|5beb39f7"
+        "internal/cli/summary.go|161|func|SummarizePaths|5beb39f7"
       ],
       "in_edges": [
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
@@ -2829,7 +2835,7 @@
       ],
       "out_confidence": [
         {
-          "target_id": "internal/cli/summary.go|158|func|SummarizePaths|5beb39f7",
+          "target_id": "internal/cli/summary.go|161|func|SummarizePaths|5beb39f7",
           "confidence": "resolved"
         }
       ]
@@ -2850,7 +2856,7 @@
         "internal/cli/helpers.go|65|func|IsCorruptStateError|baeaa80d",
         "internal/cli/helpers.go|82|func|CloneOutputHashes|e9d2faa0",
         "internal/cli/helpers.go|90|func|CountRewrittenOutputs|2c593fab",
-        "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
+        "internal/cli/summary.go|64|func|PrintRunSummary|cc5d4cee",
         "internal/cli/util.go|11|func|resolveWorkingDirectory|2ca618e4",
         "internal/cli/util.go|19|func|LoadIgnoreRules|f9f37c94",
         "internal/fileutil/hash.go|29|func|ScanFileHashes|7842a605",
@@ -2915,7 +2921,7 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
+          "target_id": "internal/cli/summary.go|64|func|PrintRunSummary|cc5d4cee",
           "confidence": "heuristic"
         },
         {
@@ -3020,7 +3026,7 @@
       "file": "internal/cli/util.go",
       "line": 11,
       "in_edges": [
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|18|func|RunSetup|7116c91b",
         "internal/cli/hook.go|20|func|RunInstallHook|ed52b2b4",
@@ -3037,7 +3043,7 @@
       "file": "internal/cli/util.go",
       "line": 19,
       "in_edges": [
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
         "internal/cli/init.go|18|func|RunInit|f93470ee",
@@ -3358,7 +3364,7 @@
         "internal/parser/parser.go|51|method|GetParserForFile|ecf13468"
       ],
       "in_edges": [
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/init.go|89|func|hasSourceFiles|8c7b4b07",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
@@ -3552,7 +3558,7 @@
       "file": "internal/fileutil/strings.go",
       "line": 5,
       "in_edges": [
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
         "internal/cli/update.go|19|func|RunUpdate|6316513e"
       ]
@@ -5304,7 +5310,7 @@
       ],
       "in_edges": [
         "internal/bench/benchmark_test.go|13|func|BenchmarkParseAndGraph_MediumRepo|56a3edee",
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
         "internal/cli/init.go|89|func|hasSourceFiles|8c7b4b07",
@@ -6213,7 +6219,7 @@
         "internal/llm/providers.go|163|func|fileExists|f31388c6"
       ],
       "in_edges": [
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910"
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910"
       ],
       "out_confidence": [
         {
@@ -6245,7 +6251,7 @@
         "internal/llm/providers.go|163|func|fileExists|f31388c6"
       ],
       "in_edges": [
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910"
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910"
       ],
       "out_confidence": [
         {
@@ -6281,8 +6287,8 @@
         "internal/fileutil/write.go|16|func|WriteIfChangedTracked|d02f0464",
         "internal/llm/managed.go|16|func|UpsertManagedMarkdownFile|1c9e7a0c",
         "internal/llm/templates.go|19|func|BuildContextBlock|da822b2a",
-        "internal/llm/templates.go|38|func|BuildRootAdapterBlock|be309504",
-        "internal/llm/templates.go|50|func|BuildCursorRuleContent|86a2c928",
+        "internal/llm/templates.go|42|func|BuildRootAdapterBlock|be309504",
+        "internal/llm/templates.go|54|func|BuildCursorRuleContent|86a2c928",
         "internal/llm/templates.go|5|func|BuildSkellySkillContent|af9e1c3e"
       ],
       "in_edges": [
@@ -6302,11 +6308,11 @@
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/llm/templates.go|38|func|BuildRootAdapterBlock|be309504",
+          "target_id": "internal/llm/templates.go|42|func|BuildRootAdapterBlock|be309504",
           "confidence": "heuristic"
         },
         {
-          "target_id": "internal/llm/templates.go|50|func|BuildCursorRuleContent|86a2c928",
+          "target_id": "internal/llm/templates.go|54|func|BuildCursorRuleContent|86a2c928",
           "confidence": "heuristic"
         },
         {
@@ -6327,23 +6333,23 @@
       ]
     },
     {
-      "id": "internal/llm/templates.go|38|func|BuildRootAdapterBlock|be309504",
+      "id": "internal/llm/templates.go|42|func|BuildRootAdapterBlock|be309504",
       "name": "BuildRootAdapterBlock",
       "kind": "func",
       "signature": "func BuildRootAdapterBlock(agentName string) string",
       "file": "internal/llm/templates.go",
-      "line": 38,
+      "line": 42,
       "in_edges": [
         "internal/llm/providers.go|66|func|GenerateIntegrationFiles|9be01e47"
       ]
     },
     {
-      "id": "internal/llm/templates.go|50|func|BuildCursorRuleContent|86a2c928",
+      "id": "internal/llm/templates.go|54|func|BuildCursorRuleContent|86a2c928",
       "name": "BuildCursorRuleContent",
       "kind": "func",
       "signature": "func BuildCursorRuleContent() string",
       "file": "internal/llm/templates.go",
-      "line": 50,
+      "line": 54,
       "in_edges": [
         "internal/llm/providers.go|66|func|GenerateIntegrationFiles|9be01e47"
       ]
@@ -6513,7 +6519,7 @@
         "internal/nav/types.go|25|struct|Lookup|77ff95db"
       ],
       "in_edges": [
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
         "internal/cli/init.go|18|func|RunInit|f93470ee",
         "internal/nav/commands.go|12|func|RunSymbol|647400bb",
         "internal/nav/commands.go|139|func|RunTrace|e944a602",
@@ -7817,7 +7823,7 @@
         "internal/state/state.go|133|method|HasChanged|754ff82d"
       ],
       "in_edges": [
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
         "internal/cli/update.go|19|func|RunUpdate|6316513e",
         "internal/state/state_test.go|8|func|TestChangedAndDeletedFiles|a5e7757f"
@@ -7837,7 +7843,7 @@
       "file": "internal/state/state.go",
       "line": 161,
       "in_edges": [
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
         "internal/cli/status.go|17|func|RunStatus|1c524893",
         "internal/cli/update.go|19|func|RunUpdate|6316513e",
         "internal/state/state_test.go|8|func|TestChangedAndDeletedFiles|a5e7757f"
@@ -7931,7 +7937,7 @@
       "in_edges": [
         "internal/cli/cli_test.go|1004|func|TestInitNoGeneratePreservesExistingState|39636cbe",
         "internal/cli/cli_test.go|475|func|TestUpdateJSONLTracksArtifactHashesIncrementally|8d5c8de7",
-        "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+        "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
         "internal/cli/enrich.go|19|func|RunEnrich|9f6f5915",
         "internal/cli/generate.go|75|func|GenerateContext|9a82a6f1",
         "internal/cli/helpers.go|74|func|LoadOutputHashesFromState|7824575d",

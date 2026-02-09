@@ -2,7 +2,7 @@
   "version": "2",
   "parser_version": "tree-sitter-v1",
   "output_version": "context-v1",
-  "updated_at": "2026-02-06T18:36:03.137522+01:00",
+  "updated_at": "2026-02-09T21:44:09.571031+01:00",
   "files": {
     "cmd/skelly/main.go": {
       "hash": "8b4e227d3cb1d6d6",
@@ -704,7 +704,6 @@
         "testing": "testing"
       },
       "dependencies": [
-        "internal/graph/graph.go",
         "internal/languages/registry.go",
         "internal/parser/parser.go"
       ],
@@ -5527,21 +5526,21 @@
       "updated_at": "2026-02-06T18:35:42.554252+01:00"
     },
     "internal/cli/doctor.go": {
-      "hash": "c4920d287fee5f7e",
+      "hash": "98271dbb939983ca",
       "language": "go",
       "symbols": [
         {
-          "ID": "internal/cli/doctor.go|20|func|RunDoctor|214d9910",
+          "ID": "internal/cli/doctor.go|26|func|RunDoctor|214d9910",
           "Name": "RunDoctor",
           "Kind": 0,
           "Signature": "func RunDoctor(cmd *cobra.Command, args []string) error",
           "File": "",
-          "Line": 20,
+          "Line": 26,
           "Doc": "",
           "Calls": [
             {
               "name": "resolveWorkingDirectory",
-              "line": 21,
+              "line": 27,
               "raw": "resolveWorkingDirectory"
             },
             {
@@ -5549,7 +5548,7 @@
               "qualifier": "nav",
               "receiver": "nav",
               "arity": 3,
-              "line": 25,
+              "line": 31,
               "raw": "nav.OptionalBoolFlag"
             },
             {
@@ -5557,7 +5556,7 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 30,
+              "line": 36,
               "raw": "filepath.Join"
             },
             {
@@ -5565,7 +5564,7 @@
               "qualifier": "llm",
               "receiver": "llm",
               "arity": 1,
-              "line": 35,
+              "line": 41,
               "raw": "llm.DetectContextFormat"
             },
             {
@@ -5573,7 +5572,7 @@
               "qualifier": "llm",
               "receiver": "llm",
               "arity": 1,
-              "line": 36,
+              "line": 42,
               "raw": "llm.DetectLLMIntegrations"
             },
             {
@@ -5581,7 +5580,7 @@
               "qualifier": "filepath",
               "receiver": "filepath",
               "arity": 2,
-              "line": 40,
+              "line": 46,
               "raw": "filepath.Join"
             },
             {
@@ -5589,28 +5588,14 @@
               "qualifier": "os",
               "receiver": "os",
               "arity": 1,
-              "line": 41,
+              "line": 47,
               "raw": "os.Stat"
             },
             {
               "name": "append",
               "arity": 2,
-              "line": 44,
+              "line": 50,
               "raw": "append"
-            },
-            {
-              "name": "append",
-              "arity": 2,
-              "line": 47,
-              "raw": "append"
-            },
-            {
-              "name": "Load",
-              "qualifier": "state",
-              "receiver": "state",
-              "arity": 1,
-              "line": 51,
-              "raw": "state.Load"
             },
             {
               "name": "append",
@@ -5619,22 +5604,62 @@
               "raw": "append"
             },
             {
+              "name": "Load",
+              "qualifier": "state",
+              "receiver": "state",
+              "arity": 1,
+              "line": 57,
+              "raw": "state.Load"
+            },
+            {
               "name": "append",
               "arity": 2,
-              "line": 54,
+              "line": 59,
+              "raw": "append"
+            },
+            {
+              "name": "append",
+              "arity": 2,
+              "line": 60,
+              "raw": "append"
+            },
+            {
+              "name": "len",
+              "arity": 1,
+              "line": 62,
+              "raw": "len"
+            },
+            {
+              "name": "HasPrefix",
+              "qualifier": "strings",
+              "receiver": "strings",
+              "arity": 2,
+              "line": 65,
+              "raw": "strings.HasPrefix"
+            },
+            {
+              "name": "len",
+              "arity": 1,
+              "line": 67,
+              "raw": "len"
+            },
+            {
+              "name": "append",
+              "arity": 2,
+              "line": 68,
               "raw": "append"
             },
             {
               "name": "NewDefaultRegistry",
               "qualifier": "languages",
               "receiver": "languages",
-              "line": 56,
+              "line": 75,
               "raw": "languages.NewDefaultRegistry"
             },
             {
               "name": "LoadIgnoreRules",
               "arity": 1,
-              "line": 57,
+              "line": 76,
               "raw": "LoadIgnoreRules"
             },
             {
@@ -5642,7 +5667,7 @@
               "qualifier": "fileutil",
               "receiver": "fileutil",
               "arity": 3,
-              "line": 61,
+              "line": 80,
               "raw": "fileutil.ScanFileHashes"
             },
             {
@@ -5650,19 +5675,19 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 63,
+              "line": 82,
               "raw": "fmt.Errorf"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 65,
+              "line": 84,
               "raw": "len"
             },
             {
               "name": "make",
               "arity": 2,
-              "line": 65,
+              "line": 84,
               "raw": "make"
             },
             {
@@ -5670,7 +5695,7 @@
               "qualifier": "st",
               "receiver": "st",
               "arity": 1,
-              "line": 70,
+              "line": 89,
               "raw": "st.ChangedFiles"
             },
             {
@@ -5678,25 +5703,25 @@
               "qualifier": "st",
               "receiver": "st",
               "arity": 1,
-              "line": 71,
+              "line": 90,
               "raw": "st.DeletedFiles"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 73,
+              "line": 92,
               "raw": "len"
             },
             {
               "name": "append",
               "arity": 2,
-              "line": 74,
+              "line": 93,
               "raw": "append"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 78,
+              "line": 97,
               "raw": "len"
             },
             {
@@ -5704,44 +5729,14 @@
               "qualifier": "fileutil",
               "receiver": "fileutil",
               "arity": 1,
-              "line": 78,
+              "line": 97,
               "raw": "fileutil.DedupeStrings"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 79,
+              "line": 98,
               "raw": "len"
-            },
-            {
-              "name": "append",
-              "arity": 2,
-              "line": 85,
-              "raw": "append"
-            },
-            {
-              "name": "append",
-              "arity": 2,
-              "line": 88,
-              "raw": "append"
-            },
-            {
-              "name": "append",
-              "arity": 2,
-              "line": 92,
-              "raw": "append"
-            },
-            {
-              "name": "append",
-              "arity": 2,
-              "line": 96,
-              "raw": "append"
-            },
-            {
-              "name": "append",
-              "arity": 2,
-              "line": 99,
-              "raw": "append"
             },
             {
               "name": "append",
@@ -5750,11 +5745,59 @@
               "raw": "append"
             },
             {
+              "name": "append",
+              "arity": 2,
+              "line": 103,
+              "raw": "append"
+            },
+            {
+              "name": "append",
+              "arity": 2,
+              "line": 104,
+              "raw": "append"
+            },
+            {
+              "name": "append",
+              "arity": 2,
+              "line": 110,
+              "raw": "append"
+            },
+            {
+              "name": "append",
+              "arity": 2,
+              "line": 113,
+              "raw": "append"
+            },
+            {
+              "name": "append",
+              "arity": 2,
+              "line": 117,
+              "raw": "append"
+            },
+            {
+              "name": "append",
+              "arity": 2,
+              "line": 121,
+              "raw": "append"
+            },
+            {
+              "name": "append",
+              "arity": 2,
+              "line": 124,
+              "raw": "append"
+            },
+            {
+              "name": "append",
+              "arity": 2,
+              "line": 127,
+              "raw": "append"
+            },
+            {
               "name": "DedupeStrings",
               "qualifier": "fileutil",
               "receiver": "fileutil",
               "arity": 1,
-              "line": 105,
+              "line": 130,
               "raw": "fileutil.DedupeStrings"
             },
             {
@@ -5762,7 +5805,7 @@
               "qualifier": "sort",
               "receiver": "sort",
               "arity": 1,
-              "line": 106,
+              "line": 131,
               "raw": "sort.Strings"
             },
             {
@@ -5770,7 +5813,7 @@
               "qualifier": "fileutil",
               "receiver": "fileutil",
               "arity": 1,
-              "line": 107,
+              "line": 132,
               "raw": "fileutil.DedupeStrings"
             },
             {
@@ -5778,13 +5821,13 @@
               "qualifier": "sort",
               "receiver": "sort",
               "arity": 1,
-              "line": 108,
+              "line": 133,
               "raw": "sort.Strings"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 109,
+              "line": 134,
               "raw": "len"
             },
             {
@@ -5792,7 +5835,7 @@
               "qualifier": "json",
               "receiver": "json",
               "arity": 1,
-              "line": 112,
+              "line": 137,
               "raw": "json.NewEncoder"
             },
             {
@@ -5800,7 +5843,7 @@
               "qualifier": "encoder",
               "receiver": "encoder",
               "arity": 2,
-              "line": 113,
+              "line": 138,
               "raw": "encoder.SetIndent"
             },
             {
@@ -5808,7 +5851,7 @@
               "qualifier": "encoder",
               "receiver": "encoder",
               "arity": 1,
-              "line": 114,
+              "line": 139,
               "raw": "encoder.Encode"
             },
             {
@@ -5816,7 +5859,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 121,
+              "line": 146,
               "raw": "fmt.Printf"
             },
             {
@@ -5824,7 +5867,15 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 5,
-              "line": 122,
+              "line": 147,
+              "raw": "fmt.Printf"
+            },
+            {
+              "name": "Printf",
+              "qualifier": "fmt",
+              "receiver": "fmt",
+              "arity": 2,
+              "line": 149,
               "raw": "fmt.Printf"
             },
             {
@@ -5832,19 +5883,33 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 6,
-              "line": 123,
+              "line": 151,
               "raw": "fmt.Printf"
+            },
+            {
+              "name": "Printf",
+              "qualifier": "fmt",
+              "receiver": "fmt",
+              "arity": 3,
+              "line": 159,
+              "raw": "fmt.Printf"
+            },
+            {
+              "name": "SummarizePaths",
+              "arity": 2,
+              "line": 161,
+              "raw": "SummarizePaths"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 130,
+              "line": 164,
               "raw": "len"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 131,
+              "line": 165,
               "raw": "len"
             },
             {
@@ -5852,7 +5917,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 3,
-              "line": 131,
+              "line": 165,
               "raw": "fmt.Printf"
             },
             {
@@ -5860,13 +5925,13 @@
               "qualifier": "strings",
               "receiver": "strings",
               "arity": 2,
-              "line": 131,
+              "line": 165,
               "raw": "strings.Join"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 133,
+              "line": 167,
               "raw": "len"
             },
             {
@@ -5874,7 +5939,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 135,
+              "line": 169,
               "raw": "fmt.Printf"
             }
           ],
@@ -5912,6 +5977,7 @@
         "strings": "strings"
       },
       "dependencies": [
+        "internal/cli/summary.go",
         "internal/cli/util.go",
         "internal/fileutil/hash.go",
         "internal/fileutil/strings.go",
@@ -5920,7 +5986,7 @@
         "internal/nav/commands.go",
         "internal/state/state.go"
       ],
-      "updated_at": "2026-02-06T18:35:42.554253+01:00"
+      "updated_at": "2026-02-09T21:44:09.552548+01:00"
     },
     "internal/cli/enrich.go": {
       "hash": "e759211034265ff1",
@@ -9130,7 +9196,7 @@
       "updated_at": "2026-02-06T18:35:42.554255+01:00"
     },
     "internal/cli/summary.go": {
-      "hash": "8a3cc9fa3e80b0bd",
+      "hash": "e303c086043120b6",
       "language": "go",
       "symbols": [
         {
@@ -9167,12 +9233,12 @@
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/summary.go|61|func|PrintRunSummary|cc5d4cee",
+          "ID": "internal/cli/summary.go|64|func|PrintRunSummary|cc5d4cee",
           "Name": "PrintRunSummary",
           "Kind": 0,
           "Signature": "func PrintRunSummary(summary RunSummary, asJSON bool) error",
           "File": "",
-          "Line": 61,
+          "Line": 64,
           "Doc": "",
           "Calls": [
             {
@@ -9180,7 +9246,7 @@
               "qualifier": "json",
               "receiver": "json",
               "arity": 1,
-              "line": 63,
+              "line": 66,
               "raw": "json.NewEncoder"
             },
             {
@@ -9188,7 +9254,7 @@
               "qualifier": "encoder",
               "receiver": "encoder",
               "arity": 2,
-              "line": 64,
+              "line": 67,
               "raw": "encoder.SetIndent"
             },
             {
@@ -9196,7 +9262,7 @@
               "qualifier": "encoder",
               "receiver": "encoder",
               "arity": 1,
-              "line": 65,
+              "line": 68,
               "raw": "encoder.Encode"
             },
             {
@@ -9204,14 +9270,6 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 69,
-              "raw": "fmt.Printf"
-            },
-            {
-              "name": "Printf",
-              "qualifier": "fmt",
-              "receiver": "fmt",
-              "arity": 3,
               "line": 72,
               "raw": "fmt.Printf"
             },
@@ -9219,15 +9277,15 @@
               "name": "Printf",
               "qualifier": "fmt",
               "receiver": "fmt",
-              "arity": 2,
-              "line": 74,
+              "arity": 3,
+              "line": 75,
               "raw": "fmt.Printf"
             },
             {
               "name": "Printf",
               "qualifier": "fmt",
               "receiver": "fmt",
-              "arity": 4,
+              "arity": 2,
               "line": 77,
               "raw": "fmt.Printf"
             },
@@ -9235,26 +9293,34 @@
               "name": "Printf",
               "qualifier": "fmt",
               "receiver": "fmt",
+              "arity": 4,
+              "line": 80,
+              "raw": "fmt.Printf"
+            },
+            {
+              "name": "Printf",
+              "qualifier": "fmt",
+              "receiver": "fmt",
               "arity": 5,
-              "line": 78,
+              "line": 81,
               "raw": "fmt.Printf"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 79,
+              "line": 82,
               "raw": "len"
             },
             {
               "name": "SummarizePaths",
               "arity": 2,
-              "line": 80,
+              "line": 83,
               "raw": "SummarizePaths"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 80,
+              "line": 83,
               "raw": "len"
             },
             {
@@ -9262,7 +9328,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 3,
-              "line": 80,
+              "line": 83,
               "raw": "fmt.Printf"
             },
             {
@@ -9270,33 +9336,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 10,
-              "line": 85,
-              "raw": "fmt.Printf"
-            },
-            {
-              "name": "len",
-              "arity": 1,
-              "line": 98,
-              "raw": "len"
-            },
-            {
-              "name": "SummarizePaths",
-              "arity": 2,
-              "line": 99,
-              "raw": "SummarizePaths"
-            },
-            {
-              "name": "len",
-              "arity": 1,
-              "line": 99,
-              "raw": "len"
-            },
-            {
-              "name": "Printf",
-              "qualifier": "fmt",
-              "receiver": "fmt",
-              "arity": 3,
-              "line": 99,
+              "line": 88,
               "raw": "fmt.Printf"
             },
             {
@@ -9358,9 +9398,15 @@
               "raw": "len"
             },
             {
+              "name": "SummarizePaths",
+              "arity": 2,
+              "line": 108,
+              "raw": "SummarizePaths"
+            },
+            {
               "name": "len",
               "arity": 1,
-              "line": 110,
+              "line": 108,
               "raw": "len"
             },
             {
@@ -9368,7 +9414,27 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 3,
+              "line": 108,
+              "raw": "fmt.Printf"
+            },
+            {
+              "name": "len",
+              "arity": 1,
+              "line": 110,
+              "raw": "len"
+            },
+            {
+              "name": "len",
+              "arity": 1,
               "line": 113,
+              "raw": "len"
+            },
+            {
+              "name": "Printf",
+              "qualifier": "fmt",
+              "receiver": "fmt",
+              "arity": 3,
+              "line": 116,
               "raw": "fmt.Printf"
             },
             {
@@ -9376,19 +9442,19 @@
               "qualifier": "strings",
               "receiver": "strings",
               "arity": 2,
-              "line": 113,
+              "line": 116,
               "raw": "strings.Join"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/summary.go|120|func|PrintEnrichSummary|791a3cb6",
+          "ID": "internal/cli/summary.go|123|func|PrintEnrichSummary|791a3cb6",
           "Name": "PrintEnrichSummary",
           "Kind": 0,
           "Signature": "func PrintEnrichSummary(summary EnrichRunSummary, asJSON bool) error",
           "File": "",
-          "Line": 120,
+          "Line": 123,
           "Doc": "",
           "Calls": [
             {
@@ -9396,7 +9462,7 @@
               "qualifier": "json",
               "receiver": "json",
               "arity": 1,
-              "line": 122,
+              "line": 125,
               "raw": "json.NewEncoder"
             },
             {
@@ -9404,7 +9470,7 @@
               "qualifier": "encoder",
               "receiver": "encoder",
               "arity": 2,
-              "line": 123,
+              "line": 126,
               "raw": "encoder.SetIndent"
             },
             {
@@ -9412,7 +9478,7 @@
               "qualifier": "encoder",
               "receiver": "encoder",
               "arity": 1,
-              "line": 124,
+              "line": 127,
               "raw": "encoder.Encode"
             },
             {
@@ -9420,7 +9486,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 132,
+              "line": 135,
               "raw": "fmt.Sprintf"
             },
             {
@@ -9428,22 +9494,8 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 133,
+              "line": 136,
               "raw": "fmt.Sprintf"
-            },
-            {
-              "name": "Sprintf",
-              "qualifier": "fmt",
-              "receiver": "fmt",
-              "arity": 2,
-              "line": 134,
-              "raw": "fmt.Sprintf"
-            },
-            {
-              "name": "append",
-              "arity": 2,
-              "line": 137,
-              "raw": "append"
             },
             {
               "name": "Sprintf",
@@ -9455,8 +9507,8 @@
             },
             {
               "name": "append",
-              "arity": 8,
-              "line": 139,
+              "arity": 2,
+              "line": 140,
               "raw": "append"
             },
             {
@@ -9468,20 +9520,10 @@
               "raw": "fmt.Sprintf"
             },
             {
-              "name": "Sprintf",
-              "qualifier": "fmt",
-              "receiver": "fmt",
-              "arity": 2,
-              "line": 141,
-              "raw": "fmt.Sprintf"
-            },
-            {
-              "name": "Sprintf",
-              "qualifier": "fmt",
-              "receiver": "fmt",
-              "arity": 2,
+              "name": "append",
+              "arity": 8,
               "line": 142,
-              "raw": "fmt.Sprintf"
+              "raw": "append"
             },
             {
               "name": "Sprintf",
@@ -9516,11 +9558,35 @@
               "raw": "fmt.Sprintf"
             },
             {
+              "name": "Sprintf",
+              "qualifier": "fmt",
+              "receiver": "fmt",
+              "arity": 2,
+              "line": 147,
+              "raw": "fmt.Sprintf"
+            },
+            {
+              "name": "Sprintf",
+              "qualifier": "fmt",
+              "receiver": "fmt",
+              "arity": 2,
+              "line": 148,
+              "raw": "fmt.Sprintf"
+            },
+            {
+              "name": "Sprintf",
+              "qualifier": "fmt",
+              "receiver": "fmt",
+              "arity": 2,
+              "line": 149,
+              "raw": "fmt.Sprintf"
+            },
+            {
               "name": "Println",
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 1,
-              "line": 148,
+              "line": 151,
               "raw": "fmt.Println"
             },
             {
@@ -9528,7 +9594,7 @@
               "qualifier": "strings",
               "receiver": "strings",
               "arity": 2,
-              "line": 148,
+              "line": 151,
               "raw": "strings.Join"
             },
             {
@@ -9536,25 +9602,25 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 150,
+              "line": 153,
               "raw": "fmt.Printf"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 152,
+              "line": 155,
               "raw": "len"
             },
             {
               "name": "SummarizePaths",
               "arity": 2,
-              "line": 153,
+              "line": 156,
               "raw": "SummarizePaths"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 153,
+              "line": 156,
               "raw": "len"
             },
             {
@@ -9562,25 +9628,25 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 3,
-              "line": 153,
+              "line": 156,
               "raw": "fmt.Printf"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/cli/summary.go|158|func|SummarizePaths|5beb39f7",
+          "ID": "internal/cli/summary.go|161|func|SummarizePaths|5beb39f7",
           "Name": "SummarizePaths",
           "Kind": 0,
           "Signature": "func SummarizePaths(paths []string, max int) string",
           "File": "",
-          "Line": 158,
+          "Line": 161,
           "Doc": "",
           "Calls": [
             {
               "name": "len",
               "arity": 1,
-              "line": 159,
+              "line": 162,
               "raw": "len"
             },
             {
@@ -9588,13 +9654,13 @@
               "qualifier": "strings",
               "receiver": "strings",
               "arity": 2,
-              "line": 160,
+              "line": 163,
               "raw": "strings.Join"
             },
             {
               "name": "len",
               "arity": 1,
-              "line": 162,
+              "line": 165,
               "raw": "len"
             },
             {
@@ -9602,7 +9668,7 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 3,
-              "line": 162,
+              "line": 165,
               "raw": "fmt.Sprintf"
             },
             {
@@ -9610,7 +9676,7 @@
               "qualifier": "strings",
               "receiver": "strings",
               "arity": 2,
-              "line": 162,
+              "line": 165,
               "raw": "strings.Join"
             }
           ],
@@ -9629,7 +9695,7 @@
         "os": "os",
         "strings": "strings"
       },
-      "updated_at": "2026-02-06T18:35:42.554255+01:00"
+      "updated_at": "2026-02-09T21:44:09.554512+01:00"
     },
     "internal/cli/update.go": {
       "hash": "2d5b6febcde4658a",
@@ -12150,7 +12216,6 @@
       },
       "dependencies": [
         "internal/fileutil/strings.go",
-        "internal/graph/graph.go",
         "internal/parser/symbol_id.go"
       ],
       "updated_at": "2026-02-06T18:35:42.554262+01:00"
@@ -21455,7 +21520,7 @@
       "updated_at": "2026-02-06T18:35:42.554266+01:00"
     },
     "internal/llm/templates.go": {
-      "hash": "649d6c820638cb80",
+      "hash": "1689067ffb160596",
       "language": "go",
       "symbols": [
         {
@@ -21481,12 +21546,12 @@
           "CalledBy": null
         },
         {
-          "ID": "internal/llm/templates.go|38|func|BuildRootAdapterBlock|be309504",
+          "ID": "internal/llm/templates.go|42|func|BuildRootAdapterBlock|be309504",
           "Name": "BuildRootAdapterBlock",
           "Kind": 0,
           "Signature": "func BuildRootAdapterBlock(agentName string) string",
           "File": "",
-          "Line": 38,
+          "Line": 42,
           "Doc": "",
           "Calls": [
             {
@@ -21494,19 +21559,19 @@
               "qualifier": "fmt",
               "receiver": "fmt",
               "arity": 2,
-              "line": 39,
+              "line": 43,
               "raw": "fmt.Sprintf"
             }
           ],
           "CalledBy": null
         },
         {
-          "ID": "internal/llm/templates.go|50|func|BuildCursorRuleContent|86a2c928",
+          "ID": "internal/llm/templates.go|54|func|BuildCursorRuleContent|86a2c928",
           "Name": "BuildCursorRuleContent",
           "Kind": 0,
           "Signature": "func BuildCursorRuleContent() string",
           "File": "",
-          "Line": 50,
+          "Line": 54,
           "Doc": "",
           "Calls": null,
           "CalledBy": null
@@ -21518,7 +21583,7 @@
       "import_aliases": {
         "fmt": "fmt"
       },
-      "updated_at": "2026-02-06T18:35:42.554267+01:00"
+      "updated_at": "2026-02-07T13:36:07.235767+01:00"
     },
     "internal/nav/commands.go": {
       "hash": "aa0093998a007eaf",
@@ -26318,9 +26383,9 @@
     }
   },
   "output_hashes": {
-    "edges.jsonl": "95cd6b26ead598c9",
-    "manifest.json": "b5dc0357e758bd8c",
-    "nav-index.json": "2784038d04781c7b",
-    "symbols.jsonl": "e0f6f6ef2e607344"
+    "edges.jsonl": "4ea018d17c96371c",
+    "manifest.json": "3deb12b173123558",
+    "nav-index.json": "3ff442284b8e317a",
+    "symbols.jsonl": "df944dc2de6b561b"
   }
 }
