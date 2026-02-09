@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/skelly/benchmark/run_record.schema.json",
+  "title": "AgentABRunRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "task_id",
+    "arm",
+    "repeat",
+    "success",
+    "duration_seconds",
+    "opencode_exit_code",
+    "acceptance_exit_code",
+    "setup_exit_code",
+    "arm_setup_exit_code"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "arm": {
+      "type": "string",
+      "enum": [
+        "with_skelly",
+        "without_skelly"
+      ]
+    },
+    "repeat": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "success": {
+      "type": "boolean"
+    },
+    "duration_seconds": {
+      "type": "number",
+      "minimum": 0
+    },
+    "opencode_exit_code": {
+      "type": "integer"
+    },
+    "acceptance_exit_code": {
+      "type": "integer"
+    },
+    "setup_exit_code": {
+      "type": "integer"
+    },
+    "arm_setup_exit_code": {
+      "type": "integer"
+    },
+    "prompt_file": {
+      "type": "string"
+    },
+    "acceptance_command": {
+      "type": "string"
+    },
+    "workspace": {
+      "type": "string"
+    },
+    "started_at_utc": {
+      "type": "string"
+    },
+    "ended_at_utc": {
+      "type": "string"
+    },
+    "session_id": {
+      "type": "string"
+    },
+    "total_cost_usd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "input_tokens": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "output_tokens": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "cache_read_tokens": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "cache_write_tokens": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "step_count": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "tool_call_count": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "task_tool_call_count": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "skelly_doctor_count": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "skelly_update_count": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "skelly_symbol_count": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "acceptance_cmd_count": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "acceptance_first_pass": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    }
+  }
+}
