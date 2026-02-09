@@ -15,6 +15,7 @@ Options:
   --opencode-bin <path>  OpenCode binary path. Default: opencode
   --opencode-state <m>   OpenCode state mode: system|isolated. Default: system
   --arms <csv>           Comma-separated arms. Default: with_skelly,without_skelly
+  --collect-analyze      Run collect.sh and analyze.sh automatically after runs.
   --dry-run              Prepare workspaces and metadata, skip OpenCode + acceptance.
   -h, --help             Show this help.
 EOF
@@ -27,11 +28,16 @@ SUITE_FILE="$ROOT_DIR/benchmark/agent_ab/tasks/suite.template.json"
 OUT_DIR="$ROOT_DIR/benchmark/agent_ab/results/$(date -u +%Y%m%dT%H%M%SZ)"
 REPEATS=1
 MODEL="${MODEL:-}"
+MODEL_SOURCE=""
+if [[ -n "$MODEL" ]]; then
+  MODEL_SOURCE="env"
+fi
 AGENT="${AGENT:-}"
 OPENCODE_BIN="${OPENCODE_BIN:-opencode}"
 OPENCODE_STATE_MODE="system"
 ARMS_CSV="with_skelly,without_skelly"
 DRY_RUN=0
+COLLECT_ANALYZE=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -49,6 +55,7 @@ while [[ $# -gt 0 ]]; do
       ;;
     --model)
       MODEL="$2"
+      MODEL_SOURCE="flag"
       shift 2
       ;;
     --agent)
@@ -71,6 +78,10 @@ while [[ $# -gt 0 ]]; do
       DRY_RUN=1
       shift 1
       ;;
+    --collect-analyze)
+      COLLECT_ANALYZE=1
+      shift 1
+      ;;
     -h|--help)
       usage
       exit 0
@@ -87,9 +98,20 @@ if [[ "$REPEATS" =~ [^0-9] || "$REPEATS" -lt 1 ]]; then
   echo "--repeats must be a positive integer" >&2
   exit 1
 fi
+if [[ -n "$MODEL" && "$MODEL" != */* ]]; then
+  echo "--model must be in provider/model format, got: $MODEL" >&2
+  exit 1
+fi
+if [[ "$MODEL" == "anthropic/claude-opus-4-6" ]]; then
+  echo "model '$MODEL' is no longer available. choose a current model via: opencode models" >&2
+  exit 1
+fi
 if [[ "$OPENCODE_STATE_MODE" != "system" && "$OPENCODE_STATE_MODE" != "isolated" ]]; then
   echo "--opencode-state must be one of: system, isolated" >&2
   exit 1
+fi
+if [[ "$MODEL_SOURCE" == "env" ]]; then
+  echo "warning: using model from MODEL environment variable ('$MODEL'); pass --model explicitly for reproducible runs" >&2
 fi
 
 if [[ "$SUITE_FILE" != /* ]]; then
@@ -504,6 +526,13 @@ while IFS= read -r task_json; do
 done < <(jq -c '.tasks[]' "$SUITE_FILE")
 
 echo "benchmark runs complete: $OUT_DIR"
-echo "next:"
-echo "  benchmark/agent_ab/scripts/collect.sh --results-dir \"$OUT_DIR\""
-echo "  benchmark/agent_ab/scripts/analyze.sh --input \"$OUT_DIR/collected.jsonl\""
+
+if [[ "$COLLECT_ANALYZE" -eq 1 ]]; then
+  "$SCRIPT_DIR/collect.sh" --results-dir "$OUT_DIR"
+  "$SCRIPT_DIR/analyze.sh" --input "$OUT_DIR/collected.jsonl"
+  echo "analysis complete: $OUT_DIR/analysis.md"
+else
+  echo "next:"
+  echo "  benchmark/agent_ab/scripts/collect.sh --results-dir \"$OUT_DIR\""
+  echo "  benchmark/agent_ab/scripts/analyze.sh --input \"$OUT_DIR/collected.jsonl\""
+fi

@@ -1,4 +1,4 @@
-# skelly 🦴
+<h1 align="center">skelly 🦴</h1>
 
 Generate LLM-friendly codebase structure maps. Extract the skeleton of your code—functions, classes, dependencies, and call graphs—into token-efficient text files.
 
@@ -198,6 +198,25 @@ go test -bench BenchmarkParseAndGraph_MediumRepo ./internal/bench -run ^$ -bench
 go test -bench BenchmarkResolverQuality_Curated ./internal/bench -run ^$ -benchmem
 go test -bench BenchmarkNavigationUsability_CommonQueries ./internal/bench -run ^$ -benchmem
 ```
+
+## Agent A/B Benchmark
+
+Use the OpenCode harness under `benchmark/agent_ab/` to compare agent outcomes with and without Skelly context:
+
+```bash
+# One command: run + collect + analyze
+benchmark/agent_ab/scripts/run.sh --suite benchmark/agent_ab/tasks/suite.example.json --repeats 1 --collect-analyze
+
+# Optional: dry-run workspace preparation only
+benchmark/agent_ab/scripts/run.sh --suite benchmark/agent_ab/tasks/suite.example.json --repeats 1 --dry-run
+
+# Optional: manual post-processing
+benchmark/agent_ab/scripts/collect.sh --results-dir benchmark/agent_ab/results/<run_id>
+benchmark/agent_ab/scripts/analyze.sh --input benchmark/agent_ab/results/<run_id>/collected.jsonl
+```
+
+`run.sh` uses your normal OpenCode config by default (`--opencode-state system`); pass `--opencode-state isolated` for isolated benchmark state.  
+Set `--model provider/model` explicitly for reproducible runs. The harness fails fast on deprecated models (for example `anthropic/claude-opus-4-6`).
 
 ## v0.1 Exit Criteria
 
