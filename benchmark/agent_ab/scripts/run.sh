@@ -151,11 +151,13 @@ arm_preamble() {
       cat <<'EOF'
 Benchmark arm: with_skelly
 
-Use Skelly before broad source reads:
-1. go run ./cmd/skelly doctor
-2. go run ./cmd/skelly update --format jsonl (if stale)
+Use Skelly with a minimal loop:
+1. Run go run ./cmd/skelly doctor exactly once at start.
+2. Run go run ./cmd/skelly update --format jsonl only if doctor reports stale context.
 3. Use Skelly CLI commands first: symbol, callers, callees, trace, path, status.
-4. Avoid direct reads of .skelly/.context/* unless CLI output is insufficient.
+4. Run acceptance early after first concrete conclusion.
+5. If acceptance passes and no code changes are required, stop (no extra verification loops).
+6. Avoid direct reads of .skelly/.context/* unless CLI output is insufficient.
 EOF
       ;;
     without_skelly)
