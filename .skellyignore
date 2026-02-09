@@ -1,0 +1,6 @@
+# Generated benchmark artifacts
+benchmark/agent_ab/results/
+
+# Local benchmark scratch directories
+.bench/
+.cache/
