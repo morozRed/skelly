@@ -1,0 +1,42 @@
+{
+  "suite_id": "skelly_advantage_v1",
+  "description": "Tasks that require multi-file reasoning where Skelly navigation should provide stronger leverage.",
+  "tasks": [
+    {
+      "id": "cli_update_incremental_jsonl",
+      "prompt_file": "benchmark/agent_ab/tasks/prompts/skelly_advantage_update_incremental.md",
+      "acceptance_command": "go test ./internal/cli -run TestUpdateJSONLTracksArtifactHashesIncrementally -count=1",
+      "setup_commands": [],
+      "timeout_seconds": 1200,
+      "tags": [
+        "incremental",
+        "multi-file",
+        "cli"
+      ]
+    },
+    {
+      "id": "state_impacted_closure",
+      "prompt_file": "benchmark/agent_ab/tasks/prompts/skelly_advantage_state_closure.md",
+      "acceptance_command": "go test ./internal/state -run TestImpactedFilesClosure -count=1",
+      "setup_commands": [],
+      "timeout_seconds": 1200,
+      "tags": [
+        "graph",
+        "impact",
+        "state"
+      ]
+    },
+    {
+      "id": "parser_ignore_incremental_scope",
+      "prompt_file": "benchmark/agent_ab/tasks/prompts/skelly_advantage_parser_scope.md",
+      "acceptance_command": "go test ./internal/parser -run TestParseDirectoryRespectsIgnoreRules -count=1",
+      "setup_commands": [],
+      "timeout_seconds": 1200,
+      "tags": [
+        "parser",
+        "scope",
+        "ignore"
+      ]
+    }
+  ]
+}
