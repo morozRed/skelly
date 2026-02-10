@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/morozRed/skelly/internal/lsp"
 )
 
 type RunSummary struct {
@@ -45,20 +47,21 @@ type EnrichRunSummary struct {
 }
 
 type DoctorSummary struct {
-	Mode                  string          `json:"mode"`
-	RootPath              string          `json:"root_path"`
-	ContextDir            string          `json:"context_dir"`
-	Format                string          `json:"format"`
-	Healthy               bool            `json:"healthy"`
-	Clean                 bool            `json:"clean"`
-	Changed               int             `json:"changed"`
-	Deleted               int             `json:"deleted"`
-	IndexedFiles          int             `json:"indexed_files,omitempty"`
-	SuspiciousIndexed     int             `json:"suspicious_indexed_files,omitempty"`
-	SuspiciousIndexedList []string        `json:"suspicious_indexed_paths,omitempty"`
-	Missing               []string        `json:"missing,omitempty"`
-	Suggestions           []string        `json:"suggestions,omitempty"`
-	Integrations          map[string]bool `json:"integrations,omitempty"`
+	Mode                  string                    `json:"mode"`
+	RootPath              string                    `json:"root_path"`
+	ContextDir            string                    `json:"context_dir"`
+	Format                string                    `json:"format"`
+	Healthy               bool                      `json:"healthy"`
+	Clean                 bool                      `json:"clean"`
+	Changed               int                       `json:"changed"`
+	Deleted               int                       `json:"deleted"`
+	IndexedFiles          int                       `json:"indexed_files,omitempty"`
+	SuspiciousIndexed     int                       `json:"suspicious_indexed_files,omitempty"`
+	SuspiciousIndexedList []string                  `json:"suspicious_indexed_paths,omitempty"`
+	Missing               []string                  `json:"missing,omitempty"`
+	Suggestions           []string                  `json:"suggestions,omitempty"`
+	Integrations          map[string]bool           `json:"integrations,omitempty"`
+	LSP                   map[string]lsp.Capability `json:"lsp,omitempty"`
 }
 
 func PrintRunSummary(summary RunSummary, asJSON bool) error {

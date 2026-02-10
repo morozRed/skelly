@@ -11,6 +11,7 @@ import (
 	"github.com/morozRed/skelly/internal/fileutil"
 	"github.com/morozRed/skelly/internal/languages"
 	"github.com/morozRed/skelly/internal/llm"
+	"github.com/morozRed/skelly/internal/lsp"
 	"github.com/morozRed/skelly/internal/nav"
 	"github.com/morozRed/skelly/internal/output"
 	"github.com/morozRed/skelly/internal/state"
@@ -53,6 +54,24 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 		summary.Missing = append(summary.Missing, "context artifacts")
 	}
 
+	registry := languages.NewDefaultRegistry()
+	ignoreRules, err := LoadIgnoreRules(rootPath)
+	if err != nil {
+		return err
+	}
+	currentHashes, err := fileutil.ScanFileHashes(rootPath, registry, ignoreRules)
+	if err != nil {
+		return fmt.Errorf("failed to scan files: %w", err)
+	}
+	currentPaths := make([]string, 0, len(currentHashes))
+	currentFiles := make(map[string]bool, len(currentHashes))
+	for file := range currentHashes {
+		currentPaths = append(currentPaths, file)
+		currentFiles[file] = true
+	}
+	sort.Strings(currentPaths)
+	summary.LSP = lsp.ProbeCapabilities(lsp.DetectLanguagePresence(currentPaths))
+
 	if hasState {
 		st, err := state.Load(contextDir)
 		if err != nil {
@@ -70,20 +89,6 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 						break
 					}
 				}
-			}
-
-			registry := languages.NewDefaultRegistry()
-			ignoreRules, err := LoadIgnoreRules(rootPath)
-			if err != nil {
-				return err
-			}
-			currentHashes, err := fileutil.ScanFileHashes(rootPath, registry, ignoreRules)
-			if err != nil {
-				return fmt.Errorf("failed to scan files: %w", err)
-			}
-			currentFiles := make(map[string]bool, len(currentHashes))
-			for file := range currentHashes {
-				currentFiles[file] = true
 			}
 
 			changed := st.ChangedFiles(currentHashes)
@@ -155,6 +160,17 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 		summary.Integrations["claude"],
 		summary.Integrations["cursor"],
 	)
+	availableLSP := 0
+	presentLSP := 0
+	for _, capability := range summary.LSP {
+		if capability.Present {
+			presentLSP++
+			if capability.Available {
+				availableLSP++
+			}
+		}
+	}
+	fmt.Printf("lsp: available=%d/%d present languages\n", availableLSP, presentLSP)
 	if summary.SuspiciousIndexed > 0 {
 		fmt.Printf("context scope warning: suspicious_indexed_files=%d (%s)\n",
 			summary.SuspiciousIndexed,

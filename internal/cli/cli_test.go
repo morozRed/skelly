@@ -167,6 +167,9 @@ func A() {}
 		if !healthy.Clean || healthy.Changed != 0 || healthy.Deleted != 0 {
 			t.Fatalf("expected clean doctor summary, got %+v", healthy)
 		}
+		if len(healthy.LSP) == 0 {
+			t.Fatalf("expected doctor summary to include lsp capabilities, got %+v", healthy)
+		}
 
 		mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
 

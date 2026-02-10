@@ -174,6 +174,7 @@ skelly enrich <target> "<description>"
 - `init` creates `.skelly/.context/`, optionally generates LLM adapter files, and auto-runs `generate` unless `--no-generate` is passed.
 - `init --llm ...` generates managed LLM adapter files (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules/skelly-context.mdc`) plus `CONTEXT.md`.
 - `doctor` reports setup health, stale context, and suggested remediation commands.
+- `doctor --json` reports optional LSP capability probes per supported language.
 - Navigation commands (`symbol`, `callers`, `callees`, `trace`, `path`) read from `.skelly/.context/nav-index.json`.
 - `symbol --fuzzy` uses BM25 ranking over `name`, `signature`, `file`, and `doc` via `.skelly/.context/search-index.json`.
 - `enrich` stores symbol records in `.skelly/.context/enrich.jsonl` and upserts by cache key.
