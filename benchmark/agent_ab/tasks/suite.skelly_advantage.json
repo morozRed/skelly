@@ -37,6 +37,30 @@
         "scope",
         "ignore"
       ]
+    },
+    {
+      "id": "symbol_fuzzy_lookup",
+      "prompt_file": "benchmark/agent_ab/tasks/prompts/skelly_advantage_symbol_fuzzy.md",
+      "acceptance_command": "go test ./internal/cli -run TestSymbolCommandFuzzyFallback -count=1",
+      "setup_commands": [],
+      "timeout_seconds": 1200,
+      "tags": [
+        "symbol",
+        "bm25",
+        "fuzzy"
+      ]
+    },
+    {
+      "id": "nav_lsp_metadata",
+      "prompt_file": "benchmark/agent_ab/tasks/prompts/skelly_advantage_nav_lsp_metadata.md",
+      "acceptance_command": "go test ./internal/cli -run TestNavigationCommandsJSONWithLSPMetadata -count=1",
+      "setup_commands": [],
+      "timeout_seconds": 1200,
+      "tags": [
+        "navigation",
+        "lsp",
+        "metadata"
+      ]
     }
   ]
 }

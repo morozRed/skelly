@@ -24,6 +24,7 @@ Required fields used in scoring:
 Per run:
 
 - `total_tokens = input_tokens + output_tokens + cache_read_tokens + cache_write_tokens`
+- `non_cache_tokens = input_tokens + output_tokens`
 
 Per arm:
 
@@ -50,19 +51,23 @@ Aggregate paired metrics:
 
 ## Decision Rule
 
-Decision heuristic:
+Primary gate (aligned with `docs/BENCHMARK_SUCCESS_CRITERIA.md`):
 
-- `prefer with_skelly` if success rate is higher and average cost is not higher.
-- `prefer without_skelly` if success rate is lower and average cost is not lower.
+- `prefer with_skelly` when all of the following hold:
+  - success-rate gate: `success_rate(with_skelly) >= success_rate(without_skelly)`
+  - runtime gate: `median_duration_seconds(with_skelly) <= median_duration_seconds(without_skelly)`
+  - token gate: `median_non_cache_tokens(with_skelly) <= median_non_cache_tokens(without_skelly)`
+- `prefer without_skelly` when all three gates flip in the opposite direction.
 - otherwise `mixed results - inspect paired deltas`.
 
-You can tighten this with explicit thresholds, for example:
+Secondary diagnostics remain non-blocking and should explain gate regressions:
 
-- rollout gate: `success_rate_delta >= +0.05` and `avg_cost_delta <= +0.00`
-- efficiency gate: `success_rate_delta >= 0` and `median_total_tokens_delta <= -0.10 * baseline`
+- cache-read/write shifts
+- orchestration deltas (`step_count`, `tool_call_count`, `acceptance_cmd_count`)
 
 ## Statistical Notes
 
-- Use at least 3 repeats per task for pilot analysis.
+- Use at least 5 repeats per task-arm pair before promotion decisions.
+- Prefer 10 repeats for higher-variance suites.
 - Prefer paired interpretation over aggregate-only means.
 - For publication-quality results, add bootstrap confidence intervals on paired deltas.
