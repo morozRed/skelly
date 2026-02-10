@@ -1,9 +1,8 @@
 ---
-description: Use Skelly CLI for code navigation
+description: Use Skelly context artifacts for code navigation
 alwaysApply: true
 ---
 
 Run skelly doctor first. If context is stale, run skelly update.
 Use .skelly/skills/skelly.md and CONTEXT.md as primary guidance.
-Prefer Skelly CLI commands (symbol/callers/callees/trace/path/status) for navigation and impact analysis.
-Avoid direct reads of .skelly/.context/* unless debugging or CLI output is insufficient.
+Prefer .skelly/.context/symbols.jsonl, .skelly/.context/edges.jsonl, and .skelly/.context/manifest.json when available.
