@@ -2,18 +2,18 @@
   "schema_version": "jsonl-v1",
   "format": "jsonl",
   "counts": {
-    "files": 59,
-    "symbols": 392,
-    "edges": 607
+    "files": 66,
+    "symbols": 450,
+    "edges": 711
   },
   "artifacts": [
     {
       "path": "symbols.jsonl",
-      "hash": "df944dc2de6b561b"
+      "hash": "06ae7cb7489181cc"
     },
     {
       "path": "edges.jsonl",
-      "hash": "4ea018d17c96371c"
+      "hash": "673025de9f9c06f3"
     }
   ]
 }
