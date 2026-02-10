@@ -428,6 +428,61 @@ func End() {}
 	})
 }
 
+func TestDefinitionAndReferencesCommandsJSON(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
+
+func Start() { Mid() }
+func Mid() { End() }
+func End() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		if err := RunInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
+		}
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
+		}
+
+		definitionCmd := newDefinitionCmdForTest()
+		mustSetFlag(t, definitionCmd, "json", "true")
+
+		var definitionPayload struct {
+			Definition nav.SymbolRecord `json:"definition"`
+		}
+		stdout := captureStdout(t, func() {
+			if err := nav.RunDefinition(definitionCmd, []string{"demo.go:4"}); err != nil {
+				t.Fatalf("RunDefinition failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &definitionPayload); err != nil {
+			t.Fatalf("failed to decode definition output: %v\noutput=%s", err, stdout)
+		}
+		if definitionPayload.Definition.Name != "Mid" {
+			t.Fatalf("expected Mid definition from line lookup, got %#v", definitionPayload.Definition)
+		}
+
+		referencesCmd := newReferencesCmdForTest()
+		mustSetFlag(t, referencesCmd, "json", "true")
+
+		var referencesPayload struct {
+			References []nav.EdgeRecord `json:"references"`
+		}
+		stdout = captureStdout(t, func() {
+			if err := nav.RunReferences(referencesCmd, []string{"Mid"}); err != nil {
+				t.Fatalf("RunReferences failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &referencesPayload); err != nil {
+			t.Fatalf("failed to decode references output: %v\noutput=%s", err, stdout)
+		}
+		if len(referencesPayload.References) != 1 || referencesPayload.References[0].Symbol.Name != "Start" {
+			t.Fatalf("expected Start to reference Mid, got %#v", referencesPayload.References)
+		}
+	})
+}
+
 func TestGenerateParsesSupportedLanguageFixtures(t *testing.T) {
 	root := t.TempDir()
 	mustWriteFile(t, filepath.Join(root, "go", "main.go"), `package demo
@@ -901,6 +956,20 @@ func newTraceCmdForTest() *cobra.Command {
 }
 
 func newPathCmdForTest() *cobra.Command {
+	cmd := &cobra.Command{}
+	cmd.Flags().Bool("json", false, "")
+	cmd.Flags().Bool("lsp", false, "")
+	return cmd
+}
+
+func newDefinitionCmdForTest() *cobra.Command {
+	cmd := &cobra.Command{}
+	cmd.Flags().Bool("json", false, "")
+	cmd.Flags().Bool("lsp", false, "")
+	return cmd
+}
+
+func newReferencesCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().Bool("json", false, "")
 	cmd.Flags().Bool("lsp", false, "")

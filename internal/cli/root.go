@@ -119,6 +119,24 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 	pathCmd.Flags().Bool("json", false, "Print machine-readable path results")
 	pathCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
 
+	definitionCmd := &cobra.Command{
+		Use:   "definition <symbol|file:line>",
+		Short: "Resolve the definition symbol for an identifier or location",
+		Args:  cobra.ExactArgs(1),
+		RunE:  nav.RunDefinition,
+	}
+	definitionCmd.Flags().Bool("json", false, "Print machine-readable definition result")
+	definitionCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
+
+	referencesCmd := &cobra.Command{
+		Use:   "references <symbol|file:line>",
+		Short: "Show references for a symbol or location",
+		Args:  cobra.ExactArgs(1),
+		RunE:  nav.RunReferences,
+	}
+	referencesCmd.Flags().Bool("json", false, "Print machine-readable references result")
+	referencesCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
+
 	// Annotate Commands
 	enrichCmd := &cobra.Command{
 		Use:   "enrich <target> <description>",
@@ -155,6 +173,8 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		calleesCmd,
 		traceCmd,
 		pathCmd,
+		definitionCmd,
+		referencesCmd,
 		enrichCmd,
 		installHookCmd,
 		versionCmd,

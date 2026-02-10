@@ -73,6 +73,8 @@ skelly callers Login --lsp
 skelly callees Login
 skelly trace Login --depth 2
 skelly path Login ValidateToken
+skelly definition internal/cli/root.go:11
+skelly references RunDoctor
 
 # Install git pre-commit hook for auto-updates
 skelly install-hook
@@ -176,8 +178,8 @@ skelly enrich <target> "<description>"
 - `init --llm ...` generates managed LLM adapter files (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules/skelly-context.mdc`) plus `CONTEXT.md`.
 - `doctor` reports setup health, stale context, and suggested remediation commands.
 - `doctor --json` reports optional LSP capability probes per supported language.
-- Navigation commands (`symbol`, `callers`, `callees`, `trace`, `path`) read from `.skelly/.context/nav-index.json`.
-- `callers/callees/trace/path --lsp` keeps parser output as source of truth and annotates output provenance (`source=parser`) with LSP capability metadata.
+- Navigation commands (`symbol`, `callers`, `callees`, `trace`, `path`, `definition`, `references`) read from `.skelly/.context/nav-index.json`.
+- `callers/callees/trace/path/definition/references --lsp` keeps parser output as source of truth and annotates output provenance (`source=parser`) with LSP capability metadata.
 - `symbol --fuzzy` uses BM25 ranking over `name`, `signature`, `file`, and `doc` via `.skelly/.context/search-index.json`.
 - `enrich` stores symbol records in `.skelly/.context/enrich.jsonl` and upserts by cache key.
 - State includes parser versioning, per-file hashes, per-file symbols/imports, dependency links, and generated output hashes.
