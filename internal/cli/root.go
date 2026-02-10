@@ -89,7 +89,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		RunE:  nav.RunCallers,
 	}
 	callersCmd.Flags().Bool("json", false, "Print machine-readable caller results")
-	callersCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
+	callersCmd.Flags().Bool("lsp", false, "Augment with LSP lookups when available (parser fallback)")
 
 	calleesCmd := &cobra.Command{
 		Use:   "callees <name|id>",
@@ -98,7 +98,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		RunE:  nav.RunCallees,
 	}
 	calleesCmd.Flags().Bool("json", false, "Print machine-readable callee results")
-	calleesCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
+	calleesCmd.Flags().Bool("lsp", false, "Augment with LSP lookups when available (parser fallback)")
 
 	traceCmd := &cobra.Command{
 		Use:   "trace <name|id>",
@@ -108,7 +108,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 	}
 	traceCmd.Flags().Int("depth", 2, "Traversal depth (>=1)")
 	traceCmd.Flags().Bool("json", false, "Print machine-readable trace results")
-	traceCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
+	traceCmd.Flags().Bool("lsp", false, "Augment with LSP lookups when available (parser fallback)")
 
 	pathCmd := &cobra.Command{
 		Use:   "path <from> <to>",
@@ -117,7 +117,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		RunE:  nav.RunPath,
 	}
 	pathCmd.Flags().Bool("json", false, "Print machine-readable path results")
-	pathCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
+	pathCmd.Flags().Bool("lsp", false, "Augment with LSP lookups when available (parser fallback)")
 
 	definitionCmd := &cobra.Command{
 		Use:   "definition <symbol|file:line>",
@@ -126,7 +126,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		RunE:  nav.RunDefinition,
 	}
 	definitionCmd.Flags().Bool("json", false, "Print machine-readable definition result")
-	definitionCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
+	definitionCmd.Flags().Bool("lsp", false, "Augment with LSP lookups when available (parser fallback)")
 
 	referencesCmd := &cobra.Command{
 		Use:   "references <symbol|file:line>",
@@ -135,7 +135,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		RunE:  nav.RunReferences,
 	}
 	referencesCmd.Flags().Bool("json", false, "Print machine-readable references result")
-	referencesCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
+	referencesCmd.Flags().Bool("lsp", false, "Augment with LSP lookups when available (parser fallback)")
 
 	// Annotate Commands
 	enrichCmd := &cobra.Command{

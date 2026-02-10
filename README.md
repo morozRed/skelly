@@ -20,12 +20,24 @@ The output is ~5-10% of your codebase size while preserving the information LLMs
 go install github.com/morozRed/skelly/cmd/skelly@latest
 ```
 
-## Usage
+## Get Started
 
 ```bash
-# First run: initialize and generate context
+# 1) Initialize context and run first generate
 skelly init
 
+# 2) Keep context fresh as code changes
+skelly update
+
+# 3) Verify health/staleness when needed
+skelly doctor
+```
+
+## Command Guide
+
+### Project Context
+
+```bash
 # Initialize .skelly/.context/ in your project (skip auto-generate)
 skelly init --no-generate
 
@@ -46,35 +58,46 @@ skelly generate --lang go --lang python
 # Update only changed files (incremental)
 skelly update
 
-# Incremental update with JSONL output
-skelly update --format jsonl
-
-# Agent-authored symbol description
-# target accepts file path, file:symbol, file:line, or stable symbol id
-skelly enrich internal/parser/parser.go:ParseDirectory "Parses a directory and normalizes symbol metadata for indexing."
-
-# Show what update would regenerate
-skelly status
-
-# Validate setup + staleness + integrations
-skelly doctor
-
 # Explain why each file is impacted
 skelly update --explain
 
 # Machine-readable output for CI
 skelly update --json
 
-# Navigation primitives
+# Show what update would regenerate
+skelly status
+```
+
+### Navigation
+
+```bash
+# Exact symbol lookup (primary path)
 skelly symbol Login
+
+# Fuzzy lookup fallback (BM25)
 skelly symbol Logn --fuzzy --limit 5
+
+# Graph navigation
 skelly callers Login
-skelly callers Login --lsp
 skelly callees Login
 skelly trace Login --depth 2
 skelly path Login ValidateToken
+
+# Definition and references by symbol or file:line
 skelly definition internal/cli/root.go:11
 skelly references RunDoctor
+
+# Optional LSP augmentation (parser-first fallback)
+skelly callers Login --lsp
+skelly definition internal/cli/root.go:11 --lsp
+```
+
+### Annotation And Automation
+
+```bash
+# Agent-authored symbol description
+# target accepts file path, file:symbol, file:line, or stable symbol id
+skelly enrich internal/parser/parser.go:ParseDirectory "Parses a directory and normalizes symbol metadata for indexing."
 
 # Install git pre-commit hook for auto-updates
 skelly install-hook
@@ -179,7 +202,7 @@ skelly enrich <target> "<description>"
 - `doctor` reports setup health, stale context, and suggested remediation commands.
 - `doctor --json` reports optional LSP capability probes per supported language.
 - Navigation commands (`symbol`, `callers`, `callees`, `trace`, `path`, `definition`, `references`) read from `.skelly/.context/nav-index.json`.
-- `callers/callees/trace/path/definition/references --lsp` keeps parser output as source of truth and annotates output provenance (`source=parser`) with LSP capability metadata.
+- `callers/callees/trace/path/definition/references --lsp` keeps parser output as source of truth, adds provenance metadata (`source=parser|lsp`), and currently performs live LSP lookups for `definition`/`references` when supported (Go via `gopls`).
 - `symbol --fuzzy` uses BM25 ranking over `name`, `signature`, `file`, and `doc` via `.skelly/.context/search-index.json`.
 - `enrich` stores symbol records in `.skelly/.context/enrich.jsonl` and upserts by cache key.
 - State includes parser versioning, per-file hashes, per-file symbols/imports, dependency links, and generated output hashes.
