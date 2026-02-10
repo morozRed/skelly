@@ -44,6 +44,7 @@ type SymbolRecord struct {
 type EdgeRecord struct {
 	Symbol     SymbolRecord `json:"symbol"`
 	Confidence string       `json:"confidence,omitempty"`
+	Source     string       `json:"source,omitempty"`
 }
 
 type TraceHop struct {
@@ -51,4 +52,12 @@ type TraceHop struct {
 	From       SymbolRecord `json:"from"`
 	To         SymbolRecord `json:"to"`
 	Confidence string       `json:"confidence,omitempty"`
+	Source     string       `json:"source,omitempty"`
+}
+
+type LSPStatus struct {
+	Language  string `json:"language,omitempty"`
+	Server    string `json:"server,omitempty"`
+	Available bool   `json:"available"`
+	Reason    string `json:"reason,omitempty"`
 }

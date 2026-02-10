@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/morozRed/skelly/internal/fileutil"
+	"github.com/morozRed/skelly/internal/lsp"
 	"github.com/morozRed/skelly/internal/search"
 	"github.com/spf13/cobra"
 )
@@ -75,6 +76,10 @@ func RunCallers(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	useLSP, err := OptionalBoolFlag(cmd, "lsp", false)
+	if err != nil {
+		return err
+	}
 
 	lookup, err := LoadLookup(rootPath)
 	if err != nil {
@@ -84,14 +89,27 @@ func RunCallers(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	lspStatus, err := ResolveLSPStatus(node, useLSP)
+	if err != nil {
+		return err
+	}
 
 	callers := CollectCallers(lookup, node)
+	if useLSP {
+		for i := range callers {
+			callers[i].Source = "parser"
+		}
+	}
 	if asJSON {
-		return fileutil.PrintJSON(map[string]any{
+		payload := map[string]any{
 			"query":   args[0],
 			"symbol":  SymbolRecordFromNode(node),
 			"callers": callers,
-		})
+		}
+		if lspStatus != nil {
+			payload["lsp"] = lspStatus
+		}
+		return fileutil.PrintJSON(payload)
 	}
 
 	fmt.Printf("callers for %s (%d)\n", node.ID, len(callers))
@@ -104,7 +122,13 @@ func RunCallers(cmd *cobra.Command, args []string) error {
 		if caller.Confidence != "" {
 			fmt.Printf(" (%s)", caller.Confidence)
 		}
+		if caller.Source != "" {
+			fmt.Printf(" source=%s", caller.Source)
+		}
 		fmt.Println()
+	}
+	if useLSP && lspStatus != nil && !lspStatus.Available {
+		fmt.Printf("note: lsp unavailable (%s); run skelly doctor for details\n", lspStatus.Reason)
 	}
 	return nil
 }
@@ -118,6 +142,10 @@ func RunCallees(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	useLSP, err := OptionalBoolFlag(cmd, "lsp", false)
+	if err != nil {
+		return err
+	}
 
 	lookup, err := LoadLookup(rootPath)
 	if err != nil {
@@ -127,14 +155,27 @@ func RunCallees(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	lspStatus, err := ResolveLSPStatus(node, useLSP)
+	if err != nil {
+		return err
+	}
 
 	callees := CollectCallees(lookup, node)
+	if useLSP {
+		for i := range callees {
+			callees[i].Source = "parser"
+		}
+	}
 	if asJSON {
-		return fileutil.PrintJSON(map[string]any{
+		payload := map[string]any{
 			"query":   args[0],
 			"symbol":  SymbolRecordFromNode(node),
 			"callees": callees,
-		})
+		}
+		if lspStatus != nil {
+			payload["lsp"] = lspStatus
+		}
+		return fileutil.PrintJSON(payload)
 	}
 
 	fmt.Printf("callees for %s (%d)\n", node.ID, len(callees))
@@ -147,7 +188,13 @@ func RunCallees(cmd *cobra.Command, args []string) error {
 		if callee.Confidence != "" {
 			fmt.Printf(" (%s)", callee.Confidence)
 		}
+		if callee.Source != "" {
+			fmt.Printf(" source=%s", callee.Source)
+		}
 		fmt.Println()
+	}
+	if useLSP && lspStatus != nil && !lspStatus.Available {
+		fmt.Printf("note: lsp unavailable (%s); run skelly doctor for details\n", lspStatus.Reason)
 	}
 	return nil
 }
@@ -168,12 +215,20 @@ func RunTrace(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	useLSP, err := OptionalBoolFlag(cmd, "lsp", false)
+	if err != nil {
+		return err
+	}
 
 	lookup, err := LoadLookup(rootPath)
 	if err != nil {
 		return err
 	}
 	startNode, err := ResolveSingleSymbol(lookup, args[0])
+	if err != nil {
+		return err
+	}
+	lspStatus, err := ResolveLSPStatus(startNode, useLSP)
 	if err != nil {
 		return err
 	}
@@ -209,6 +264,7 @@ func RunTrace(cmd *cobra.Command, args []string) error {
 				From:       SymbolRecordFromNode(fromNode),
 				To:         SymbolRecordFromNode(toNode),
 				Confidence: lookup.EdgeConfidenceValue(fromNode.ID, toNode.ID),
+				Source:     edgeSource(useLSP),
 			})
 			if previousDepth, exists := seenDepth[nextID]; !exists || nextDepth < previousDepth {
 				seenDepth[nextID] = nextDepth
@@ -228,12 +284,16 @@ func RunTrace(cmd *cobra.Command, args []string) error {
 	})
 
 	if asJSON {
-		return fileutil.PrintJSON(map[string]any{
+		payload := map[string]any{
 			"query": args[0],
 			"start": SymbolRecordFromNode(startNode),
 			"depth": depth,
 			"hops":  hops,
-		})
+		}
+		if lspStatus != nil {
+			payload["lsp"] = lspStatus
+		}
+		return fileutil.PrintJSON(payload)
 	}
 
 	fmt.Printf("trace from %s depth=%d hops=%d\n", startNode.ID, depth, len(hops))
@@ -246,7 +306,13 @@ func RunTrace(cmd *cobra.Command, args []string) error {
 		if hop.Confidence != "" {
 			fmt.Printf(" (%s)", hop.Confidence)
 		}
+		if hop.Source != "" {
+			fmt.Printf(" source=%s", hop.Source)
+		}
 		fmt.Println()
+	}
+	if useLSP && lspStatus != nil && !lspStatus.Available {
+		fmt.Printf("note: lsp unavailable (%s); run skelly doctor for details\n", lspStatus.Reason)
 	}
 	return nil
 }
@@ -260,6 +326,10 @@ func RunPath(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	useLSP, err := OptionalBoolFlag(cmd, "lsp", false)
+	if err != nil {
+		return err
+	}
 
 	lookup, err := LoadLookup(rootPath)
 	if err != nil {
@@ -270,6 +340,10 @@ func RunPath(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	toNode, err := ResolveSingleSymbol(lookup, args[1])
+	if err != nil {
+		return err
+	}
+	lspStatus, err := ResolveLSPStatus(fromNode, useLSP)
 	if err != nil {
 		return err
 	}
@@ -295,24 +369,58 @@ func RunPath(cmd *cobra.Command, args []string) error {
 			"from_id":    prevID,
 			"to_id":      id,
 			"confidence": lookup.EdgeConfidenceValue(prevID, id),
+			"source":     edgeSource(useLSP),
 		})
 	}
 
 	if asJSON {
-		return fileutil.PrintJSON(map[string]any{
+		payload := map[string]any{
 			"from":   SymbolRecordFromNode(fromNode),
 			"to":     SymbolRecordFromNode(toNode),
 			"length": len(pathNodes) - 1,
 			"path":   pathNodes,
 			"edges":  edges,
-		})
+		}
+		if lspStatus != nil {
+			payload["lsp"] = lspStatus
+		}
+		return fileutil.PrintJSON(payload)
 	}
 
 	fmt.Printf("path %s -> %s length=%d\n", fromNode.ID, toNode.ID, len(pathNodes)-1)
 	for i, node := range pathNodes {
 		fmt.Printf("%d. %s [%s] %s:%d\n", i+1, node.ID, node.Kind, node.File, node.Line)
 	}
+	if useLSP && lspStatus != nil && !lspStatus.Available {
+		fmt.Printf("note: lsp unavailable (%s); run skelly doctor for details\n", lspStatus.Reason)
+	}
 	return nil
+}
+
+func edgeSource(useLSP bool) string {
+	if useLSP {
+		return "parser"
+	}
+	return ""
+}
+
+func ResolveLSPStatus(node *IndexNode, enabled bool) (*LSPStatus, error) {
+	if !enabled {
+		return nil, nil
+	}
+	language, ok := lsp.LanguageForPath(node.File)
+	if !ok {
+		return &LSPStatus{Available: false, Reason: "unsupported_language"}, nil
+	}
+	presence := map[string]bool{language: true}
+	capabilities := lsp.ProbeCapabilities(presence)
+	capability := capabilities[language]
+	return &LSPStatus{
+		Language:  language,
+		Server:    capability.Server,
+		Available: capability.Available,
+		Reason:    capability.Reason,
+	}, nil
 }
 
 func OptionalBoolFlag(cmd *cobra.Command, name string, defaultValue bool) (bool, error) {

@@ -89,6 +89,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		RunE:  nav.RunCallers,
 	}
 	callersCmd.Flags().Bool("json", false, "Print machine-readable caller results")
+	callersCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
 
 	calleesCmd := &cobra.Command{
 		Use:   "callees <name|id>",
@@ -97,6 +98,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		RunE:  nav.RunCallees,
 	}
 	calleesCmd.Flags().Bool("json", false, "Print machine-readable callee results")
+	calleesCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
 
 	traceCmd := &cobra.Command{
 		Use:   "trace <name|id>",
@@ -106,6 +108,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 	}
 	traceCmd.Flags().Int("depth", 2, "Traversal depth (>=1)")
 	traceCmd.Flags().Bool("json", false, "Print machine-readable trace results")
+	traceCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
 
 	pathCmd := &cobra.Command{
 		Use:   "path <from> <to>",
@@ -114,6 +117,7 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		RunE:  nav.RunPath,
 	}
 	pathCmd.Flags().Bool("json", false, "Print machine-readable path results")
+	pathCmd.Flags().Bool("lsp", false, "Enable optional LSP-assisted navigation metadata")
 
 	// Annotate Commands
 	enrichCmd := &cobra.Command{

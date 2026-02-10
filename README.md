@@ -69,6 +69,7 @@ skelly update --json
 skelly symbol Login
 skelly symbol Logn --fuzzy --limit 5
 skelly callers Login
+skelly callers Login --lsp
 skelly callees Login
 skelly trace Login --depth 2
 skelly path Login ValidateToken
@@ -176,6 +177,7 @@ skelly enrich <target> "<description>"
 - `doctor` reports setup health, stale context, and suggested remediation commands.
 - `doctor --json` reports optional LSP capability probes per supported language.
 - Navigation commands (`symbol`, `callers`, `callees`, `trace`, `path`) read from `.skelly/.context/nav-index.json`.
+- `callers/callees/trace/path --lsp` keeps parser output as source of truth and annotates output provenance (`source=parser`) with LSP capability metadata.
 - `symbol --fuzzy` uses BM25 ranking over `name`, `signature`, `file`, and `doc` via `.skelly/.context/search-index.json`.
 - `enrich` stores symbol records in `.skelly/.context/enrich.jsonl` and upserts by cache key.
 - State includes parser versioning, per-file hashes, per-file symbols/imports, dependency links, and generated output hashes.

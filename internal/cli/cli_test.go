@@ -386,6 +386,48 @@ func BuildGraph() {}
 	})
 }
 
+func TestNavigationCommandsJSONWithLSPMetadata(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
+
+func Start() { Mid() }
+func Mid() { End() }
+func End() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		if err := RunInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
+		}
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
+		}
+
+		callersCmd := newCallersCmdForTest()
+		mustSetFlag(t, callersCmd, "json", "true")
+		mustSetFlag(t, callersCmd, "lsp", "true")
+
+		var payload struct {
+			Callers []nav.EdgeRecord `json:"callers"`
+			LSP     *nav.LSPStatus   `json:"lsp"`
+		}
+		stdout := captureStdout(t, func() {
+			if err := nav.RunCallers(callersCmd, []string{"Mid"}); err != nil {
+				t.Fatalf("RunCallers failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &payload); err != nil {
+			t.Fatalf("failed to decode callers output with lsp metadata: %v\noutput=%s", err, stdout)
+		}
+		if payload.LSP == nil {
+			t.Fatalf("expected lsp metadata in payload, got %#v", payload)
+		}
+		if len(payload.Callers) == 0 || payload.Callers[0].Source != "parser" {
+			t.Fatalf("expected callers source=parser when --lsp enabled, got %#v", payload.Callers)
+		}
+	})
+}
+
 func TestGenerateParsesSupportedLanguageFixtures(t *testing.T) {
 	root := t.TempDir()
 	mustWriteFile(t, filepath.Join(root, "go", "main.go"), `package demo
@@ -839,12 +881,14 @@ func newSymbolCmdForTest() *cobra.Command {
 func newCallersCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().Bool("json", false, "")
+	cmd.Flags().Bool("lsp", false, "")
 	return cmd
 }
 
 func newCalleesCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().Bool("json", false, "")
+	cmd.Flags().Bool("lsp", false, "")
 	return cmd
 }
 
@@ -852,12 +896,14 @@ func newTraceCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().Int("depth", 2, "")
 	cmd.Flags().Bool("json", false, "")
+	cmd.Flags().Bool("lsp", false, "")
 	return cmd
 }
 
 func newPathCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().Bool("json", false, "")
+	cmd.Flags().Bool("lsp", false, "")
 	return cmd
 }
 

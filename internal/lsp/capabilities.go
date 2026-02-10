@@ -27,6 +27,18 @@ var languageExtensions = map[string][]string{
 	"ruby":       {".rb"},
 }
 
+func LanguageForPath(path string) (string, bool) {
+	ext := strings.ToLower(filepath.Ext(path))
+	for language, exts := range languageExtensions {
+		for _, candidate := range exts {
+			if ext == candidate {
+				return language, true
+			}
+		}
+	}
+	return "", false
+}
+
 func DetectLanguagePresence(paths []string) map[string]bool {
 	presence := make(map[string]bool, len(languageServers))
 	for language := range languageServers {

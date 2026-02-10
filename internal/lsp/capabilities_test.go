@@ -56,3 +56,15 @@ func TestProbeCapabilitiesWithLookPath(t *testing.T) {
 		t.Fatalf("expected ruby server_not_found, got %#v", capabilities["ruby"])
 	}
 }
+
+func TestLanguageForPath(t *testing.T) {
+	if language, ok := LanguageForPath("src/main.tsx"); !ok || language != "typescript" {
+		t.Fatalf("expected tsx to map to typescript, got language=%q ok=%t", language, ok)
+	}
+	if language, ok := LanguageForPath("pkg/service.go"); !ok || language != "go" {
+		t.Fatalf("expected go extension to map to go, got language=%q ok=%t", language, ok)
+	}
+	if _, ok := LanguageForPath("README.md"); ok {
+		t.Fatalf("expected unsupported extension to return false")
+	}
+}
