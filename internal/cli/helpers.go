@@ -14,6 +14,7 @@ import (
 	"github.com/morozRed/skelly/internal/nav"
 	"github.com/morozRed/skelly/internal/output"
 	"github.com/morozRed/skelly/internal/parser"
+	"github.com/morozRed/skelly/internal/search"
 	"github.com/morozRed/skelly/internal/state"
 )
 
@@ -43,6 +44,7 @@ func RecordOutputHashes(st *state.State, contextDir string, format output.Format
 		return fmt.Errorf("unsupported format %q", format)
 	}
 	outputPaths = append(outputPaths, filepath.Join(contextDir, nav.NavigationIndexFile))
+	outputPaths = append(outputPaths, filepath.Join(contextDir, search.IndexFile))
 
 	for _, outputPath := range outputPaths {
 		hash, err := fileutil.HashFile(outputPath)
@@ -140,9 +142,9 @@ func OutputsNeedRefresh(st *state.State, contextDir string, format output.Format
 func RequiredOutputFiles(format output.Format) []string {
 	switch format {
 	case output.FormatText:
-		return []string{output.IndexFile, output.GraphFile, nav.NavigationIndexFile}
+		return []string{output.IndexFile, output.GraphFile, nav.NavigationIndexFile, search.IndexFile}
 	case output.FormatJSONL:
-		return []string{output.SymbolsFile, output.EdgesFile, output.ManifestFile, nav.NavigationIndexFile}
+		return []string{output.SymbolsFile, output.EdgesFile, output.ManifestFile, nav.NavigationIndexFile, search.IndexFile}
 	default:
 		return nil
 	}

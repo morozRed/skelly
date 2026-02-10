@@ -67,6 +67,7 @@ skelly update --json
 
 # Navigation primitives
 skelly symbol Login
+skelly symbol Logn --fuzzy --limit 5
 skelly callers Login
 skelly callees Login
 skelly trace Login --depth 2
@@ -89,6 +90,7 @@ skelly install-hook
     ├── edges.jsonl        # (jsonl format) one edge record per line
     ├── manifest.json      # (jsonl format) schema version + counts + hashes
     ├── nav-index.json     # navigation index for symbol/callers/callees/trace/path
+    ├── search-index.json  # BM25 search index for fuzzy symbol lookup
     └── enrich.jsonl       # (enrich command) symbol enrichment records
 ```
 
@@ -173,6 +175,7 @@ skelly enrich <target> "<description>"
 - `init --llm ...` generates managed LLM adapter files (`AGENTS.md`, `CLAUDE.md`, `.cursor/rules/skelly-context.mdc`) plus `CONTEXT.md`.
 - `doctor` reports setup health, stale context, and suggested remediation commands.
 - Navigation commands (`symbol`, `callers`, `callees`, `trace`, `path`) read from `.skelly/.context/nav-index.json`.
+- `symbol --fuzzy` uses BM25 ranking over `name`, `signature`, `file`, and `doc` via `.skelly/.context/search-index.json`.
 - `enrich` stores symbol records in `.skelly/.context/enrich.jsonl` and upserts by cache key.
 - State includes parser versioning, per-file hashes, per-file symbols/imports, dependency links, and generated output hashes.
 - Calls are stored as structured call sites (name, qualifier/receiver, arity, line, raw expression).

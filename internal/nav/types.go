@@ -1,7 +1,7 @@
 package nav
 
 type Index struct {
-	Version string     `json:"version"`
+	Version string      `json:"version"`
 	Nodes   []IndexNode `json:"nodes"`
 }
 
@@ -25,6 +25,11 @@ type EdgeConfidence struct {
 type Lookup struct {
 	ByID   map[string]*IndexNode
 	ByName map[string][]string
+}
+
+type ResolveOptions struct {
+	Fuzzy bool
+	Limit int
 }
 
 type SymbolRecord struct {

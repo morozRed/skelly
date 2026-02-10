@@ -11,6 +11,7 @@ import (
 	"github.com/morozRed/skelly/internal/languages"
 	"github.com/morozRed/skelly/internal/nav"
 	"github.com/morozRed/skelly/internal/output"
+	"github.com/morozRed/skelly/internal/search"
 	"github.com/morozRed/skelly/internal/state"
 	"github.com/spf13/cobra"
 )
@@ -100,6 +101,9 @@ func GenerateContext(rootPath string, languageFilter map[string]bool, format out
 	}
 	if err := nav.WriteIndex(contextDir, g); err != nil {
 		return fmt.Errorf("failed to write navigation index: %w", err)
+	}
+	if err := search.Write(contextDir, g); err != nil {
+		return fmt.Errorf("failed to write search index: %w", err)
 	}
 
 	if err := PersistState(contextDir, parseResult.Files, g, format); err != nil {

@@ -79,6 +79,8 @@ Output is written to .skelly/.context/ and can be version-controlled.`,
 		RunE:  nav.RunSymbol,
 	}
 	symbolCmd.Flags().Bool("json", false, "Print machine-readable symbol matches")
+	symbolCmd.Flags().Bool("fuzzy", false, "Enable BM25 fuzzy fallback when exact lookup misses")
+	symbolCmd.Flags().Int("limit", 10, "Maximum number of symbol matches to return")
 
 	callersCmd := &cobra.Command{
 		Use:   "callers <name|id>",

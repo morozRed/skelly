@@ -12,6 +12,7 @@ import (
 	"github.com/morozRed/skelly/internal/languages"
 	"github.com/morozRed/skelly/internal/nav"
 	"github.com/morozRed/skelly/internal/output"
+	"github.com/morozRed/skelly/internal/search"
 	"github.com/morozRed/skelly/internal/state"
 	"github.com/spf13/cobra"
 )
@@ -107,6 +108,9 @@ func RunUpdate(cmd *cobra.Command, args []string) error {
 			if err := nav.WriteIndex(contextDir, g); err != nil {
 				return fmt.Errorf("failed to write navigation index: %w", err)
 			}
+			if err := search.Write(contextDir, g); err != nil {
+				return fmt.Errorf("failed to write search index: %w", err)
+			}
 			if err := RecordOutputHashes(st, contextDir, format); err != nil {
 				return fmt.Errorf("failed to update output hashes: %w", err)
 			}
@@ -175,6 +179,9 @@ func RunUpdate(cmd *cobra.Command, args []string) error {
 	}
 	if err := nav.WriteIndex(contextDir, g); err != nil {
 		return fmt.Errorf("failed to write navigation index: %w", err)
+	}
+	if err := search.Write(contextDir, g); err != nil {
+		return fmt.Errorf("failed to write search index: %w", err)
 	}
 	if err := RecordOutputHashes(st, contextDir, format); err != nil {
 		return fmt.Errorf("failed to update output hashes: %w", err)

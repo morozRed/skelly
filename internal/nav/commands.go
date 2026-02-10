@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/morozRed/skelly/internal/fileutil"
+	"github.com/morozRed/skelly/internal/search"
 	"github.com/spf13/cobra"
 )
 
@@ -18,12 +19,27 @@ func RunSymbol(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
+	fuzzy, err := OptionalBoolFlag(cmd, "fuzzy", false)
+	if err != nil {
+		return err
+	}
+	limit, err := OptionalIntFlag(cmd, "limit", 10)
+	if err != nil {
+		return err
+	}
 
 	lookup, err := LoadLookup(rootPath)
 	if err != nil {
 		return err
 	}
-	matches := Resolve(lookup, args[0])
+	var searchIndex *search.Index
+	if fuzzy {
+		searchIndex, err = search.Load(rootPath)
+		if err != nil {
+			return err
+		}
+	}
+	matches := ResolveWithOptions(lookup, searchIndex, args[0], ResolveOptions{Fuzzy: fuzzy, Limit: limit})
 	if len(matches) == 0 {
 		return fmt.Errorf("symbol %q not found", args[0])
 	}
@@ -306,6 +322,17 @@ func OptionalBoolFlag(cmd *cobra.Command, name string, defaultValue bool) (bool,
 	value, err := cmd.Flags().GetBool(name)
 	if err != nil {
 		return false, fmt.Errorf("failed to read --%s flag: %w", name, err)
+	}
+	return value, nil
+}
+
+func OptionalIntFlag(cmd *cobra.Command, name string, defaultValue int) (int, error) {
+	if cmd == nil || cmd.Flags().Lookup(name) == nil {
+		return defaultValue, nil
+	}
+	value, err := cmd.Flags().GetInt(name)
+	if err != nil {
+		return 0, fmt.Errorf("failed to read --%s flag: %w", name, err)
 	}
 	return value, nil
 }

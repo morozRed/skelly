@@ -342,6 +342,47 @@ func End() {}
 	})
 }
 
+func TestSymbolCommandFuzzyFallback(t *testing.T) {
+	root := t.TempDir()
+	mustWriteFile(t, filepath.Join(root, "demo.go"), `package demo
+
+func ParseDirectory() {}
+func BuildGraph() {}
+`)
+
+	withWorkingDir(t, root, func() {
+		if err := RunInit(newInitCmdForTest(), nil); err != nil {
+			t.Fatalf("RunInit failed: %v", err)
+		}
+		if err := RunGenerate(newGenerateCmdForTest(), []string{"."}); err != nil {
+			t.Fatalf("RunGenerate failed: %v", err)
+		}
+
+		symbolCmd := newSymbolCmdForTest()
+		mustSetFlag(t, symbolCmd, "json", "true")
+		mustSetFlag(t, symbolCmd, "fuzzy", "true")
+		mustSetFlag(t, symbolCmd, "limit", "2")
+
+		var payload struct {
+			Matches []nav.SymbolRecord `json:"matches"`
+		}
+		stdout := captureStdout(t, func() {
+			if err := nav.RunSymbol(symbolCmd, []string{"ParzeDirectory"}); err != nil {
+				t.Fatalf("RunSymbol failed: %v", err)
+			}
+		})
+		if err := json.Unmarshal([]byte(stdout), &payload); err != nil {
+			t.Fatalf("failed to decode fuzzy symbol output: %v\noutput=%s", err, stdout)
+		}
+		if len(payload.Matches) == 0 {
+			t.Fatalf("expected fuzzy symbol matches, got %#v", payload)
+		}
+		if payload.Matches[0].Name != "ParseDirectory" {
+			t.Fatalf("expected ParseDirectory as top fuzzy match, got %#v", payload.Matches)
+		}
+	})
+}
+
 func TestGenerateParsesSupportedLanguageFixtures(t *testing.T) {
 	root := t.TempDir()
 	mustWriteFile(t, filepath.Join(root, "go", "main.go"), `package demo
@@ -787,6 +828,8 @@ func newDoctorCmdForTest() *cobra.Command {
 func newSymbolCmdForTest() *cobra.Command {
 	cmd := &cobra.Command{}
 	cmd.Flags().Bool("json", false, "")
+	cmd.Flags().Bool("fuzzy", false, "")
+	cmd.Flags().Int("limit", 10, "")
 	return cmd
 }
 

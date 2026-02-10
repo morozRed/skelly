@@ -11,6 +11,7 @@ import (
 	"github.com/morozRed/skelly/internal/fileutil"
 	"github.com/morozRed/skelly/internal/graph"
 	"github.com/morozRed/skelly/internal/output"
+	"github.com/morozRed/skelly/internal/search"
 )
 
 const NavigationIndexFile = "nav-index.json"
@@ -109,6 +110,30 @@ func Resolve(l *Lookup, query string) []*IndexNode {
 		if node := l.ByID[id]; node != nil {
 			out = append(out, node)
 		}
+	}
+	return out
+}
+
+func ResolveWithOptions(l *Lookup, index *search.Index, query string, options ResolveOptions) []*IndexNode {
+	matches := Resolve(l, query)
+	if len(matches) > 0 {
+		if options.Limit > 0 && len(matches) > options.Limit {
+			return matches[:options.Limit]
+		}
+		return matches
+	}
+	if !options.Fuzzy || index == nil {
+		return nil
+	}
+
+	results := search.Search(index, query, options.Limit)
+	out := make([]*IndexNode, 0, len(results))
+	for _, result := range results {
+		node := l.ByID[result.ID]
+		if node == nil {
+			continue
+		}
+		out = append(out, node)
 	}
 	return out
 }
