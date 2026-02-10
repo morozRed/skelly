@@ -61,6 +61,18 @@
         "lsp",
         "metadata"
       ]
+    },
+    {
+      "id": "definition_references_commands",
+      "prompt_file": "benchmark/agent_ab/tasks/prompts/skelly_advantage_definition_references.md",
+      "acceptance_command": "go test ./internal/cli -run TestDefinitionAndReferencesCommandsJSON -count=1",
+      "setup_commands": [],
+      "timeout_seconds": 1200,
+      "tags": [
+        "navigation",
+        "definition",
+        "references"
+      ]
     }
   ]
 }
