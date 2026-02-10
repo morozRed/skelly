@@ -54,3 +54,53 @@ Goal: make Skelly the default code-navigation context layer for LLM agents with 
 - [x] Add quality benchmark: resolver precision/recall on curated fixtures.
 - [x] Add usability benchmark: “tokens to answer” and latency for common code-navigation questions.
 - [x] Define and publish v0.2 exit criteria (correctness, DX, traversal utility, enrich stability).
+
+## Phase 7 - Symbol Retrieval Quality (v0.3 Priority 0)
+
+- [ ] Implement BM25-backed symbol retrieval over `name`, `signature`, `file`, and `doc`.
+- [ ] Keep exact ID/name lookup as primary path; use BM25 as ranked fallback.
+- [ ] Add `skelly symbol --fuzzy` and `--limit` with stable deterministic ordering.
+- [ ] Persist a compact search index under `.skelly/.context/` and rebuild it during `generate`/`update`.
+- [ ] Add tests for typo tolerance, partial-name matching, and deterministic ranking.
+
+## Phase 8 - Optional LSP Foundation (v0.3 Priority 0)
+
+- [ ] Add `internal/lsp` adapter package with capability probe, definition lookup, and references lookup.
+- [ ] Map supported languages to preferred servers:
+- [ ] Go -> `gopls`
+- [ ] Python -> `pyright-langserver` (fallback `pylsp`)
+- [ ] TypeScript/JavaScript -> `typescript-language-server`
+- [ ] Ruby -> `solargraph`
+- [ ] Extend `skelly doctor` JSON/text output with per-language LSP availability and reason fields.
+- [ ] Ensure missing LSP servers never fail default parser-first workflows.
+
+## Phase 9 - LSP-Enriched Navigation (Opt-In, Non-Core)
+
+- [ ] Add `--lsp` flag to `callers`, `callees`, `trace`, and `path`.
+- [ ] Keep default behavior unchanged when `--lsp` is not set.
+- [ ] Annotate output provenance (`source=parser|lsp`) and confidence consistently in text and JSON.
+- [ ] Add fallback messaging that points users to `skelly doctor` when LSP backends are unavailable.
+- [ ] Add regression tests asserting identical output without `--lsp`.
+
+## Phase 10 - Typed Context and Resolver Hardening
+
+- [ ] Extend call/edge metadata to carry typed receiver hints when parser data can infer them.
+- [ ] Preserve parser confidence semantics while adding explicit provenance for hybrid edges.
+- [ ] Refine unresolved/heuristic edges with optional LSP evidence only for changed/impacted scope.
+- [ ] Add fixture cases for dynamic dispatch ambiguity and same-name symbols across modules.
+- [ ] Track and report resolved vs heuristic edge ratios in benchmark outputs.
+
+## Phase 11 - Incremental Performance and Scale
+
+- [ ] Reduce full-output regeneration work in `update` by reusing unaffected artifacts where safe.
+- [ ] Add latency budgets for optional LSP refinement (`p50`, `p95`) and enforce timeout guardrails.
+- [ ] Add query/result caching for LSP lookups keyed by language, file hash, symbol, and query type.
+- [ ] Add large-repo benchmark scenarios with mixed-language trees and high fan-out call graphs.
+
+## Phase 12 - Benchmark Expansion and Adoption Gates
+
+- [ ] Extend agent A/B suite with BM25 symbol-discovery tasks and optional-LSP navigation tasks.
+- [ ] Add quality metrics: symbol search recall@k, navigation precision/recall, ambiguity resolution rate.
+- [ ] Preserve existing primary gates: success-rate, runtime, and non-cache token advantage.
+- [ ] Require at least 5 repeats per task-arm pair before promotion decisions; prefer 10 for noisy suites.
+- [ ] Publish v0.3 exit criteria and rollout recommendation from benchmark evidence.
