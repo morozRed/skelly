@@ -136,10 +136,15 @@ func RunUpdate(cmd *cobra.Command, args []string) error {
 		}, asJSON)
 	}
 
+	progress := newParseProgressReporter("update", len(changed), asJSON)
+	parsedCount := 0
 	for _, file := range changed {
+		parsedCount++
+		progress.Update(file, parsedCount)
 		absPath := filepath.Join(rootPath, file)
 		parsed, err := registry.ParseFile(absPath)
 		if err != nil {
+			progress.Done(parsedCount)
 			return fmt.Errorf("failed to parse %s: %w", file, err)
 		}
 		if parsed == nil {
@@ -153,6 +158,7 @@ func RunUpdate(cmd *cobra.Command, args []string) error {
 		fileutil.EnsureSymbolIDs(parsed)
 		st.SetFileData(*parsed)
 	}
+	progress.Done(parsedCount)
 
 	for _, file := range deleted {
 		st.RemoveFile(file)

@@ -30,6 +30,12 @@ type Registry struct {
 	extToLang map[string]string         // extension -> language name
 }
 
+// ParseProgress reports incremental parse progress for supported source files.
+type ParseProgress struct {
+	File  string
+	Count int
+}
+
 // NewRegistry creates a new parser registry
 func NewRegistry() *Registry {
 	return &Registry{
@@ -98,6 +104,12 @@ func (r *Registry) ParseFile(path string) (*FileSymbols, error) {
 
 // ParseDirectory recursively parses all supported files in a directory
 func (r *Registry) ParseDirectory(root string, ignorePaths []string) (*ParseResult, error) {
+	return r.ParseDirectoryWithProgress(root, ignorePaths, nil)
+}
+
+// ParseDirectoryWithProgress recursively parses all supported files in a directory
+// and invokes onProgress before each supported file parse when provided.
+func (r *Registry) ParseDirectoryWithProgress(root string, ignorePaths []string, onProgress func(ParseProgress)) (*ParseResult, error) {
 	ignoreMatcher := ignore.NewMatcher(ignorePaths)
 
 	result := &ParseResult{
@@ -105,6 +117,7 @@ func (r *Registry) ParseDirectory(root string, ignorePaths []string) (*ParseResu
 		Files:    make([]FileSymbols, 0),
 		Issues:   make([]ParseIssue, 0),
 	}
+	parsedCount := 0
 
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
@@ -134,6 +147,17 @@ func (r *Registry) ParseDirectory(root string, ignorePaths []string) (*ParseResu
 
 		if info.IsDir() {
 			return nil
+		}
+
+		if _, ok := r.GetParserForFile(path); !ok {
+			return nil
+		}
+		parsedCount++
+		if onProgress != nil {
+			onProgress(ParseProgress{
+				File:  relPath,
+				Count: parsedCount,
+			})
 		}
 
 		symbols, err := r.ParseFile(path)

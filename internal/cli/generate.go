@@ -11,6 +11,7 @@ import (
 	"github.com/morozRed/skelly/internal/languages"
 	"github.com/morozRed/skelly/internal/nav"
 	"github.com/morozRed/skelly/internal/output"
+	"github.com/morozRed/skelly/internal/parser"
 	"github.com/morozRed/skelly/internal/search"
 	"github.com/morozRed/skelly/internal/state"
 	"github.com/spf13/cobra"
@@ -84,7 +85,13 @@ func GenerateContext(rootPath string, languageFilter map[string]bool, format out
 	previousOutputHashes, _ := LoadOutputHashesFromState(contextDir)
 
 	registry := languages.NewDefaultRegistry()
-	parseResult, err := registry.ParseDirectory(rootPath, ignoreRules)
+	parsedCount := 0
+	progress := newParseProgressReporter("generate", 0, asJSON)
+	parseResult, err := registry.ParseDirectoryWithProgress(rootPath, ignoreRules, func(step parser.ParseProgress) {
+		parsedCount = step.Count
+		progress.Update(step.File, step.Count)
+	})
+	progress.Done(parsedCount)
 	if err != nil {
 		return fmt.Errorf("failed to parse source files: %w", err)
 	}
